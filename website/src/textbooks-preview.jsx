@@ -50,12 +50,12 @@ function Cover({book,small=false}) {
   </div>;
 }
 
-function App({production=false}) {
-  const learning=useMultiLearning(production);
+export function App({production=false,previewPage,onPreviewNavigate,learning:providedLearning}) {
+  const localLearning=useMultiLearning(production&&!providedLearning),learning=providedLearning||localLearning;
   const [auth,setAuth]=useState(false),[switchingAccount,setSwitchingAccount]=useState(false);
   function closeAccount(){setAuth(false);setSwitchingAccount(false);}
   function openAccount(switching=false){if(navigator.onLine===false){setToast("账号登录与修改资料需要联网，当前检测记录会保存在本机。");return;}setSwitchingAccount(switching);setAuth(true);}
-  useEffect(()=>{if(learning.authCallback?.type==='recovery'||learning.authCallback?.type==='invite')setAuth(true);},[learning.authCallback]);
+  useEffect(()=>{if(!providedLearning&&(learning.authCallback?.type==='recovery'||learning.authCallback?.type==='invite'))setAuth(true);},[learning.authCallback,providedLearning]);
   const [library]=useState(()=>{try{return loadImportedLibrary(window.localStorage);}catch{return {books:[],error:'浏览器无法保存词库，可取消记住词库临时使用。'};}});
   const [books,setBooks]=useLearningSlice(learning,'books',()=>[...initialBooks.map(b=>library.books.find(saved=>saved.id===b.id)||b),...library.books.filter(b=>!initialBooks.some(i=>i.id===b.id))],production);
   const [bookId,setBookId]=useLearningSlice(learning,'bookId',()=>{const selected=new URLSearchParams(location.search).get('book');return books.some(b=>b.id===selected)?selected:'edito-b1';},production);
@@ -64,7 +64,8 @@ function App({production=false}) {
   const [secondary,setSecondary]=useLearningSlice(learning,'secondary',()=>({}),production),[dailyProblem,setDailyProblem]=useState(''),[backupPreview,setBackupPreview]=useState(null);
   const [previewAccount,setPreviewAccount]=useState({id:'preview-alain',name:'Alain'}),[previewAccountDialog,setPreviewAccountDialog]=useState(false);
   const backupInput=useRef(null);
-  const [progress,setProgress]=useLearningSlice(learning,'progress',()=>freshProgress(books,{shuffle:settings.shuffle}),production),[page,setPage]=useState(initialPage);
+  const [progress,setProgress]=useLearningSlice(learning,'progress',()=>freshProgress(books,{shuffle:settings.shuffle}),production),[page,setPage]=useState(()=>previewPage||initialPage());
+  useEffect(()=>{if(previewPage&&Object.hasOwn(pageTitles,previewPage))setPage(previewPage);},[previewPage]);
   const [importing,setImporting]=useState(null);
   function changeSettings(patch){const next={...settings,...patch};setSettings(next);try{if(!production)core.saveSettings(window.localStorage,next);}catch{setToast('设置已在本次预览生效，浏览器暂时无法保存。');}}
   function changeTheme(next){setTheme(next);try{if(!production)localStorage.setItem('atelier:design-theme:v1',next);}catch{setToast('外观已应用，浏览器暂时无法保存。');}}
@@ -75,7 +76,7 @@ function App({production=false}) {
   const totalParts=ready(book)?core.parts(book.bank).length:0;
   const [autoPart,setAutoPart]=useState(null);
   const allowedStamp=state?eligible(state).join('|'):'';
-  function go(next){setPage(next);setSwitcher(false);location.hash='/'+next;window.scrollTo({top:0,behavior:'instant'});}
+  function go(next){setPage(next);setSwitcher(false);if(onPreviewNavigate)onPreviewNavigate(next);else location.hash='/'+next;window.scrollTo({top:0,behavior:'instant'});}
   function choose(id,next){setBookId(id);setSwitcher(false);setWordQuery('');if(next)go(next);setToast('已切换课本。每本课本的记录分别保留。');}
   function generateDaily(){
     if(!ready(book))return;
@@ -103,7 +104,7 @@ function App({production=false}) {
     if(action==='part'||action==='repeat')window.scrollTo({top:0,behavior:'instant'});
   }
   useEffect(()=>{
-    const fn=()=>setPage(initialPage());window.addEventListener('hashchange',fn);
+    const fn=()=>{if(!onPreviewNavigate)setPage(initialPage());};window.addEventListener('hashchange',fn);
     return ()=>window.removeEventListener('hashchange',fn);
   },[]);
   useEffect(()=>{
@@ -151,7 +152,7 @@ function App({production=false}) {
   return <div className={`dp-shell ${production?'dp-production':''}`}>
     {!production&&<div className="dp-preview-bar"><span><Sparkles size={14}/><strong>设计预览</strong><span>仅使用临时演示进度 · 原有学习记录保持不变</span></span><button ref={resetRef} onClick={reset}><RotateCcw size={13}/>重置预览</button></div>}
     <aside className="dp-sidebar">
-      <a className="dp-brand" href="#/home" onClick={e=>{e.preventDefault();go('home');}}><span className="dp-brand-icon"><BookOpen size={24}/></span><span>Franmotest<small>法语词汇学习</small></span><span className="brand-dot"/></a>
+      <a className="dp-brand" href="#/home" onClick={e=>{e.preventDefault();go('home');}}><span className="dp-brand-icon"><BookOpen size={24}/></span><span>FranLumi<small>法语词汇学习</small></span><span className="brand-dot"/></a>
       <div className="dp-nav-label">MON ESPACE<span>学习空间</span></div>
       <nav aria-label="主要导航">{nav.map(([id,label,Icon])=><button key={id} className={`dp-nav-item ${navigationPage(page)===id?'active':''}`} onClick={()=>go(id)}><Icon size={19}/><span>{id==='settings'?'设置与备份':label}</span>{navigationPage(page)===id&&<span className="nav-dot"/>}</button>)}</nav>
       <div className="dp-side-course"><div className="side-course-label">当前学习课本<Bookmark size={13}/></div><div className={`side-course-icon ${book.color}`}><BookOpen size={24}/></div><strong>{book.name}</strong><small>{ready(book)?`${book.bank.length} 词 · 独立学习进度`:'词库尚未添加'}</small><button onClick={()=>go('books')}>查看我的课本<ArrowUpRight size={14}/></button></div>
@@ -225,5 +226,7 @@ function AddBook({close,onAdd,production=false}){
 }
 
 const previewContainer=document.getElementById('root');
+if(previewContainer&&location.pathname.endsWith('/textbooks-preview.html')){
 previewContainer.atelierRoot||=createRoot(previewContainer);
 previewContainer.atelierRoot.render(<App production={!location.pathname.endsWith('/textbooks-preview.html')}/>);
+}

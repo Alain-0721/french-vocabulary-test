@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "packageId": "app.netlify.franmotest",
-  "versionName": "1.1.7",
-  "versionCode": 10,
-  "apkUrl": "https://github.com/Alain-0721/french-vocabulary-test/releases/download/v1.1.7/Franmotest-1.1.7-Android.apk",
-  "sha256": "b2a188960f2098e6f47b96ba860e69867b3314a94c385a4e675187138c1538a0",
-  "size": 2340244,
-  "notes": "顺序和布局选项在按钮下方展开；新增 Édito A1 2022 词库（566 条、20 个 Part）；保留学习记录和云同步。"
+  "versionName": "2.0.0",
+  "versionCode": 11,
+  "apkUrl": "https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.0.0/FranLumi-2.0.0-Android.apk",
+  "sha256": "0e05f43e08bb4a6199318e002dff2803851a1b998a28cadbfb88365906a8fbb6",
+  "size": 2450892,
+  "notes": "FranLumi 2.0：新增语法之光（36 个专题、216 道练习），与单词之光分开学习；支持账号同步、备份迁移、独立外观和可收起顶栏。保留原学习记录。"
 }

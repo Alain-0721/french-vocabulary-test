@@ -1,6 +1,7 @@
 import {validateEntries,makeImportedBook,vocabularySummary,sameVocabulary} from './vocabulary-import.js';
 import {downloadText} from './vocabulary-guide.js';
 import * as Study from './preview-study.js';
+import {normalizeGrammarState} from './grammar-preview/backup.js';
 import {D,V,practiceBank,eligible,restoreStudy,convertClassicMain} from './preview-review.js';
 
 const safeId=id=>typeof id==='string'&&id.length>0&&id.length<=150&&!['__proto__','prototype','constructor'].includes(id);
@@ -32,7 +33,7 @@ export function readBackup(raw,existing,current){
     const books=[...existing.filter(b=>!ids.has(b.id)),...saved],progress={...current},secondary={};
     for(const b of saved)if(b.bank){const s=restoreStudy(data.progress[b.id],b);if(!s)throw Error(`${b.name} 的主进度或词条累计记录无效。`);progress[b.id]=s;secondary[b.id]=restoreSecondary(data.secondary?.[b.id],b,s);}
     if(!books.some(b=>b.id===data.bookId))throw Error('选中的课本不存在。');
-    return {books,progress,secondary,bookId:data.bookId,settings:{layout:data.settings.layout,shuffle:data.settings.shuffle},theme:['light','dark','system'].includes(data.theme)?data.theme:'light',label:'多课本完整备份'};
+    return {books,progress,secondary,bookId:data.bookId,settings:{layout:data.settings.layout,shuffle:data.settings.shuffle},theme:['light','dark','system'].includes(data.theme)?data.theme:'light',...(data.grammar?{grammar:normalizeGrammarState(data.grammar)}:{}),label:data.grammar?'法语之光完整备份':'多课本完整备份'};
   }
   if(data?.mode==='multi-atelier-main'){
     if(data.version!==1)throw Error('主进度版本无效。');

@@ -1,23 +1,47 @@
 {
   "id": "/",
-  "name": "Franmotest · 法语词汇学习",
-  "short_name": "Franmotest",
-  "description": "按课本主题学习法语词汇，翻词自测、每日复习与学习统计，支持离线检测。",
+  "name": "FranLumi · 法语之光",
+  "short_name": "FranLumi",
+  "description": "单词之光与语法之光：多课本词汇检测、语法双语阅读与练习，支持离线学习。",
   "lang": "zh-CN",
-  "start_url": "/#/home",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#f7f8fc",
-  "theme_color": "#f7f8fc",
+  "background_color": "#fbf8f2",
+  "theme_color": "#fbf8f2",
   "prefer_related_applications": false,
   "icons": [
-    {"src":"/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
-    {"src":"/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
-    {"src":"/icons/icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
-    {"name":"课本过关","url":"/#/study"},
-    {"name":"每日检测","url":"/#/daily"},
-    {"name":"我的课本","url":"/#/books"}
+    {
+      "name": "单词之光",
+      "url": "/#/words/home"
+    },
+    {
+      "name": "语法之光",
+      "url": "/#/grammar/home"
+    },
+    {
+      "name": "练习复习",
+      "url": "/#/grammar/practice"
+    }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "packageId": "app.netlify.franmotest",
-  "appVersion": "1.1.7",
-  "appVersionCode": 10,
+  "appVersion": "2.0.0",
+  "appVersionCode": 11,
   "signingKey": {
     "path": "../.netlify/android-signing/franmotest-release.jks",
     "alias": "franmotest"

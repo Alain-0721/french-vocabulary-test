@@ -10,7 +10,7 @@ import * as Study from '../src/preview-study.js';
 
 test('manifest has standalone launch, stable scope and real correctly sized icons',()=>{
  const manifest=JSON.parse(readFileSync('public/manifest.webmanifest','utf8'));
- assert.equal(manifest.id,'/');assert.equal(manifest.start_url,'/#/home');assert.equal(manifest.scope,'/');assert.equal(manifest.display,'standalone');
+ assert.equal(manifest.id,'/');assert.equal(manifest.start_url,'/');assert.equal(manifest.scope,'/');assert.equal(manifest.display,'standalone');
  for(const icon of manifest.icons){const png=readFileSync('public'+icon.src),[size]=icon.sizes.split('x').map(Number);assert.equal(png.subarray(1,4).toString(),'PNG');assert.equal(png.readUInt32BE(16),size);assert.equal(png.readUInt32BE(20),size);}
  assert.ok(manifest.icons.some(icon=>icon.purpose==='maskable'));assert.ok(readFileSync('index.html','utf8').includes('apple-touch-icon'));
 });
@@ -83,6 +83,6 @@ test('reconnection preserves dirty offline work when another device changed the 
  }finally{dom.window.close();}
 });
 test('offline guest can reconnect and regain the login form without reloading or losing local work',async()=>{
- const {dom,w}=offlineBrowser(false);try{await pause();assert.equal(w.authReads,0);Object.defineProperty(w.navigator,'onLine',{value:true,configurable:true});w.dispatchEvent(new w.Event('online'));await pause();w.document.querySelector('.ac-trigger').click();await pause();assert.ok(w.document.querySelector('input[type=email]'));
+ const {dom,w}=offlineBrowser(false);try{for(let i=0;i<30&&!w.document.querySelector('.ac-trigger:not(:disabled)');i++)await pause(50);assert.ok(w.document.querySelector('.ac-trigger:not(:disabled)'));assert.equal(w.authReads,0);Object.defineProperty(w.navigator,'onLine',{value:true,configurable:true});w.dispatchEvent(new w.Event('online'));await pause();w.document.querySelector('.ac-trigger').click();await pause();assert.ok(w.document.querySelector('input[type=email]'));
  }finally{dom.window.close();}
 });

@@ -1,14 +1,20 @@
-# Franmotest · 法语词汇检测
+# FranLumi · 法语之光
 
-**Franmotest = Français（法语）＋ mots（单词）＋ test（检测）**。按课本主题学习、自测和复习法语词汇。仓库包含多课本学习网站，以及 **1.0.8** 版 ChatGPT 插件源码、三个 skill、自包含 HTML 卡片和 MCP 服务。
+**FranLumi 2.0** 是法语集成学习系统，包含独立的 **单词之光** 和 **语法之光**。首次进入选择学习空间，之后记住上次选择，顶部随时切换。网页版、离线 PWA 和独立安卓 App 使用同一套学习内容；登录后两个空间的记录由同一账号保存。仓库另含 **1.0.8** 版 ChatGPT 词汇插件源码、三个 skill、HTML 卡片和 MCP 服务。
 
 ## 在线学习网站
 
-**[打开学习网站](https://franmotest.pages.dev/)**：https://franmotest.pages.dev/
+**[打开学习网站](https://franlumi.pages.dev/)**
 
-[网站介绍与使用教程](https://franmotest.pages.dev/#/about) · [词库生成与导入教程](website/AI词库生成与导入教程.md) · [下载与安装](https://github.com/Alain-0721/french-vocabulary-test/releases)
+https://franlumi.pages.dev/
 
-**[下载 Franmotest 1.1.7 安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v1.1.7/Franmotest-1.1.7-Android.apk)** · [安卓安装说明](android-app/INSTALL.md)。支持 Android 6.0 及以上，安装包自带学习界面与四本完整词库，不依赖外部浏览器，首次断网也可检测。登录和云同步需要联网。设置可检查更新，首页提示新版。
+[语法使用教程](https://franlumi.pages.dev/#/grammar/about) · [单词使用教程](https://franlumi.pages.dev/#/words/about) · [词库生成与导入教程](website/AI词库生成与导入教程.md) · [下载与安装](https://github.com/Alain-0721/french-vocabulary-test/releases)
+
+**[下载 FranLumi 2.0 安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.0.0/FranLumi-2.0.0-Android.apk)** · [安卓安装说明](android-app/INSTALL.md)。支持 Android 6.0 及以上，界面、四本词库和语法内容内置，直接在 App 中运行。旧版 Franmotest 用户可以检查更新并覆盖安装，原包名、发布签名和本机存储来源保留。账号登录与云同步需要联网。
+
+**2.0 更新**：品牌统一为 FranLumi · 法语之光。单词空间保留原蓝色风格、多课本检测与逐词统计；语法空间采用暖色风格，提供 Édito B1 全书 12 个单元、24 个 Part、36 个语法专题、69 张知识表格和 216 道自编练习。支持左框选单元、右框选语法、点击题目翻开中文、答案解析与学习统计；设置包含独立外观、字号、翻译、备份恢复与教程。顶栏可以收起，手机底部导航更紧凑。
+
+旧网址 https://franmotest.pages.dev/ 继续提供 2.0 和旧 App 更新接口。浏览器游客记录按网址分别保存：更换网址前请在旧站导出完整备份，在新站导入；登录用户可在新站登录原账号读取云端记录。2.0 完整备份包含两个空间；旧版单词备份继续在单词空间导入。旧 APK 保存单词记录时，后台保留已有语法记录。
 
 **1.1.7 更新**：词汇顺序与卡片布局在按钮下方直接展开选项；安卓版新增 Édito A1 2022 词库（566 条词条、20 个 Part），保留原学习记录。网站同时修复 Edge 缓存刷新时的 `ERR_FAILED`。
 

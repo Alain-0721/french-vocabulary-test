@@ -1,3 +1,5 @@
+> FranLumi 2.0 正式网址为 https://franlumi.pages.dev/。原 franmotest.pages.dev 继续提供兼容入口与旧安卓更新通道；浏览器游客记录跨网址迁移需要导出/导入备份。下列旧网址是首次迁移时的历史配置，新部署请使用新网址并保留旧来源允许列表。
+
 # Franmotest 完整后台迁移
 
 状态：[正式网站](https://franmotest.pages.dev/) 与 [测试预览](https://migration-preview.franmotest.pages.dev/) 已部署；账号、记录和头像已导入核对，并补齐切换前新增记录。真实登录、同步、隔离、冲突与头像检查通过。自定义 SMTP 已在线核验，账号本人已确认收到恢复邮件、登录成功且原学习记录正常。原站和原账号数据保留。

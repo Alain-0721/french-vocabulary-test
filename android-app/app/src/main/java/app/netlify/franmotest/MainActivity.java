@@ -38,7 +38,7 @@ import java.util.concurrent.Executors;
 /** APK-owned screens and banks. Online paths are restricted to existing APIs. */
 public final class MainActivity extends ComponentActivity {
     static final String HOST = "franmotest.netlify.app";
-    static final String HOME = "https://" + HOST + "/#/home";
+    static final String HOME = "https://" + HOST + "/";
     private WebView web;
     private FrameLayout root;
     private AppUpdater updater;
@@ -223,7 +223,7 @@ public final class MainActivity extends ComponentActivity {
     }
     private static boolean isAppUrl(Uri uri) {
         return uri != null && "https".equals(uri.getScheme())
-            && (HOST.equals(uri.getHost()) || BuildConfig.MIGRATED_BACKEND && BuildConfig.API_HOST.equals(uri.getHost()))
+            && (HOST.equals(uri.getHost()) || BuildConfig.MIGRATED_BACKEND && (BuildConfig.API_HOST.equals(uri.getHost()) || "franmotest.pages.dev".equals(uri.getHost())))
             && (uri.getPort() == -1 || uri.getPort() == 443)
             && ("/".equals(uri.getPath()) || "/index.html".equals(uri.getPath()));
     }
@@ -253,7 +253,7 @@ public final class MainActivity extends ComponentActivity {
             if (text == null || text.length() > 16 * 1024 * 1024) { runOnUiThread(() -> toast("导出文件过大，请按课本分别导出")); return; }
             runOnUiThread(() -> {
                 if (pendingExport != null) { toast("请先完成当前文件保存"); return; }
-                String name = filename == null ? "Franmotest-backup.json" : filename.replaceAll("[\\\\/\\r\\n]", "_");
+                String name = filename == null ? "FranLumi-backup.json" : filename.replaceAll("[\\\\/\\r\\n]", "_");
                 if (name.length() > 180) name = name.substring(0, 180);
                 String type = "application/json".equals(mime) || "text/csv".equals(mime) || "text/markdown".equals(mime) ? mime : "text/plain";
                 pendingExport = text.getBytes(StandardCharsets.UTF_8);

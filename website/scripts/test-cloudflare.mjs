@@ -37,6 +37,19 @@ test('Cloudflare protects origins, permits existing native storage origin, valid
  assert.deepEqual(JSON.parse(calls.at(-1).options.body),{p_data:restoreMulti(data),p_expected_etag:'old'});
  modified=true;assert.equal((await (await handleApi(request(undefined,{method:'PUT',body:{data,etag:'old'}}),env,fetcher)).json()).etag,'new');
 });
+test('legacy APK saves preserve existing grammar and still use atomic ETag protection',async()=>{
+ const previous=freshMulti();previous.grammar.space='grammar';previous.grammar.topics[previous.grammar.current]={read:true,bookmarked:true};
+ const old=freshMulti();delete old.grammar;let written;
+ const fetcher=async(url,options)=>{
+  if(url.endsWith('/user'))return Response.json({id:'a'});
+  if(url.includes('/learning_records?'))return Response.json([{data:previous,etag:'existing'}]);
+  written=JSON.parse(options.body);return Response.json({modified:true,etag:'next'});
+ };
+ const result=await handleApi(request(undefined,{method:'PUT',body:{data:old,etag:'existing'}}),env,fetcher);
+ assert.equal(result.status,200);assert.deepEqual(written.p_data.grammar,previous.grammar);assert.equal(written.p_expected_etag,'existing');
+ const unavailable=async(url,options)=>url.includes('/learning_records?')?new Response('',{status:503}):fetcher(url,options);
+ assert.equal((await handleApi(request(undefined,{method:'PUT',body:{data:old,etag:'existing'}}),env,unavailable)).status,503);
+});
 test('avatar API remains public for existing URLs, bounds uploads and rejects disguised images',async()=>{
  const calls=[];const fetcher=async(url,options)=>{calls.push({url,options});return url.endsWith('/user')?Response.json({id:'a'}):url.includes('/public/')?new Response('image'):Response.json({Key:'avatar'});};
  const name='12345678-1234-1234-1234-123456789012.webp';
