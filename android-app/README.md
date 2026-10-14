@@ -39,3 +39,5 @@ npm run test:android
 ```
 
 AndroidX 和保留的 Gradle/icon 模板采用 Apache-2.0，原创代码许可见根目录 LICENSE；词库的教材数据许可与质量说明见 DATA_NOTICE.md。
+
+自动更新兼容约定：旧版原生更新器限定 `Franmotest-<版本>-Android.apk` 的 GitHub 地址。每次发布必须同时上传此兼容文件名与 `FranLumi-<版本>-Android.apk`，两者为同一签名 APK 字节；`android-update.json` 指向兼容名称。更改显示品牌不能改变已安装更新器的下载地址约定。

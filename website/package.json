@@ -16,7 +16,7 @@
     "test:production": "node scripts/test-multi-production.mjs",
     "test:profile": "node scripts/test-account-profile.mjs",
     "test:pwa": "node scripts/test-pwa.mjs",
-    "test:android": "node scripts/test-native-app.mjs",
+    "test:android": "node scripts/test-native-app.mjs && node --test scripts/test-native-update-contract.mjs",
     "build:cloudflare": "vite build --mode cloudflare",
     "test:choices": "node scripts/test-choice-navigation.mjs",
     "test:recovery": "node scripts/test-password-recovery.mjs && node scripts/test-supabase-account.mjs",
