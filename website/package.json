@@ -1,6 +1,6 @@
 {
   "name": "edito-b1-atelier",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,6 +13,7 @@
     "test:study": "node scripts/test-preview-study.mjs",
     "test:navigation": "node scripts/test-preview-navigation.mjs",
     "test:mnemonics": "node scripts/test-mnemonics.mjs",
+    "test:startup": "node scripts/test-startup.mjs",
     "test:account": "node scripts/test-account-session.mjs",
     "test:production": "node scripts/test-multi-production.mjs",
     "test:profile": "node scripts/test-account-profile.mjs",

@@ -83,6 +83,6 @@ test('reconnection preserves dirty offline work when another device changed the 
  }finally{dom.window.close();}
 });
 test('offline guest can reconnect and regain the login form without reloading or losing local work',async()=>{
- const {dom,w}=offlineBrowser(false);try{for(let i=0;i<30&&!w.document.querySelector('.ac-trigger:not(:disabled)');i++)await pause(50);assert.ok(w.document.querySelector('.ac-trigger:not(:disabled)'));assert.equal(w.authReads,0);Object.defineProperty(w.navigator,'onLine',{value:true,configurable:true});w.dispatchEvent(new w.Event('online'));await pause();w.document.querySelector('.ac-trigger').click();await pause();assert.ok(w.document.querySelector('input[type=email]'));
+ const {dom,w}=offlineBrowser(false);try{for(let i=0;i<30&&!w.document.querySelector('.ac-trigger:not(:disabled)');i++)await pause(50);assert.ok(w.document.querySelector('.ac-trigger:not(:disabled)'));assert.equal(w.authReads,0);await pause();Object.defineProperty(w.navigator,'onLine',{value:true,configurable:true});w.dispatchEvent(new w.Event('online'));await pause();w.document.querySelector('.ac-trigger').click();await pause();assert.ok(w.document.querySelector('input[type=email]'));
  }finally{dom.window.close();}
 });

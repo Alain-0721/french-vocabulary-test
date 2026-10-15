@@ -10,7 +10,9 @@ https://franlumi.pages.dev/
 
 [语法使用教程](https://franlumi.pages.dev/#/grammar/about) · [单词使用教程](https://franlumi.pages.dev/#/words/about) · [词库生成与导入教程](website/AI词库生成与导入教程.md) · [下载与安装](https://github.com/Alain-0721/french-vocabulary-test/releases)
 
-**[下载 FranLumi 2.1 安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.0/FranLumi-2.1.0-Android.apk)** · [安卓安装说明](android-app/INSTALL.md)。支持 Android 6.0 及以上，界面、四本词库和语法内容内置，直接在 App 中运行。旧版 Franmotest 用户可以检查更新并覆盖安装，原包名、发布签名和本机存储来源保留。账号登录与云同步需要联网。
+**[下载 FranLumi 2.1 安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.1/FranLumi-2.1.1-Android.apk)** · [安卓安装说明](android-app/INSTALL.md)。支持 Android 6.0 及以上，界面、四本词库和语法内容内置，直接在 App 中运行。旧版 Franmotest 用户可以检查更新并覆盖安装，原包名、发布签名和本机存储来源保留。账号登录与云同步需要联网。
+
+**2.1.1 启动优化**：直接打开上次账号的本机记录，联网验证与云端读取在后台进行；网络慢也能继续学习，等待期间的新操作会保存，核对云端版本后再同步。
 
 **2.1 更新**：新增 A1–B1 时态专题：22 个专题、17 个构成与变位扩充专题、206 个常用动词及特殊模型速查、260 道时态与变位练习。四本词库与演示词表共 3469 条词汇加入助记：完整词库点击词条查看，课本过关和每日检测点击序号下方的小灯泡独立展开，采用紧凑的小圆角卡片。两个空间统一从头像进入设置，顶部与底部导航固定，保留蓝色词汇空间与暖色语法空间。旧版保存时保留新版语法及其时态记录。
 
