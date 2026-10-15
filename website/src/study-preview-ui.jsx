@@ -1,22 +1,27 @@
-import React,{useState} from 'react';
+import React,{useId,useState} from 'react';
 import {BookOpen,CheckCircle2,Check,X,ChevronDown,RotateCcw,Settings2,Shuffle,ArrowRight,Library,Upload,Info} from 'lucide-react';
 import {ChoiceMenu} from './choice-menu.jsx';
 import * as Study from './preview-study.js';
+import {Mnemonic,MnemonicButton} from './mnemonic-ui.jsx';
+import {mnemonicFor} from './vocabulary-mnemonics.js';
 
 const shortPart=p=>p.replace(/^U(\d+)P(\d+)$/,'U$1 · P$2');
 
-export function WordRow({entry,index,attempt,stats,act}){
+export function WordRow({entry,index,attempt,stats,act,mnemonic}){
   const open=!!attempt.opened[entry.id],vote=attempt.votes[entry.id],counts=stats||{good:0,bad:0};
+  const [mnemonicAttempt,setMnemonicAttempt]=useState(null),mnemonicId=useId(),mnemonicOpen=mnemonicAttempt===attempt.id;
   function flip(){act('toggle',entry.id,null,attempt.id);}
   return <div className={`dp-word-row study-word-row ${open?'opened':''}`} data-word-id={entry.id} onClick={flip}>
     <div className="study-word-top">
       <button className="dp-word-trigger" aria-expanded={open} onClick={e=>{e.stopPropagation();flip();}}><span>{String(index+1).padStart(2,'0')}</span><strong lang="fr">{entry.fr}</strong><ChevronDown size={14} className={open?'opened':''}/></button>
       <span className={`dp-ipa ${!open?'hidden':''}`} aria-hidden={!open}>{entry.ipa||'未提供音标'}</span>
     </div>
-    <div className="study-word-bottom">
+    <div className={`study-word-bottom${mnemonic?' has-mnemonic':''}`}>
+      {mnemonic&&<MnemonicButton word={entry.fr} id={mnemonicId} open={mnemonicOpen} onToggle={()=>setMnemonicAttempt(mnemonicOpen?null:attempt.id)}/>}
       <div className="dp-votes">{['good','bad'].map(kind=><button key={kind} disabled={!open} aria-label={`${kind==='good'?'正确':'错误'} ${entry.fr}`} aria-pressed={vote===kind} className={`${kind} ${vote===kind?'chosen':''}`} onClick={e=>{e.stopPropagation();act('vote',entry.id,kind,attempt.id);}}>{kind==='good'?<Check size={16}/>:<X size={16}/>}<span className={!open?'hidden':''}>{counts[kind]}</span></button>)}</div>
       <span className={`dp-answer ${!open?'hidden':''}`} aria-hidden={!open}>{entry.zh}</span>
     </div>
+    {mnemonic&&mnemonicOpen&&<div className="study-mnemonic" onClick={e=>e.stopPropagation()}><Mnemonic text={mnemonic} id={mnemonicId}/></div>}
   </div>;
 }
 
@@ -31,7 +36,7 @@ export function Quiz({book,state,attempt,act,auto,settings,onSettings,titleFor,t
     <div className="quiz-completion"><span>本部分已判 <b>{done}</b> / {attempt.ids.length} 词</span><span className="study-live-score" role="status" aria-live="polite" aria-label="本轮对错与正确率"><span className="score-good">✔ {good}</span><span className="score-bad">✘ {bad}</span><span>正确率 <b>{done?Math.round(good/done*100)+'%':'—'}</b></span></span><div className="dp-track"><span style={{width:done/attempt.ids.length*100+'%'}}/></div></div>
     <div className="dp-group-tabs" role="tablist" aria-label="主题分组">{grouped.map((g,i)=><button role="tab" aria-selected={attempt.group===i} key={g.label} className={attempt.group===i?'active':''} onClick={()=>act('group',i,null,attempt.id)}>第 {i+1} 组</button>)}</div>
     <div className="dp-theme"><span>{String(attempt.group+1).padStart(2,'0')}</span><div><h3 lang="fr">{group.label}</h3><p>{themeFor(book,first)}</p></div><small>{group.ids.length} 词</small></div>
-    <div className="dp-word-list">{group.ids.map((id,i)=><WordRow key={id} entry={dictionary.get(id)} index={i} attempt={attempt} stats={state.stats[id]} act={act}/>)}</div>
+    <div className="dp-word-list">{group.ids.map((id,i)=><WordRow key={id} entry={dictionary.get(id)} index={i} attempt={attempt} stats={state.stats[id]} act={act} mnemonic={mnemonicFor(book,dictionary.get(id))}/>)}</div>
     <div className="dp-quiz-footer"><span>{book.name} · 本组完整主题词汇</span><span>{attempt.group+1} / {grouped.length} 组</span></div>
     <div className="dp-quiz-actions"><button className="dp-button" onClick={()=>act('repeat',null,null,attempt.id)}><RotateCcw size={15}/>再测本部分</button><button className="dp-button primary" disabled={last&&!!attempt.passReason} onClick={()=>{if(last)act('pass',null,null,attempt.id);else{act('group',attempt.group+1,null,attempt.id);document.querySelector('.dp-group-tabs')?.scrollIntoView({block:'start',behavior:'smooth'});}}}>{last?<CheckCircle2 size={16}/>:<ArrowRight size={16}/>} {last?(auto?'正在完成本轮…':attempt.passReason?'本轮已完成':'本部分过关'):'下一组'}</button></div>
   </section>;
@@ -60,7 +65,8 @@ export function About({go,production=false}){
     ['选择课本','在“我的课本”选择 Édito B1、Inspire A1、Édito A2 2022，或导入自己的词库。课本、词条和累计次数分别记录。'],
     ['选择 Part','进入“课本过关”，在页面底部目录任选 Part。首次打开创建卡片，未完成的卡片可继续；已过关的部分也能检测。'],
     ['点击整行翻词','点击单词所在整行查看中文和音标，再点击 ✔ 或 ✘ 自评。答案区与音标提前预留位置，翻开和收起时单词保持固定。'],
-    ['切换布局与顺序','卡片上方可立即切换两种布局。到“设置”开启主题内乱序，下一张新卡片或重测时生效，默认按教材顺序。'],
+    ['切换布局与顺序','卡片上方可立即切换布局和主题内顺序，默认按教材顺序。'],
+    ['查看助记','在课本过关或每日检测中点击序号下方的小灯泡，独立展开或收起助记，不改变翻词和自评；完整词库中点击词条即可查看。'],
     ['过关与重测','本轮全部词判断正确会自动过关，也可手动点击“本部分过关”。只标记当前 Part，不代替其他章节过关。点“再测本部分”开始新一轮，旧轮的对错次数保留。'],
     ['查看每个词的统计','进入“词库统计”的“学习记录”，点击 Part 展开每个词的累计正确与错误次数。同一轮重复点击同一个判定不加次数；改选会替换旧判定；新一轮可再次累计。'],
     ['每日检测与普通练习','每日检测只从本书已过关的 Part 抽取五组十词。最近已过关 Part 两组、前两个各一组，其余已过关 Part 一组，每组保持同一主题；词数不足时提示继续学习。首页的普通练习为第一单元 P1＋P2 五组十词，副进度各自独立。'],

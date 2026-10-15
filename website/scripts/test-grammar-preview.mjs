@@ -42,19 +42,19 @@ const bundle=await build({entryPoints:['src/grammar-preview/main.jsx'],bundle:tr
 const pause=()=>new Promise(r=>setTimeout(r,100));
 function app(saved){const d=new JSDOM('<div id="franlumi-root"></div>',{url:'http://localhost/franlumi-preview.html',runScripts:'dangerously',pretendToBeVisual:true});d.window.structuredClone=structuredClone;d.window.scrollTo=()=>{};d.window.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});d.window.localStorage.setItem('franmo-atelier:v2:guest','original-production-record');if(saved)d.window.localStorage.setItem(STORAGE_KEY,saved);d.window.eval(bundle.outputFiles[0].text);return d;}
 const click=async(d,selector)=>{assert.ok(d.window.document.querySelector(selector),selector);d.window.document.querySelector(selector).click();await pause();};
-test('settings theme and translation persist, export and preview import work and cancellation preserves records',async()=>{
+test('unified avatar settings remove space-specific controls and safely restore both-space backups',async()=>{
  let initial=recordAnswer(freshState(),exercises[0],exercises[0].correct);initial.space='grammar';initial.last.grammar='settings';
  const d=app(JSON.stringify(initial));try{
-  await pause();const doc=d.window.document;await click(d,'.gl-theme-options button:nth-child(2)');assert.ok(doc.querySelector('.gl-theme-dark'));assert.equal(doc.documentElement.dataset.previewTheme,'dark');
-  await click(d,'[aria-label="显示中文翻译"]');assert.equal(JSON.parse(d.window.localStorage.getItem(STORAGE_KEY)).translation,false);
+  await pause();const doc=d.window.document;await click(d,'.gl-avatar');await click(d,'.gl-profile-menu button');assert.equal(d.window.location.hash,'#/settings');await click(d,'.gl-theme-options button:nth-child(2)');assert.ok(doc.querySelector('.gl-theme-dark'));assert.equal(doc.documentElement.dataset.previewTheme,'dark');
+  assert.equal(doc.querySelector('[aria-label="显示中文翻译"]'),null);assert.equal(doc.querySelector('.gl-segments'),null);assert.equal(doc.querySelectorAll('.gl-bottom-nav button').length,5);assert.ok(!doc.querySelector('.gl-bottom-nav').textContent.includes('设置'));
   let exported;d.window.FranmotestNative={saveText:(filename,text)=>exported={filename,data:JSON.parse(text)}};
-  await click(d,'.gl-setting-actions .gl-primary');assert.equal(exported.data.state.theme,'dark');assert.equal(exported.data.state.answers[exercises[0].id],exercises[0].correct);
-  const upload=async data=>{const input=doc.querySelector('[aria-label="导入语法备份文件"]');Object.defineProperty(input,'files',{configurable:true,value:[{name:'grammar.json',size:1024,text:async()=>JSON.stringify(data)}]});input.dispatchEvent(new d.window.Event('change',{bubbles:true}));await pause();};
+  await click(d,'.gl-setting-actions .gl-primary');assert.equal(exported.data.grammar.theme,'dark');assert.equal(exported.data.grammar.answers[exercises[0].id],exercises[0].correct);
+  const upload=async data=>{const input=doc.querySelector('[aria-label="导入学习备份文件"]');Object.defineProperty(input,'files',{configurable:true,value:[{name:'grammar.json',size:1024,text:async()=>JSON.stringify(data)}]});input.dispatchEvent(new d.window.Event('change',{bubbles:true}));await pause();};
   const empty=freshState();empty.space='grammar';empty.theme='light';await upload(grammarBackup(empty));assert.ok(doc.querySelector('[aria-modal=true]'));assert.match(doc.querySelector('.gl-restore-summary').textContent,/已答题 0/);
   await click(d,'[aria-label="关闭恢复窗口"]');assert.equal(JSON.parse(d.window.localStorage.getItem(STORAGE_KEY)).topics[exercises[0].topic].good,1);
   await upload(grammarBackup(empty));await click(d,'.gl-restore-dialog .gl-primary');assert.equal(JSON.parse(d.window.localStorage.getItem(STORAGE_KEY)).theme,'light');assert.deepEqual(JSON.parse(d.window.localStorage.getItem(STORAGE_KEY)).answers,{});assert.equal(doc.querySelector('[aria-modal=true]'),null);
   await upload({format:'wrong'});assert.equal(doc.querySelector('[aria-modal=true]'),null);assert.match(doc.querySelector('.gl-toast').textContent,/导入未完成/);
-  const tutorial=[...doc.querySelectorAll('button')].find(b=>b.textContent.includes('语法之光使用教程'));tutorial.click();await pause();assert.match(doc.querySelector('.gl-page-intro h1').textContent,/使用教程/);assert.equal(doc.querySelectorAll('.gl-guide-number').length,8);
+  const tutorial=[...doc.querySelectorAll('button')].find(b=>b.textContent.includes('语法之光使用教程'));tutorial.click();await pause();assert.match(doc.querySelector('.gl-page-intro h1').textContent,/使用教程/);assert.equal(doc.querySelectorAll('.gl-guide-number').length,9);
   assert.equal(d.window.localStorage.getItem('franmo-atelier:v2:guest'),'original-production-record');
  }finally{d.window.close();}
 });
@@ -79,7 +79,7 @@ test('local App preview remembers space, stores bookmarks and scores, preserves 
 
 test('practice picker filters questions, resets position, preserves answers and remembers the selected grammar',async()=>{
  let d=app();try{
-  await pause();await click(d,'.gl-space-grammar');await click(d,'.gl-bottom-nav button:nth-child(3)');await click(d,'[aria-label="选择练习语法"]');
+  await pause();await click(d,'.gl-space-grammar');await click(d,'.gl-bottom-nav button:nth-child(4)');await click(d,'[aria-label="选择练习语法"]');
   let doc=d.window.document;assert.equal(doc.querySelectorAll('.choice-dropdown [role=option]').length,37);
   const choose=async name=>{const option=[...doc.querySelectorAll('.choice-dropdown [role=option]')].find(n=>n.textContent.includes(name));assert.ok(option);option.click();await pause();};
   await choose('疑问句');assert.match(doc.querySelector('.gl-exercise-meta').textContent,/1 \/ 6/);assert.match(doc.querySelector('.gl-practice-info').textContent,/疑问句/);assert.equal(doc.querySelector('.gl-question-translation').hidden,true);await click(d,'.gl-question button');assert.equal(doc.querySelector('.gl-question-translation').hidden,false);await click(d,'.gl-question button');assert.equal(doc.querySelector('.gl-question-translation').hidden,true);await click(d,'.gl-question button');await click(d,'.gl-answer-options button');

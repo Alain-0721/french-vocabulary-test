@@ -53,13 +53,22 @@ export async function handleApi(request,env,fetcher=fetch){
   const text=await request.text();if(new TextEncoder().encode(text).length>16_000_000)return json({error:'记录超过 16 MB，请导出备份。'},413);
   const body=JSON.parse(text),data=path==='/api/progress'?migrateClassic(body.data):restoreMulti(body.data);
   if(!data||!(body.etag===null||typeof body.etag==='string'&&body.etag.length>0&&body.etag.length<=200))return json({error:'记录校验失败，原记录未覆盖。'},400);
-  // Older APKs know only vocabulary. Preserve grammar when they save a compatible snapshot.
-  if(!Object.hasOwn(body.data,'grammar')){
+  // Preserve spaces that an older client cannot represent. An explicit tense
+  // snapshot from a current client may still reset its own records normally.
+  const missingGrammar=!Object.hasOwn(body.data,'grammar');
+  const missingTense=!missingGrammar&&!Object.hasOwn(body.data.grammar,'tense');
+  if(missingGrammar||missingTense){
    const existing=await fetcher(base+'/rest/v1/learning_records?select=data,etag&user_id=eq.'+encodeURIComponent(user.id),{headers});
    if(!existing.ok)return json({error:'暂时无法读取完整记录，原记录未覆盖。'},503);
    const records=await existing.json(),previous=records[0]?.data&&restoreMulti(records[0].data);
    if(records[0]?.data&&!previous)return json({error:'云端记录校验失败，原记录未覆盖。'},503);
-   if(previous)data.grammar=previous.grammar;
+   if(previous){
+    if(missingGrammar)data.grammar=previous.grammar;
+    else{
+     data.grammar.tense=previous.grammar.tense;
+     for(const field of ['practiceMode','recordsMode'])if(!Object.hasOwn(body.data.grammar,field))data.grammar[field]=previous.grammar[field];
+    }
+   }
   }
   const response=await fetcher(base+'/rest/v1/rpc/save_learning_record',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({p_data:data,p_expected_etag:body.etag})});
   if(!response.ok)return json({error:'暂时无法同步，记录仍保存在本机。'},503);

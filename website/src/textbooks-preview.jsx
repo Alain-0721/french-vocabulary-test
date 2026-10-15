@@ -50,21 +50,23 @@ function Cover({book,small=false}) {
   </div>;
 }
 
-export function App({production=false,previewPage,onPreviewNavigate,learning:providedLearning}) {
+export function App({production=false,previewPage,onPreviewNavigate,learning:providedLearning,embedded=false,commonTheme}) {
   const localLearning=useMultiLearning(production&&!providedLearning),learning=providedLearning||localLearning;
+  const connected=production||!!providedLearning?.localPreview;
+  const visibleNav=embedded?nav.filter(([id])=>id!=='settings'):nav;
   const [auth,setAuth]=useState(false),[switchingAccount,setSwitchingAccount]=useState(false);
   function closeAccount(){setAuth(false);setSwitchingAccount(false);}
   function openAccount(switching=false){if(navigator.onLine===false){setToast("账号登录与修改资料需要联网，当前检测记录会保存在本机。");return;}setSwitchingAccount(switching);setAuth(true);}
   useEffect(()=>{if(!providedLearning&&(learning.authCallback?.type==='recovery'||learning.authCallback?.type==='invite'))setAuth(true);},[learning.authCallback,providedLearning]);
   const [library]=useState(()=>{try{return loadImportedLibrary(window.localStorage);}catch{return {books:[],error:'浏览器无法保存词库，可取消记住词库临时使用。'};}});
-  const [books,setBooks]=useLearningSlice(learning,'books',()=>[...initialBooks.map(b=>library.books.find(saved=>saved.id===b.id)||b),...library.books.filter(b=>!initialBooks.some(i=>i.id===b.id))],production);
-  const [bookId,setBookId]=useLearningSlice(learning,'bookId',()=>{const selected=new URLSearchParams(location.search).get('book');return books.some(b=>b.id===selected)?selected:'edito-b1';},production);
-  const [settings,setSettings]=useLearningSlice(learning,'settings',()=>{try{return core.loadSettings(window.localStorage);}catch{return {...core.DEFAULT_SETTINGS};}},production);
-  const [theme,setTheme]=useLearningSlice(learning,'theme',()=>{try{const t=localStorage.getItem('atelier:design-theme:v1');return ['light','dark','system'].includes(t)?t:'light';}catch{return 'light';}},production);
-  const [secondary,setSecondary]=useLearningSlice(learning,'secondary',()=>({}),production),[dailyProblem,setDailyProblem]=useState(''),[backupPreview,setBackupPreview]=useState(null);
+  const [books,setBooks]=useLearningSlice(learning,'books',()=>[...initialBooks.map(b=>library.books.find(saved=>saved.id===b.id)||b),...library.books.filter(b=>!initialBooks.some(i=>i.id===b.id))],connected);
+  const [bookId,setBookId]=useLearningSlice(learning,'bookId',()=>{const selected=new URLSearchParams(location.search).get('book');return books.some(b=>b.id===selected)?selected:'edito-b1';},connected);
+  const [settings,setSettings]=useLearningSlice(learning,'settings',()=>{try{return core.loadSettings(window.localStorage);}catch{return {...core.DEFAULT_SETTINGS};}},connected);
+  const [theme,setTheme]=useLearningSlice(learning,'theme',()=>{try{const t=localStorage.getItem('atelier:design-theme:v1');return ['light','dark','system'].includes(t)?t:'light';}catch{return 'light';}},connected);
+  const [secondary,setSecondary]=useLearningSlice(learning,'secondary',()=>({}),connected),[dailyProblem,setDailyProblem]=useState(''),[backupPreview,setBackupPreview]=useState(null);
   const [previewAccount,setPreviewAccount]=useState({id:'preview-alain',name:'Alain'}),[previewAccountDialog,setPreviewAccountDialog]=useState(false);
   const backupInput=useRef(null);
-  const [progress,setProgress]=useLearningSlice(learning,'progress',()=>freshProgress(books,{shuffle:settings.shuffle}),production),[page,setPage]=useState(()=>previewPage||initialPage());
+  const [progress,setProgress]=useLearningSlice(learning,'progress',()=>freshProgress(books,{shuffle:settings.shuffle}),connected),[page,setPage]=useState(()=>previewPage||initialPage());
   useEffect(()=>{if(previewPage&&Object.hasOwn(pageTitles,previewPage))setPage(previewPage);},[previewPage]);
   const [importing,setImporting]=useState(null);
   function changeSettings(patch){const next={...settings,...patch};setSettings(next);try{if(!production)core.saveSettings(window.localStorage,next);}catch{setToast('设置已在本次预览生效，浏览器暂时无法保存。');}}
@@ -116,7 +118,7 @@ export function App({production=false,previewPage,onPreviewNavigate,learning:pro
     return ()=>{window.removeEventListener('pointerdown',fn);window.removeEventListener('keydown',esc);};
   },[switcher]);
   useEffect(()=>{if(!toast)return;const timer=setTimeout(()=>setToast(''),4200);return ()=>clearTimeout(timer);},[toast]);
-  useEffect(()=>{const media=matchMedia('(prefers-color-scheme: dark)'),apply=()=>{document.documentElement.dataset.previewTheme=theme==='system'?(media.matches?'dark':'light'):theme;};apply();media.addEventListener('change',apply);return ()=>media.removeEventListener('change',apply);},[theme]);
+  useEffect(()=>{const media=matchMedia('(prefers-color-scheme: dark)'),apply=()=>{document.documentElement.dataset.previewTheme=(commonTheme||theme)==='system'?(media.matches?'dark':'light'):(commonTheme||theme);};apply();media.addEventListener('change',apply);return ()=>media.removeEventListener('change',apply);},[theme,commonTheme]);
   useEffect(()=>{if(page!=='daily'||!ready(book))return;generateDaily();},[page,bookId,allowedStamp]);
   useEffect(()=>{if(page!=='daily'||!ready(book))return;const timer=setInterval(()=>{if(secondary[bookId]?.daily?.day!==day())generateDaily();},60000);return ()=>clearInterval(timer);},[page,bookId,allowedStamp,secondary[bookId]?.daily?.day]);
   useEffect(()=>{if(page!=='practice'||!ready(book))return;setSecondary(old=>old[bookId]?.practice?old:{...old,[bookId]:{...old[bookId],practice:createPractice(book)}});},[page,bookId]);
@@ -154,7 +156,7 @@ export function App({production=false,previewPage,onPreviewNavigate,learning:pro
     <aside className="dp-sidebar">
       <a className="dp-brand" href="#/home" onClick={e=>{e.preventDefault();go('home');}}><span className="dp-brand-icon"><BookOpen size={24}/></span><span>FranLumi<small>法语词汇学习</small></span><span className="brand-dot"/></a>
       <div className="dp-nav-label">MON ESPACE<span>学习空间</span></div>
-      <nav aria-label="主要导航">{nav.map(([id,label,Icon])=><button key={id} className={`dp-nav-item ${navigationPage(page)===id?'active':''}`} onClick={()=>go(id)}><Icon size={19}/><span>{id==='settings'?'设置与备份':label}</span>{navigationPage(page)===id&&<span className="nav-dot"/>}</button>)}</nav>
+      <nav aria-label="主要导航">{visibleNav.map(([id,label,Icon])=><button key={id} className={`dp-nav-item ${navigationPage(page)===id?'active':''}`} onClick={()=>go(id)}><Icon size={19}/><span>{id==='settings'?'设置与备份':label}</span>{navigationPage(page)===id&&<span className="nav-dot"/>}</button>)}</nav>
       <div className="dp-side-course"><div className="side-course-label">当前学习课本<Bookmark size={13}/></div><div className={`side-course-icon ${book.color}`}><BookOpen size={24}/></div><strong>{book.name}</strong><small>{ready(book)?`${book.bank.length} 词 · 独立学习进度`:'词库尚未添加'}</small><button onClick={()=>go('books')}>查看我的课本<ArrowUpRight size={14}/></button></div>
       <div className="dp-side-bottom">{!production&&<button onClick={()=>setNotes(true)}><Info size={17}/>设计说明</button>}<div className="dp-user">{production&&(learning.user||learning.offlineAccount)?<AccountAvatar user={learning.user||learning.offlineAccount}/>:<span><GraduationCap size={20}/></span>}<div><strong>{production?(learning.user?.name||learning.offlineAccount?.name||'游客学习'):'预览模式'}</strong><small>{production?({loading:'正在恢复记录',local:'已保存到本机',memory:'保存受限，请导出备份',pending:'等待云端同步',saving:'正在同步',cloud:'已同步到云端',offline:'本机保存，等待同步','offline-account':'离线账号记录 · 未验证登录',conflict:'同步冲突，请到设置处理'})[learning.sync]:'体验课本切换与检测'}</small></div></div></div>
     </aside>
@@ -182,7 +184,7 @@ export function App({production=false,previewPage,onPreviewNavigate,learning:pro
           <footer className="dp-footer"><span>Petit à petit, on va loin.</span><span>Édito B2 为待接入示例；自定义笔记使用演示词表。</span></footer>
         </>}
         {page==='guide'&&<VocabularyGuide production={production} onImport={()=>setImporting({target:''})} notify={setToast}/>}
-        {page==='settings'&&<><div className="dp-page-heading"><div><div className="dp-eyebrow">MES PRÉFÉRENCES</div><h1>设置与备份</h1><p>备份学习记录，调整界面外观、卡片布局与词汇顺序。</p></div></div><SettingsAndBackup production={production} learning={learning} onAccount={()=>openAccount()} onGuest={()=>{const guest=learning.guest();if(!guest){setToast('没有有效游客记录。');return;}setBackupPreview({...readBackup(guest,books,progress),filename:'本机游客记录'});}} book={book} settings={settings} onChange={changeSettings} theme={theme} onTheme={changeTheme} onFullBackup={()=>downloadJSON(production?learning.bundle:fullBackup(books,progress,settings,bookId,secondary,theme),production?'franmo-multibook-backup.json':'atelier-multibook-preview-backup.json')} onMainBackup={()=>downloadJSON(mainBackup(book,state),`${book.id}-${production?'':'preview-'}main-progress.json`)} onImport={()=>backupInput.current.click()} go={go}/></>}
+        {page==='settings'&&!embedded&&<><div className="dp-page-heading"><div><div className="dp-eyebrow">MES PRÉFÉRENCES</div><h1>设置与备份</h1><p>备份学习记录，调整界面外观、卡片布局与词汇顺序。</p></div></div><SettingsAndBackup production={production} learning={learning} onAccount={()=>openAccount()} onGuest={()=>{const guest=learning.guest();if(!guest){setToast('没有有效游客记录。');return;}setBackupPreview({...readBackup(guest,books,progress),filename:'本机游客记录'});}} book={book} settings={settings} onChange={changeSettings} theme={theme} onTheme={changeTheme} onFullBackup={()=>downloadJSON(production?learning.bundle:fullBackup(books,progress,settings,bookId,secondary,theme),production?'franmo-multibook-backup.json':'atelier-multibook-preview-backup.json')} onMainBackup={()=>downloadJSON(mainBackup(book,state),`${book.id}-${production?'':'preview-'}main-progress.json`)} onImport={()=>backupInput.current.click()} go={go}/></>}
         {page==='about'&&<><div className="dp-page-heading"><div><div className="dp-eyebrow">FRANMOTEST</div><h1>网站介绍与使用教程</h1></div></div><About go={go} production={production}/></>}
         {!['home','books','guide','settings','about'].includes(page)&&<><div className="dp-context"><button onClick={()=>go('books')}><ArrowLeft size={14}/>我的课本</button><span>/</span><strong>{book.name}</strong><span className="context-level">{book.level}</span><span className="context-status">{bookStatus(book)}</span></div><div className="dp-page-heading inner"><div><div className="dp-eyebrow">{page==='study'?'APPRENDRE':page==='daily'?'RÉVISER':page==='records'?'MES PROGRÈS':'LE VOCABULAIRE'}</div><h1>{pageTitles[page]}</h1><p>{page==='study'?'按主题检测，点击整行翻词；页面底部可任选 Part。':page==='daily'?'只复习当前课本已过关的内容，不混入其他课本词汇。':page==='practice'?'第一单元 P1＋P2 混合练习，五组各十词；累计独立，不改变课本过关。':'浏览完整词库，按 Part 查看每个词的累计正确与错误次数。'}</p></div>{page!=='study'&&<button className="dp-button" onClick={()=>go('books')}><Library size={15}/>切换课本</button>}</div>
         {!ready(book)?<section className="dp-unavailable"><Cover book={book}/><div><span className="dp-status pending">词库待添加</span><h2>课本已选好，下一步添加词库。</h2><p>{book.name} 目前只有课本信息。导入对应的词条与章节后，就能开始检测并保存这本课本自己的进度。</p><button className="dp-button primary" onClick={()=>setImporting({target:book.id})}><Upload size={16}/>一键导入词库</button><button className="dp-text-button" onClick={()=>choose('edito-b1')}>先体验 Édito B1<ArrowRight size={14}/></button></div></section>:
@@ -197,7 +199,7 @@ export function App({production=false,previewPage,onPreviewNavigate,learning:pro
         </>}
       </div>
     </main>
-    <nav className="dp-mobile-nav" aria-label="手机导航">{nav.map(([id,label,Icon])=><button key={id} className={navigationPage(page)===id?'active':''} onClick={()=>go(id)}><Icon size={20}/><span>{label}</span></button>)}</nav>
+    <nav className="dp-mobile-nav" aria-label="手机导航">{visibleNav.map(([id,label,Icon])=><button key={id} className={navigationPage(page)===id?'active':''} onClick={()=>go(id)}><Icon size={20}/><span>{label}</span></button>)}</nav>
     <input className="vi-hidden-file" ref={backupInput} type="file" accept="application/json,.json" aria-label="导入学习进度文件" onChange={prepareBackup}/>
     {!production&&previewAccountDialog&&<Dialog title="体验账号菜单" close={()=>setPreviewAccountDialog(false)}><p className="dialog-intro">这里演示登录后的头像菜单；真实登录与保持登录在正式网站使用。</p><div className="preview-account-options">{[{id:'preview-alain',name:'Alain'},{id:'preview-camille',name:'Camille'}].map(account=><button key={account.id} onClick={()=>{setPreviewAccount(account);setPreviewAccountDialog(false);setToast('已切换演示账号；本地预览不会改动正式账号。');}}><strong>{account.name}</strong><small>选择演示账号</small></button>)}</div><a className="dp-button" href={PRODUCTION+'/#/settings'} target="_blank" rel="noreferrer">前往正式站登录<ArrowUpRight size={15}/></a></Dialog>}
     {backupPreview&&<Dialog title={production?"恢复学习记录":"恢复预览学习记录"} close={()=>setBackupPreview(null)}><div className="dp-design-notes"><p><b>{backupPreview.filename}</b></p><p>{backupPreview.label} · {backupPreview.books.filter(b=>b.bank).length} 本已就绪课本</p><p>已校验词条与判定次数。{production?'确认后替换对应课本的学习记录，建议先导出当前备份。':'确认后替换对应课本的预览进度；正式站记录不变。'}</p></div><div className="dialog-actions"><button className="dp-button" onClick={()=>setBackupPreview(null)}>取消</button><button className="dp-button primary" onClick={restoreBackup}>{production?'恢复记录':'恢复到预览'}</button></div></Dialog>}

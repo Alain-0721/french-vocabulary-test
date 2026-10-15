@@ -37,3 +37,6 @@ android-app/*.apk
 android-app/*.aab
 *.jks
 *.keystore
+
+# User-provided textbook PDFs and local reference documents
+texte/

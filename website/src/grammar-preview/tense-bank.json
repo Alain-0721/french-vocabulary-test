@@ -1,0 +1,3439 @@
+{
+  "groups": [
+    {
+      "id": "now",
+      "label": "现在与日常表达"
+    },
+    {
+      "id": "past",
+      "label": "过去的叙述"
+    },
+    {
+      "id": "future",
+      "label": "将来与计划"
+    },
+    {
+      "id": "mood",
+      "label": "条件与主观表达"
+    },
+    {
+      "id": "synthesis",
+      "label": "综合运用"
+    },
+    {
+      "id": "extension",
+      "label": "补充学习"
+    }
+  ],
+  "topics": [
+    {
+      "id": "present",
+      "zh": "现在时",
+      "fr": "Le présent",
+      "level": "A1",
+      "group": "now",
+      "description": "表达现在的事实、习惯与持续状态。",
+      "chapter": 5,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "现在时是法语动词变位的地基：其他大部分时态都由它推导（未完成过去时来自 nous 词干、虚拟式来自 ils 词干）。它不只表示「现在」，还承担五类常见用途："
+            },
+            {
+              "t": "ol",
+              "x": [
+                "**此刻发生的事**：En ce moment, je travaille à la maison.（现在我在家办公。）",
+                "**习惯与反复**：Je prends le métro tous les matins.（我每天早上乘地铁。）",
+                "**普遍真理**：L’eau bout à 100 °C.（水在 100 摄氏度沸腾。）",
+                "**近未来与确定安排**（尤其口语）：Demain, je pars à Lyon.（明天我去里昂。）",
+                "**持续到现在的动作**（与 depuis 连用）：J’apprends le français depuis deux ans.（我学法语已经两年了。）"
+              ]
+            },
+            {
+              "t": "fr",
+              "f": "En ce moment, je travaille à la maison.",
+              "z": "现在我在家办公。"
+            },
+            {
+              "t": "fr",
+              "f": "Je prends le métro tous les matins.",
+              "z": "我每天早上乘地铁。"
+            },
+            {
+              "t": "fr",
+              "f": "Demain, je pars à Lyon. / J’apprends le français depuis deux ans.",
+              "z": "明天我去里昂。/ 我学法语已经两年了。"
+            }
+          ]
+        },
+        {
+          "title": "构成：三组规则动词",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "动词组",
+                "例词",
+                "词尾规律",
+                "示例（je / nous / ils）"
+              ],
+              "rows": [
+                [
+                  "第一组 -er",
+                  "parler 说",
+                  "去掉 -er + -e, -es, -e, -ons, -ez, -ent",
+                  "je parle / nous parlons / ils parlent"
+                ],
+                [
+                  "第二组 -ir",
+                  "finir 完成",
+                  "去掉 -ir + -is, -is, -it, -issons, -issez, -issent",
+                  "je finis / nous finissons / ils finissent"
+                ],
+                [
+                  "第三组 vendre 模式",
+                  "vendre 出售",
+                  "去掉 -re + -s, -s, (无), -ons, -ez, -ent",
+                  "je vends / nous vendons / ils vendent"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.16,
+                0.16,
+                0.38,
+                0.3
+              ]
+            },
+            {
+              "t": "p",
+              "x": "注意第三组并不完全规则，同一个词尾模式还有 partir / sortir / dormir 一类 -ir 动词（不按 finir 变化）。记动词时建议「按模式成组记」：finir 组（choisir, réussir, grandir…）与 partir 组（sortir, dormir, sentir, servir…）分开背。"
+            }
+          ]
+        },
+        {
+          "title": "拼写变化（只在部分人称出现）",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "变化类型",
+                "代表动词",
+                "je / tu 形式",
+                "nous / vous 形式"
+              ],
+              "rows": [
+                [
+                  "-ger：nous 保留 e",
+                  "manger 吃",
+                  "je mange",
+                  "nous mangeons"
+                ],
+                [
+                  "-cer：nous 变 ç",
+                  "commencer 开始",
+                  "je commence",
+                  "nous commençons"
+                ],
+                [
+                  "-yer：y → i",
+                  "payer 支付；essayer 尝试",
+                  "je paie（也作 je paye）/ j’essaie（也作 j’essaye）",
+                  "nous payons / nous essayons"
+                ],
+                [
+                  "-eler / -eter：双写辅音",
+                  "appeler 呼叫；jeter 扔",
+                  "j’appelle / je jette",
+                  "nous appelons / nous jetons"
+                ],
+                [
+                  "-e- + 单辅音：加 è",
+                  "acheter 购买；lever 抬起",
+                  "j’achète / je lève",
+                  "nous achetons / nous levons"
+                ],
+                [
+                  "-é- + 单辅音：变 è",
+                  "préférer 更喜欢；espérer 希望",
+                  "je préfère / j’espère",
+                  "nous préférons / nous espérons"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.24,
+                0.28,
+                0.28,
+                0.2
+              ]
+            }
+          ]
+        },
+        {
+          "title": "22 个高频不规则动词现在时（需熟记）",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "动词",
+                "je",
+                "tu",
+                "il / elle / on",
+                "nous",
+                "vous",
+                "ils / elles"
+              ],
+              "rows": [
+                [
+                  "être 是",
+                  "suis",
+                  "es",
+                  "est",
+                  "sommes",
+                  "êtes",
+                  "sont"
+                ],
+                [
+                  "avoir 有",
+                  "ai",
+                  "as",
+                  "a",
+                  "avons",
+                  "avez",
+                  "ont"
+                ],
+                [
+                  "aller 去",
+                  "vais",
+                  "vas",
+                  "va",
+                  "allons",
+                  "allez",
+                  "vont"
+                ],
+                [
+                  "faire 做",
+                  "fais",
+                  "fais",
+                  "fait",
+                  "faisons",
+                  "faites",
+                  "font"
+                ],
+                [
+                  "dire 说",
+                  "dis",
+                  "dis",
+                  "dit",
+                  "disons",
+                  "dites",
+                  "disent"
+                ],
+                [
+                  "prendre 拿",
+                  "prends",
+                  "prends",
+                  "prend",
+                  "prenons",
+                  "prenez",
+                  "prennent"
+                ],
+                [
+                  "venir 来",
+                  "viens",
+                  "viens",
+                  "vient",
+                  "venons",
+                  "venez",
+                  "viennent"
+                ],
+                [
+                  "voir 看见",
+                  "vois",
+                  "vois",
+                  "voit",
+                  "voyons",
+                  "voyez",
+                  "voient"
+                ],
+                [
+                  "pouvoir 能",
+                  "peux",
+                  "peux",
+                  "peut",
+                  "pouvons",
+                  "pouvez",
+                  "peuvent"
+                ],
+                [
+                  "vouloir 想要",
+                  "veux",
+                  "veux",
+                  "veut",
+                  "voulons",
+                  "voulez",
+                  "veulent"
+                ],
+                [
+                  "devoir 应该",
+                  "dois",
+                  "dois",
+                  "doit",
+                  "devons",
+                  "devez",
+                  "doivent"
+                ],
+                [
+                  "savoir 知道",
+                  "sais",
+                  "sais",
+                  "sait",
+                  "savons",
+                  "savez",
+                  "savent"
+                ],
+                [
+                  "mettre 放",
+                  "mets",
+                  "mets",
+                  "met",
+                  "mettons",
+                  "mettez",
+                  "mettent"
+                ],
+                [
+                  "partir 出发",
+                  "pars",
+                  "pars",
+                  "part",
+                  "partons",
+                  "partez",
+                  "partent"
+                ],
+                [
+                  "sortir 出去",
+                  "sors",
+                  "sors",
+                  "sort",
+                  "sortons",
+                  "sortez",
+                  "sortent"
+                ],
+                [
+                  "dormir 睡觉",
+                  "dors",
+                  "dors",
+                  "dort",
+                  "dormons",
+                  "dormez",
+                  "dorment"
+                ],
+                [
+                  "écrire 写",
+                  "écris",
+                  "écris",
+                  "écrit",
+                  "écrivons",
+                  "écrivez",
+                  "écrivent"
+                ],
+                [
+                  "lire 读",
+                  "lis",
+                  "lis",
+                  "lit",
+                  "lisons",
+                  "lisez",
+                  "lisent"
+                ],
+                [
+                  "boire 喝",
+                  "bois",
+                  "bois",
+                  "boit",
+                  "buvons",
+                  "buvez",
+                  "boivent"
+                ],
+                [
+                  "connaître 认识",
+                  "connais",
+                  "connais",
+                  "connaît",
+                  "connaissons",
+                  "connaissez",
+                  "connaissent"
+                ],
+                [
+                  "ouvrir 打开",
+                  "ouvre",
+                  "ouvres",
+                  "ouvre",
+                  "ouvrons",
+                  "ouvrez",
+                  "ouvrent"
+                ],
+                [
+                  "recevoir 收到",
+                  "reçois",
+                  "reçois",
+                  "reçoit",
+                  "recevons",
+                  "recevez",
+                  "reçoivent"
+                ]
+              ],
+              "small": true,
+              "widths": [
+                0.16,
+                0.14,
+                0.14,
+                0.15,
+                0.14,
+                0.14,
+                0.13
+              ]
+            }
+          ]
+        },
+        {
+          "title": "时间标志词",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "现在：maintenant, en ce moment, actuellement, aujourd’hui, là",
+                "频率：toujours, souvent, parfois, rarement, jamais（配合 ne）, tous les jours, chaque semaine, le lundi（每周一）",
+                "持续：depuis + 时间/起点（J’habite ici depuis 2019.）"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 中文「我在吃饭」可以直接说 Je mange；想强调「正在做」用 Je suis en train de manger，不存在「Je suis mangeant」。② depuis 与现在时搭配时表示「从过去持续到现在」：J’apprends le français depuis deux ans. ✓（不能说 J’ai appris... depuis deux ans 来表示「学到现在」）。③ 拼写变化动词只是「为了发音」的调整，别把变化延伸到所有人称：nous levons（不是 lèvons）。"
+            }
+          ]
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "near-future",
+      "zh": "最近将来时",
+      "fr": "Le futur proche",
+      "level": "A1",
+      "group": "future",
+      "description": "用 aller + 不定式表达计划或有迹象的将来。",
+      "chapter": 6,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "视角",
+              "x": "最近将来时与现在的计划或迹象联系紧密，并不只用于时间很近的事情；简单将来时也可表示马上发生的事。时间距离不是唯一标准。"
+            },
+            {
+              "t": "p",
+              "x": "表示「马上要做」或「已计划好」的将来，是口语中最常用的将来表达。"
+            },
+            {
+              "t": "ul",
+              "x": [
+                "**马上发生**：Attends ! Je vais descendre.（等等！我这就下来。）",
+                "**计划与打算**：Nous allons visiter le musée demain.（我们明天打算参观博物馆。）",
+                "**迹象预示（马上要发生）**：Regarde les nuages ! Il va pleuvoir.（看这些云！要下雨了。）"
+              ]
+            },
+            {
+              "t": "fr",
+              "f": "Je vais partir dans cinq minutes.",
+              "z": "我五分钟后就走。"
+            },
+            {
+              "t": "fr",
+              "f": "Nous allons visiter le musée demain.",
+              "z": "我们明天打算参观博物馆。"
+            },
+            {
+              "t": "fr",
+              "f": "Il va pleuvoir.",
+              "z": "要下雨了。"
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**aller 的现在时 + 动词原形**：je vais / tu vas / il va / nous allons / vous allez / ils vont + 动词原形。"
+            },
+            {
+              "t": "fr",
+              "f": "Je vais prendre le train. / Vous allez aimer ce film.",
+              "z": "我要坐火车。/ 你们会喜欢这部电影的。"
+            }
+          ]
+        },
+        {
+          "title": "与简单将来时的区别",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "对比项",
+                "最近将来时",
+                "简单将来时"
+              ],
+              "rows": [
+                [
+                  "与现在的联系",
+                  "与当前计划、意图或迹象联系紧密",
+                  "把事情放在将来参照下陈述"
+                ],
+                [
+                  "语体",
+                  "口语中常见，也用于书面",
+                  "口语与书面都可使用"
+                ],
+                [
+                  "同一时间",
+                  "Je vais partir demain.",
+                  "Je partirai demain."
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.15,
+                0.42,
+                0.43
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 代词放在动词原形前：「Je vais le faire.」（不是 Je vais faire le）② 否定包住 aller：「Je ne vais pas partir.」③ aller 变位别漏：nous allons、vous allez、ils vont。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u12-p1-g34"
+      ]
+    },
+    {
+      "id": "recent-past",
+      "zh": "最近过去时",
+      "fr": "Le passé récent",
+      "level": "A1",
+      "group": "past",
+      "description": "用 venir de + 不定式表达刚发生的动作。",
+      "chapter": 7,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "表示「刚刚发生」，动作与现在距离极近，常与「还没…」「正好…」呼应。"
+            },
+            {
+              "t": "fr",
+              "f": "Je viens d’arriver.",
+              "z": "我刚到。"
+            },
+            {
+              "t": "fr",
+              "f": "Il vient de partir.",
+              "z": "他刚走。"
+            },
+            {
+              "t": "fr",
+              "f": "Nous venons de finir le travail.",
+              "z": "我们刚做完工作。"
+            },
+            {
+              "t": "fr",
+              "f": "Elle vient de téléphoner à sa mère.",
+              "z": "她刚给她妈妈打了电话。"
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**venir 的现在时 + de + 动词原形**：viens / viens / vient / venons / venez / viennent + de + inf。"
+            }
+          ]
+        },
+        {
+          "title": "辨析：venir de + 动词 vs venir de + 地点",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "结构",
+                "含义",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "venir de + 动词原形",
+                  "刚刚做了某事",
+                  "Je viens de voir Marc.（我刚看见马克）"
+                ],
+                [
+                  "venir de + 城市/国家",
+                  "来自某地",
+                  "Je viens de Chine.（我来自中国）"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.28,
+                0.26,
+                0.46
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① de 固定不变：「Je viens de partir.」✓（不是 du / des）② 与复合过去时分清：Il vient de partir（刚走，人可能还在附近）≠ Il est parti（走了，强调结果）。③ 不能说「Je viens de partir depuis deux jours」。"
+            }
+          ]
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "ongoing",
+      "zh": "现在进行时",
+      "fr": "Être en train de",
+      "level": "A2",
+      "group": "now",
+      "description": "把注意力放在动作正在进行的过程中。",
+      "chapter": 8,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "强调「此刻正忙于某动作」，回答「你在干嘛？」时最自然。"
+            },
+            {
+              "t": "fr",
+              "f": "Qu’est-ce que tu fais ? — Je suis en train de préparer le dîner.",
+              "z": "你在干嘛？——我在准备晚饭。"
+            },
+            {
+              "t": "fr",
+              "f": "Elle est en train de téléphoner, rappelle plus tard.",
+              "z": "她正在打电话，晚点再打吧。"
+            }
+          ]
+        },
+        {
+          "title": "构成与辨析",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**être en train de + 动词原形**。它与现在时的区别只在「强调程度」：现在时已可表示正在进行（Je mange），en train de 把镜头拉近到过程中。"
+            },
+            {
+              "t": "table",
+              "headers": [
+                "表达",
+                "语感",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "现在时",
+                  "陈述事实，也可表示正好在做",
+                  "Je prépare le dîner.（我在准备晚饭）"
+                ],
+                [
+                  "en train de",
+                  "强调「正在这个过程中」",
+                  "Je suis en train de préparer le dîner.（我正忙着准备晚饭呢）"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.2,
+                0.36,
+                0.44
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 不用于状态动词：「✗ Je suis en train de savoir」；② 过去场景用未完成过去时版：「J’étais en train de dormir quand tu as appelé.」（你打电话时我正在睡觉）；③ en train de 后面只能接动词原形。"
+            }
+          ]
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "imperative",
+      "zh": "命令式",
+      "fr": "L’impératif",
+      "level": "A1",
+      "group": "now",
+      "description": "给出指示、建议与禁止。",
+      "chapter": 9,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**命令与指示**：Fermez la porte !（把门关上！）",
+                "**建议与鼓励**：Prends le temps de réfléchir.（慢慢想，别急。）",
+                "**说明书 / 菜谱 / 指路**：Tournez à droite, puis continuez tout droit.（右转，然后一直往前走。）",
+                "**禁止**（否定式）：Ne fumez pas ici.（请勿在此吸烟。）"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "构成：只有三个主语形式",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "直接把现在时的 tu / nous / vous 形式去掉主语即可。注意两点：**-er 动词的 tu 形式去掉词尾 s**；être / avoir / savoir 特殊。"
+            },
+            {
+              "t": "table",
+              "headers": [
+                "动词",
+                "tu",
+                "nous",
+                "vous"
+              ],
+              "rows": [
+                [
+                  "parler 说",
+                  "Parle !",
+                  "Parlons !",
+                  "Parlez !"
+                ],
+                [
+                  "finir 完成",
+                  "Finis !",
+                  "Finissons !",
+                  "Finissez !"
+                ],
+                [
+                  "vendre 卖",
+                  "Vends !",
+                  "Vendons !",
+                  "Vendez !"
+                ],
+                [
+                  "aller 去",
+                  "Va !",
+                  "Allons !",
+                  "Allez !"
+                ],
+                [
+                  "être 是",
+                  "Sois !",
+                  "Soyons !",
+                  "Soyez !"
+                ],
+                [
+                  "avoir 有",
+                  "Aie !",
+                  "Ayons !",
+                  "Ayez !"
+                ],
+                [
+                  "savoir 知道",
+                  "Sache !",
+                  "Sachons !",
+                  "Sachez !"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.22,
+                0.26,
+                0.26,
+                0.26
+              ]
+            }
+          ]
+        },
+        {
+          "title": "代词的位置（重点）",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**肯定命令式**：代词放在动词后面，用连字符连接；me / te 变成 moi / toi。",
+                "**否定命令式**：代词回到动词前面（与普通语序一致）。"
+              ]
+            },
+            {
+              "t": "fr",
+              "f": "Donne-le-moi ! / Parle-lui ! / Lève-toi !",
+              "z": "把它给我！/ 跟他说！/ 起来！"
+            },
+            {
+              "t": "fr",
+              "f": "Ne me le donne pas ! / Ne te lève pas !",
+              "z": "别把它给我！/ 别起来！"
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 第一组动词 tu 形式去 s：「Va !」（不是 Vas）「Mange !」（不是 Manges）② 否定式不加连字符：「Ne me parle pas !」③ 双代词顺序固定：Donne-le-moi（不是 Donne-moi-le）。④ 第三人称命令用虚拟式：「Qu’il vienne !」（让他来！）。"
+            }
+          ]
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "compound-past",
+      "zh": "复合过去时",
+      "fr": "Le passé composé",
+      "level": "A1",
+      "group": "past",
+      "description": "把过去动作看作有边界的完整事件。",
+      "chapter": 10,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**一次完成的事件**：Hier, j’ai vu un film. （昨天我看了一部电影。）",
+                "**连续发生的事件序列**：Je me suis levé, j’ai pris mon petit déjeuner et je suis parti. （我起床、吃了早饭就出门了。）",
+                "**限定次数或时长的经历**：J’ai visité Paris trois fois. / J’ai travaillé pendant huit heures. （我去过巴黎三次。/ 我工作了八个小时。）",
+                "**有明确结果的变化**：Il a grandi. / Elle est devenue médecin. （他长大了。/ 她成了医生。）"
+              ]
+            },
+            {
+              "t": "fr",
+              "f": "Hier, j’ai vu un film avec mes amis.",
+              "z": "昨天我和朋友们看了一部电影。"
+            },
+            {
+              "t": "fr",
+              "f": "Je me suis levé, j’ai pris mon petit déjeuner et je suis parti.",
+              "z": "我起了床、吃了早饭就出门了。"
+            },
+            {
+              "t": "fr",
+              "f": "J’ai visité Paris trois fois.",
+              "z": "我去过巴黎三次。"
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**助动词（avoir 或 être）的现在时 + 过去分词**。例：j’ai parlé / je suis allé(e)。"
+            }
+          ]
+        },
+        {
+          "title": "助动词怎么选",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "绝大多数动词用 avoir；一小批「移动与状态变化」动词用 être，需要背成清单："
+            },
+            {
+              "t": "table",
+              "headers": [
+                "类别",
+                "动词",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "移动 / 方向",
+                  "aller, venir, arriver, partir, entrer, sortir, monter, descendre, retourner, passer（经过）",
+                  "Je suis allé à Paris. / Elle est partie hier."
+                ],
+                [
+                  "状态变化 / 生死",
+                  "rester, tomber, naître, mourir, devenir",
+                  "Il est tombé. / Elle est née en 2001."
+                ],
+                [
+                  "代词式动词（全部）",
+                  "se lever, se coucher, s’habiller, se dépêcher…",
+                  "Je me suis levé à sept heures."
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.2,
+                0.5,
+                0.3
+              ]
+            },
+            {
+              "t": "p",
+              "x": "由上表动词加前缀派生出的词同样用 être：revenir, rentrer, remonter, redescendre, repartir, renaître… 但注意 traîner / marcher 等并非「方向移动」，仍用 avoir。"
+            }
+          ]
+        },
+        {
+          "title": "过去分词的构成",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "动词组",
+                "规则",
+                "示例"
+              ],
+              "rows": [
+                [
+                  "第一组 -er",
+                  "-er → -é",
+                  "parler → parlé；manger → mangé"
+                ],
+                [
+                  "第二组 -ir",
+                  "-ir → -i",
+                  "finir → fini；choisir → choisi"
+                ],
+                [
+                  "部分 -re 动词",
+                  "-re → -u",
+                  "vendre → vendu；attendre → attendu"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.2,
+                0.24,
+                0.56
+              ]
+            },
+            {
+              "t": "p",
+              "x": "高频不规则过去分词（按「成组记」）："
+            },
+            {
+              "t": "table",
+              "headers": [
+                "模式",
+                "动词与分词"
+              ],
+              "rows": [
+                [
+                  "-u",
+                  "avoir → eu；être → été（例外中的例外）；vouloir → voulu；pouvoir → pu；devoir → dû；savoir → su；voir → vu；boire → bu；lire → lu；courir → couru；vivre → vécu；recevoir → reçu"
+                ],
+                [
+                  "-is / -it",
+                  "mettre → mis；prendre → pris；faire → fait；dire → dit；écrire → écrit"
+                ],
+                [
+                  "-ert / -u",
+                  "ouvrir → ouvert；offrir → offert；souffrir → souffert；couvrir → couvert"
+                ],
+                [
+                  "其他",
+                  "venir → venu；naître → né；mourir → mort；conduire → conduit"
+                ]
+              ],
+              "small": true,
+              "widths": [
+                0.16,
+                0.84
+              ]
+            }
+          ]
+        },
+        {
+          "title": "性数配合（两条规则）",
+          "blocks": [
+            {
+              "t": "ol",
+              "x": [
+                "**être 助动词：与主语配合**。Il est allé. / Elle est allée. / Ils sont allés. / Elles sont allées.",
+                "**avoir 助动词：一般不动**；但**直接宾语前置**时要配合：Les photos que j’ai prises.（我拍的那些照片）／ Combien de livres as-tu lus ?（你读了几本书？）"
+              ]
+            },
+            {
+              "t": "note",
+              "title": "注意",
+              "x": "代词式动词中，如果自反代词是「直接宾语」则配合：Elle s’est levée. 但若是间接宾语则不配合：Elle s’est parlé.（她对自己说话）——B1 阶段先掌握 être 主谓配合与 avoir 前置宾语配合这两条主线。"
+            }
+          ]
+        },
+        {
+          "title": "时间标志词",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**明确过去时点**：hier, avant-hier, hier soir, la semaine dernière, l’année dernière, il y a deux jours, ce jour-là",
+                "**完成与经历**：déjà, ne... jamais, ne... pas encore, trois fois, plusieurs fois",
+                "**事件推进**：d’abord, puis, ensuite, enfin, tout à coup, soudain",
+                "**限定时长**：pendant deux heures, pendant trois ans（表示已结束的一段时间）"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 助动词错：「✗ J’ai allé à Paris」→「✓ Je suis allé à Paris」；② 配合错：「✗ Elle est allé」→「✓ Elle est allée」；③ devoir 的分词有帽子：「J’ai dû partir」；④ 与未完成过去时分清：一个事件 vs 一段背景（见第十二章）。"
+            }
+          ]
+        },
+        {
+          "title": "助动词与代词式动词的补充",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "monter、descendre、sortir、rentrer、passer 等动词表示不及物移动时常用 être，带直接宾语时用 avoir：Elle est sortie. / Elle a sorti son téléphone. 代词式动词要先辨认直接宾语：Elle s’est lavée. / Elle s’est lavé les mains.（les mains 在动词后，不配合）Elles se sont parlé.（se 为间接宾语，不配合）"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u01-p1-g01"
+      ]
+    },
+    {
+      "id": "imperfect",
+      "zh": "未完成过去时",
+      "fr": "L’imparfait",
+      "level": "A2",
+      "group": "past",
+      "description": "描述过去的背景、习惯与正在进行的动作。",
+      "chapter": 11,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**描写背景**（天气、场景、人物状态）：Il faisait beau, le ciel était bleu.（天气晴朗，天空湛蓝。）",
+                "**过去的习惯**：Quand j’étais petit, je jouais au foot tous les mercredis.（我小时候每周三都踢足球。）",
+                "**正在进行、被事件打断的动作**：Je dormais quand le téléphone a sonné.（电话响时我正在睡觉。）",
+                "**两个同时进行的动作**：Elle lisait pendant que je cuisinais.（我做饭时她在看书。）",
+                "**委婉或假设场景**（固定用法）：Si on partait demain ?（要不我们明天出发？）／ Je voulais vous demander un service.（我想请您帮个忙。）"
+              ]
+            },
+            {
+              "t": "fr",
+              "f": "Il faisait beau, le ciel était bleu.",
+              "z": "天气晴朗，天空湛蓝。"
+            },
+            {
+              "t": "fr",
+              "f": "Quand j’étais petit, je jouais au foot tous les mercredis.",
+              "z": "我小时候每周三都踢足球。"
+            },
+            {
+              "t": "fr",
+              "f": "Je dormais quand le téléphone a sonné.",
+              "z": "电话响时我正在睡觉。"
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**nous 现在时词干 + -ais, -ais, -ait, -ions, -iez, -aient**（常用动词中 être 的词干为 ét-；falloir 用 il fallait：ét-）。"
+            },
+            {
+              "t": "table",
+              "headers": [
+                "动词",
+                "词干来源",
+                "je / tu / il",
+                "nous / vous / ils"
+              ],
+              "rows": [
+                [
+                  "parler",
+                  "nous parlons",
+                  "je parlais / tu parlais / il parlait",
+                  "nous parlions / vous parliez / ils parlaient"
+                ],
+                [
+                  "finir",
+                  "nous finissons",
+                  "je finissais / tu finissais / il finissait",
+                  "nous finissions / vous finissiez / ils finissaient"
+                ],
+                [
+                  "faire",
+                  "nous faisons",
+                  "je faisais / il faisait",
+                  "nous faisions / ils faisaient"
+                ],
+                [
+                  "être（例外）",
+                  "ét-",
+                  "j’étais / tu étais / il était",
+                  "nous étions / vous étiez / ils étaient"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.16,
+                0.18,
+                0.33,
+                0.33
+              ]
+            },
+            {
+              "t": "p",
+              "x": "拼写细节：manger → je mangeais（保留 e）；commencer → je commençais（ç）；étudier → nous étudiions（ii 并排）。"
+            }
+          ]
+        },
+        {
+          "title": "时间标志词",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "autrefois, avant, à l’époque, dans mon enfance, quand j’étais petit / jeune",
+                "过去的频率：tous les jours, chaque été, souvent, parfois, le samedi（那时每周六）",
+                "配合连词：pendant que, tandis que, alors que（同时/对比）"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 「下雨了（开始下）」用 il a plu / il s’est mis à pleuvoir；「当时在下雨」用 il pleuvait；② 不要见「过去」就用未完成过去时——完成的事件必须用复合过去时；③ c’était / il y avait / il faisait 是 A1 起就出现的固定句型，直接背句子。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u01-p1-g01"
+      ]
+    },
+    {
+      "id": "past-contrast",
+      "zh": "过去时辨析",
+      "fr": "Passé composé ou imparfait",
+      "level": "A2",
+      "group": "synthesis",
+      "description": "从叙述视角理解事件与背景的分工。",
+      "chapter": 12,
+      "sections": [
+        {
+          "title": "一句话分工",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**未完成过去时 = 布景与习惯（故事里「当时是什么样」）；复合过去时 = 情节与事件（故事里「发生了什么」）。** 两者经常出现在同一段话里：未完成过去时把舞台搭好，复合过去时让情节往前走。"
+            },
+            {
+              "t": "table",
+              "headers": [
+                "维度",
+                "未完成过去时",
+                "复合过去时"
+              ],
+              "rows": [
+                [
+                  "视角",
+                  "过程之中（摄像机在跟拍）",
+                  "事件完成（照片定格）"
+                ],
+                [
+                  "功能",
+                  "描写、习惯、同时、背景",
+                  "一次性事件、连续动作、结果"
+                ],
+                [
+                  "次数 / 时长",
+                  "不强调次数；重复的习惯",
+                  "可数次数；限定时长且已结束"
+                ],
+                [
+                  "例句",
+                  "Il pleuvait et les rues étaient vides.",
+                  "Soudain, un chien a traversé la rue."
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.16,
+                0.42,
+                0.42
+              ]
+            }
+          ]
+        },
+        {
+          "title": "对比例句（6 组）",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "未完成过去时（背景/习惯）",
+                "复合过去时（事件/结果）"
+              ],
+              "rows": [
+                [
+                  "Il pleuvait.（当时在下雨，背景）",
+                  "Il a plu.（下雨了，一个事件）"
+                ],
+                [
+                  "Je lisais tranquillement.（我当时在安静地看书）",
+                  "J’ai lu ce livre en deux jours.（我两天读完了这本书）"
+                ],
+                [
+                  "Elle allait au marché le samedi.（她那时每周六去市场）",
+                  "Elle est allée au marché hier.（她昨天去了市场）"
+                ],
+                [
+                  "Nous étions en train de dîner.（我们正在吃晚饭）",
+                  "Nous avons dîné à huit heures.（我们八点吃了晚饭）"
+                ],
+                [
+                  "Il voulait partir.（他当时想走）",
+                  "Il a voulu partir.（他决定要走）"
+                ],
+                [
+                  "Je connaissais bien ce quartier.（我早就熟悉这个街区）",
+                  "J’ai connu ce quartier en 2020.（我 2020 年开始认识这个街区）"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.5,
+                0.5
+              ]
+            }
+          ]
+        },
+        {
+          "title": "同一动词、两种时态、两种意思",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "动词",
+                "未完成过去时",
+                "复合过去时"
+              ],
+              "rows": [
+                [
+                  "savoir",
+                  "je savais 我（那时）知道",
+                  "j’ai su 我得知了"
+                ],
+                [
+                  "vouloir",
+                  "je voulais 我想要 / 委婉请求",
+                  "j’ai voulu 我下定决心要（或：我试图）"
+                ],
+                [
+                  "devoir",
+                  "je devais 我（原）应该",
+                  "j’ai dû 我不得不"
+                ],
+                [
+                  "pouvoir",
+                  "je pouvais 我当时能（条件允许）",
+                  "j’ai pu 我成功地做到"
+                ],
+                [
+                  "connaître",
+                  "je connaissais 我早就认识",
+                  "j’ai connu 我认识了（开端）"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.16,
+                0.42,
+                0.42
+              ]
+            }
+          ]
+        },
+        {
+          "title": "叙事示范（两时态配合）",
+          "blocks": [
+            {
+              "t": "fr",
+              "f": "Samedi dernier, il faisait très beau. Je me promenais près du lac quand j’ai rencontré un ancien collègue. Nous avons discuté une heure, puis il est parti.",
+              "z": "上周六天气非常好。我正在湖边散步，突然遇到一位老同事。我们聊了一个小时，然后他就走了。"
+            },
+            {
+              "t": "p",
+              "x": "分析：天气与散步是背景（未完成过去时）；「遇到、聊了、走了」是推动故事的事件（复合过去时）。"
+            }
+          ]
+        },
+        {
+          "title": "判断口诀",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "口诀",
+              "x": "写句子前先问自己：这句话是在「描写/铺垫/说习惯」还是在「叙述一个完成的事件」？前者用未完成过去时，后者用复合过去时；中文「了」不一定是复合过去时，「着/正在/那时候」多半是未完成过去时。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u01-p1-g01"
+      ]
+    },
+    {
+      "id": "pluperfect",
+      "zh": "愈过去时",
+      "fr": "Le plus-que-parfait",
+      "level": "B1",
+      "group": "past",
+      "description": "表达先于另一个过去参照点的动作。",
+      "chapter": 13,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "表示「过去的过去」：一个动作发生在另一个过去动作（或过去参照点）之前。它必须有一个「过去的参照点」才有存在意义。"
+            },
+            {
+              "t": "ul",
+              "x": [
+                "**先于另一个过去事件**：Quand je suis arrivé, le train était déjà parti.（我到的时候，火车已经开走了。）",
+                "**追述更早的原因或背景**：Il était fatigué parce qu’il avait mal dormi.（他累，因为没睡好。）",
+                "**间接引语中代替复合过去时**：Il a dit qu’il avait fini.（他说他已经做完了。）",
+                "**假设句（见第二十三章）**：Si j’avais su, je serais venu plus tôt.（要是我早知道，就早点来了。）"
+              ]
+            },
+            {
+              "t": "fr",
+              "f": "Quand je suis arrivé, le train était déjà parti.",
+              "z": "我到的时候，火车已经开走了。"
+            },
+            {
+              "t": "fr",
+              "f": "Il était fatigué parce qu’il avait mal dormi.",
+              "z": "他累，因为没睡好。"
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**avoir / être 的未完成过去时 + 过去分词**：j’avais parlé / j’étais allé(e)。助动词选择与性数配合规则与复合过去时完全相同。"
+            }
+          ]
+        },
+        {
+          "title": "时间标志词",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "déjà, ne... jamais（配合）, ne... pas encore（对照）",
+                "avant, auparavant, deux jours plus tôt, la veille（前一天）",
+                "从属连词：quand, lorsque, après que（表示先完成的一侧）"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 没有「更早」的参照点时不要用愈过去时；② 与复合过去时分清：「过去做完的单一事件」用复合过去时（J’ai fini mon travail.），「在那之前已完成」才用愈过去时（J’avais fini mon travail quand il est arrivé.）；③ 助动词与配合照搬复合过去时的规则。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u01-p2-g03",
+        "edito-b1-u06-p1-g16"
+      ]
+    },
+    {
+      "id": "simple-past",
+      "zh": "简单过去时",
+      "fr": "Le passé simple",
+      "level": "拓展",
+      "group": "extension",
+      "description": "认识文学与历史叙事中的完成事件形式。",
+      "chapter": 14,
+      "sections": [
+        {
+          "title": "用途：书面叙事的时态",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "简单过去时专门用于**书面叙述**：小说、历史、童话、正式记叙文。它和未完成过去时分工与复合过去时/未完成过去时相同——简单过去时推进情节，未完成过去时描写背景。日常口语与书信不用它。Édito A1–B1 未系统讲解，但阅读真实法语（分级读物、新闻、文学）必须认识。"
+            }
+          ]
+        },
+        {
+          "title": "构成：三组词尾",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "动词组",
+                "词尾（je, tu, il, nous, vous, ils）",
+                "示例"
+              ],
+              "rows": [
+                [
+                  "-er 动词",
+                  "-ai, -as, -a, -âmes, -âtes, -èrent",
+                  "parler → je parlai, il parla, ils parlèrent"
+                ],
+                [
+                  "-ir / -re 规则型",
+                  "-is, -is, -it, -îmes, -îtes, -irent",
+                  "finir → je finis, il finit, ils finirent；vendre → il vendit"
+                ],
+                [
+                  "-u 型（不规则）",
+                  "-us, -us, -ut, -ûmes, -ûtes, -urent",
+                  "avoir → j’eus, il eut, ils eurent"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.2,
+                0.44,
+                0.36
+              ]
+            }
+          ]
+        },
+        {
+          "title": "高频形式速查（阅读用）",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "动词",
+                "je",
+                "il / elle",
+                "ils / elles"
+              ],
+              "rows": [
+                [
+                  "être",
+                  "je fus",
+                  "il fut",
+                  "ils furent"
+                ],
+                [
+                  "avoir",
+                  "j’eus",
+                  "il eut",
+                  "ils eurent"
+                ],
+                [
+                  "faire",
+                  "je fis",
+                  "il fit",
+                  "ils firent"
+                ],
+                [
+                  "aller",
+                  "j’allai",
+                  "il alla",
+                  "ils allèrent"
+                ],
+                [
+                  "venir",
+                  "je vins",
+                  "il vint",
+                  "ils vinrent"
+                ],
+                [
+                  "voir",
+                  "je vis",
+                  "il vit",
+                  "ils virent"
+                ],
+                [
+                  "prendre",
+                  "je pris",
+                  "il prit",
+                  "ils prirent"
+                ],
+                [
+                  "dire",
+                  "je dis",
+                  "il dit",
+                  "ils dirent"
+                ],
+                [
+                  "pouvoir",
+                  "je pus",
+                  "il put",
+                  "ils purent"
+                ],
+                [
+                  "vouloir",
+                  "je voulus",
+                  "il voulut",
+                  "ils voulurent"
+                ],
+                [
+                  "savoir",
+                  "je sus",
+                  "il sut",
+                  "ils surent"
+                ],
+                [
+                  "écrire",
+                  "j’écrivis",
+                  "il écrivit",
+                  "ils écrivirent"
+                ],
+                [
+                  "naître",
+                  "je naquis",
+                  "il naquit",
+                  "ils naquirent"
+                ],
+                [
+                  "mourir",
+                  "je mourus",
+                  "il mourut",
+                  "ils moururent"
+                ]
+              ],
+              "small": true,
+              "widths": [
+                0.16,
+                0.28,
+                0.28,
+                0.28
+              ]
+            }
+          ]
+        },
+        {
+          "title": "阅读提示",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "遇到 -a / -èrent / -it / -ut 等陌生词尾，先想简单过去时，再还原成原形。",
+                "「il fut, il eut, il fit, il vit」是最常见的四个——变成白话说就是 il a été, il a eu, il a fait, il a vu。",
+                "简单过去时与未完成过去时配对出现：句子里的「事件」用简单过去时，「描写」用未完成过去时。"
+              ]
+            }
+          ]
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "future",
+      "zh": "简单将来时",
+      "fr": "Le futur simple",
+      "level": "A2",
+      "group": "future",
+      "description": "表达将来的事实、预测与承诺。",
+      "chapter": 15,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**将来发生的事**：L’année prochaine, j’irai au Canada.（明年我要去加拿大。）",
+                "**预测与推测**：Il pleuvra demain.（明天会下雨。）",
+                "**承诺与意愿**：Je t’aiderai. / Je te promets que je viendrai.（我会帮你。/ 我保证会来。）",
+                "**时间从句中的将来**：Quand tu arriveras, appelle-moi.（你到了给我打电话。）"
+              ]
+            },
+            {
+              "t": "fr",
+              "f": "L’année prochaine, j’irai au Canada.",
+              "z": "明年我要去加拿大。"
+            },
+            {
+              "t": "fr",
+              "f": "Quand tu arriveras, appelle-moi.",
+              "z": "你到了给我打电话。"
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**动词原形 + -ai, -as, -a, -ons, -ez, -ont**（-re 结尾动词去掉词尾 e：vendre → je vendrai）。"
+            }
+          ]
+        },
+        {
+          "title": "不规则词干（必须背）",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "动词",
+                "词干",
+                "je 形式"
+              ],
+              "rows": [
+                [
+                  "être",
+                  "ser-",
+                  "je serai"
+                ],
+                [
+                  "avoir",
+                  "aur-",
+                  "j’aurai"
+                ],
+                [
+                  "aller",
+                  "ir-",
+                  "j’irai"
+                ],
+                [
+                  "faire",
+                  "fer-",
+                  "je ferai"
+                ],
+                [
+                  "pouvoir",
+                  "pourr-",
+                  "je pourrai"
+                ],
+                [
+                  "vouloir",
+                  "voudr-",
+                  "je voudrai"
+                ],
+                [
+                  "devoir",
+                  "devr-",
+                  "je devrai"
+                ],
+                [
+                  "venir / tenir",
+                  "viendr- / tiendr-",
+                  "je viendrai / je tiendrai"
+                ],
+                [
+                  "voir",
+                  "verr-",
+                  "je verrai"
+                ],
+                [
+                  "savoir",
+                  "saur-",
+                  "je saurai"
+                ],
+                [
+                  "recevoir",
+                  "recevr-",
+                  "je recevrai"
+                ],
+                [
+                  "envoyer",
+                  "enverr-",
+                  "j’enverrai"
+                ],
+                [
+                  "falloir / pleuvoir",
+                  "faudr- / pleuvr-",
+                  "il faudra / il pleuvra"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.28,
+                0.28,
+                0.44
+              ]
+            },
+            {
+              "t": "p",
+              "x": "拼写变化：essayer → j’essaierai；appeler → j’appellerai；jeter → je jetterai；acheter → j’achèterai；lever → je lèverai。"
+            }
+          ]
+        },
+        {
+          "title": "时间标志词",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "demain, après-demain, ce soir, la semaine / l’année prochaine, bientôt, plus tard, un jour",
+                "dans + 时长（dans deux jours 两天后）；d’ici + 时间点（d’ici 2030）",
+                "连接词引导的将来：quand, lorsque, dès que, dès, une fois que（后接将来时）"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 时间从句（quand/dès que）可以并且应该用将来时：「Quand il arrivera...」（不是 arrive）；② 条件从句 si 后不能用将来时：「Si j’ai le temps, je viendrai.」（不是 si j’aurai）；③ 近将来用 futur proche 更自然：「Je vais partir」（马上走）比「Je partirai」更贴近口语。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u12-p1-g34"
+      ]
+    },
+    {
+      "id": "future-perfect",
+      "zh": "先将来时",
+      "fr": "Le futur antérieur",
+      "level": "拓展",
+      "group": "extension",
+      "description": "表示在将来某个参照点之前已经完成。",
+      "chapter": 16,
+      "sections": [
+        {
+          "title": "核心用途",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**将来某时之前已完成**：Quand tu auras fini tes devoirs, tu pourras sortir.（你做完作业就可以出去。）",
+                "**将来回望**：Dans deux ans, j’aurai terminé mes études.（两年后我就完成学业了。）",
+                "**对过去的推测**（近似「大概已经…」）：Il n’est pas là ? Il aura oublié. （他不在？大概是忘了。）"
+              ]
+            },
+            {
+              "t": "fr",
+              "f": "Quand tu auras fini tes devoirs, tu pourras sortir.",
+              "z": "你做完作业就可以出去。"
+            },
+            {
+              "t": "fr",
+              "f": "Dans deux ans, j’aurai terminé mes études.",
+              "z": "两年后我就完成学业了。"
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**avoir / être 的简单将来时 + 过去分词**：j’aurai parlé / je serai allé(e)。"
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "提示",
+              "x": "中文里「等你做完（再…）」这种「先完成、后发生」的时间从句，法语用先将来时：Quand tu finiras 表示结束这一事件；Quand tu auras fini 明确表示先已完成。quand 后接简单将来时本身没问题（Quand tu seras grand, tu comprendras.），区别在于是否强调「先完成」。这也是 B1 写作与考试的加分点。"
+            }
+          ]
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "conditional",
+      "zh": "条件式现在时",
+      "fr": "Le conditionnel présent",
+      "level": "A2",
+      "group": "mood",
+      "description": "礼貌请求、愿望、建议与假设结果。",
+      "chapter": 17,
+      "sections": [
+        {
+          "title": "核心用途（五类）",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "用途",
+                "例句",
+                "翻译"
+              ],
+              "rows": [
+                [
+                  "礼貌请求 / 委婉",
+                  "Pourriez-vous m’aider ? / Je voudrais un café.",
+                  "您能帮我一下吗？/ 我想要一杯咖啡。"
+                ],
+                [
+                  "愿望",
+                  "J’aimerais visiter le Japon un jour.",
+                  "我希望有一天去日本。"
+                ],
+                [
+                  "建议",
+                  "Tu devrais te reposer.",
+                  "你应该休息一下。"
+                ],
+                [
+                  "假设的结果（si + 未完成过去时）",
+                  "Si j’étais riche, je voyagerais.",
+                  "如果我有钱，我就去旅行。"
+                ],
+                [
+                  "不确定信息（「据称」）",
+                  "Le ministre serait en voyage.",
+                  "据说部长正在出差。"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.3,
+                0.42,
+                0.28
+              ]
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**将来时词干 + 未完成过去时词尾**：-ais, -ais, -ait, -ions, -iez, -aient。因为词干与简单将来时相同，所以「不规则词干表」直接复用（ser-, aur-, ir-, fer-, pourr-…）。"
+            },
+            {
+              "t": "table",
+              "headers": [
+                "动词",
+                "je",
+                "tu",
+                "il / elle",
+                "nous",
+                "vous",
+                "ils / elles"
+              ],
+              "rows": [
+                [
+                  "parler",
+                  "parlerais",
+                  "parlerais",
+                  "parlerait",
+                  "parlerions",
+                  "parleriez",
+                  "parleraient"
+                ],
+                [
+                  "être",
+                  "serais",
+                  "serais",
+                  "serait",
+                  "serions",
+                  "seriez",
+                  "seraient"
+                ],
+                [
+                  "avoir",
+                  "aurais",
+                  "aurais",
+                  "aurait",
+                  "aurions",
+                  "auriez",
+                  "auraient"
+                ],
+                [
+                  "aller",
+                  "irais",
+                  "irais",
+                  "irait",
+                  "irions",
+                  "iriez",
+                  "iraient"
+                ],
+                [
+                  "faire",
+                  "ferais",
+                  "ferais",
+                  "ferait",
+                  "ferions",
+                  "feriez",
+                  "feraient"
+                ],
+                [
+                  "pouvoir",
+                  "pourrais",
+                  "pourrais",
+                  "pourrait",
+                  "pourrions",
+                  "pourriez",
+                  "pourraient"
+                ]
+              ],
+              "small": true,
+              "widths": [
+                0.16,
+                0.14,
+                0.14,
+                0.14,
+                0.14,
+                0.14,
+                0.14
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① si 引导的条件从句里不能用条件式：「✗ Si j’aurais le temps」→「✓ Si j’avais le temps」；② 礼貌场合把 je veux 换成 je voudrais、pouvez-vous 换成 pourriez-vous；③ 播音、新闻中「据称」用法很常见——看到 serait / aurait 先想「消息未经证实」。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u03-p1-g07",
+        "edito-b1-u10-p2-g30"
+      ]
+    },
+    {
+      "id": "conditional-past",
+      "zh": "条件式过去时",
+      "fr": "Le conditionnel passé",
+      "level": "B1",
+      "group": "mood",
+      "description": "表达过去未实现的结果或未经证实的信息。",
+      "chapter": 18,
+      "sections": [
+        {
+          "title": "核心用途（三类）",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**未实现的过去 / 遗憾**：J’aurais voulu te voir avant ton départ.（你走之前我本想见你一面。）",
+                "**责备与反省**：Tu aurais pu me prévenir !（你本可以提前告诉我！）",
+                "**不确定信息（过去）**：Il aurait eu un accident.（据说他出了事故。）"
+              ]
+            },
+            {
+              "t": "fr",
+              "f": "J’aurais voulu te voir avant ton départ.",
+              "z": "你走之前我本想见你一面。"
+            },
+            {
+              "t": "fr",
+              "f": "Tu aurais pu me prévenir !",
+              "z": "你本可以提前告诉我！"
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**avoir / être 的条件式现在时 + 过去分词**：j’aurais parlé / je serais allé(e)。"
+            }
+          ]
+        },
+        {
+          "title": "与假设句的组合",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "结构",
+                "含义",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "si + 愈过去时 → 条件式过去时",
+                  "对过去的假设（与事实相反）",
+                  "Si j’avais su, je serais venu plus tôt.（要是我早知道，就早点来了）"
+                ],
+                [
+                  "si + 愈过去时 → 条件式现在时",
+                  "过去的条件，现在的结果",
+                  "Si j’avais accepté ce travail, je vivrais à Paris maintenant.（如果我当时接受那份工作，现在就在巴黎生活了）"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.34,
+                0.26,
+                0.4
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 「本应该 / 本可以」是 aurais dû / aurais pu，不是 dois / peux；② 与条件式现在时分清：现在遗憾用 j’aimerais，过去遗憾用 j’aurais aimé；③ 新闻里的 aurait + 分词表示「据称」，不要理解成假设。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u10-p2-g30"
+      ]
+    },
+    {
+      "id": "subjunctive",
+      "zh": "虚拟式现在时",
+      "fr": "Le subjonctif présent",
+      "level": "A2",
+      "group": "mood",
+      "description": "在从句中表达意愿、情感、必要性等视角。",
+      "chapter": 19,
+      "sections": [
+        {
+          "title": "它是什么",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "虚拟式表达的不是时间，而是**说话人的主观态度**：需要、愿望、情感、判断、怀疑……它几乎总出现在 **que 引导的从句**里，由主句的「触发词」决定。这是 A2 开始接触、B1 反复考查的重点。"
+            }
+          ]
+        },
+        {
+          "title": "构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "**ils 现在时词干 + -e, -es, -e, -ions, -iez, -ent**；nous / vous 通常用未完成过去时的词干（nous parlions、nous venions、nous buvions…），但 être、avoir、faire、pouvoir、savoir 等动词整个虚拟式都用同一个特殊词干（soyons、ayons、fassions、puissions、sachions）。"
+            },
+            {
+              "t": "table",
+              "headers": [
+                "动词",
+                "que je",
+                "que tu",
+                "qu’il",
+                "que nous",
+                "que vous",
+                "qu’ils"
+              ],
+              "rows": [
+                [
+                  "parler",
+                  "parle",
+                  "parles",
+                  "parle",
+                  "parlions",
+                  "parliez",
+                  "parlent"
+                ],
+                [
+                  "finir",
+                  "finisse",
+                  "finisses",
+                  "finisse",
+                  "finissions",
+                  "finissiez",
+                  "finissent"
+                ],
+                [
+                  "être",
+                  "sois",
+                  "sois",
+                  "soit",
+                  "soyons",
+                  "soyez",
+                  "soient"
+                ],
+                [
+                  "avoir",
+                  "aie",
+                  "aies",
+                  "ait",
+                  "ayons",
+                  "ayez",
+                  "aient"
+                ],
+                [
+                  "aller",
+                  "aille",
+                  "ailles",
+                  "aille",
+                  "allions",
+                  "alliez",
+                  "aillent"
+                ],
+                [
+                  "faire",
+                  "fasse",
+                  "fasses",
+                  "fasse",
+                  "fassions",
+                  "fassiez",
+                  "fassent"
+                ],
+                [
+                  "pouvoir",
+                  "puisse",
+                  "puisses",
+                  "puisse",
+                  "puissions",
+                  "puissiez",
+                  "puissent"
+                ],
+                [
+                  "savoir",
+                  "sache",
+                  "saches",
+                  "sache",
+                  "sachions",
+                  "sachiez",
+                  "sachent"
+                ],
+                [
+                  "vouloir",
+                  "veuille",
+                  "veuilles",
+                  "veuille",
+                  "voulions",
+                  "vouliez",
+                  "veuillent"
+                ],
+                [
+                  "falloir（无人称，仅 il）",
+                  "",
+                  "",
+                  "faille",
+                  "",
+                  "",
+                  ""
+                ]
+              ],
+              "small": true,
+              "widths": [
+                0.16,
+                0.14,
+                0.14,
+                0.14,
+                0.14,
+                0.14,
+                0.14
+              ]
+            }
+          ]
+        },
+        {
+          "title": "触发词分类（背「类别」而不是单个词）",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "类别",
+                "常见触发词",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "必要性 / 义务",
+                  "il faut que；il est nécessaire / important / essentiel que",
+                  "Il faut que tu partes maintenant.（你得现在就走）"
+                ],
+                [
+                  "愿望 / 意志",
+                  "vouloir que；souhaiter que；désirer que；aimer que",
+                  "Je veux que tu sois content.（我希望你开心）"
+                ],
+                [
+                  "情感",
+                  "être content / triste / étonné / surpris / heureux que；avoir peur que；regretter que",
+                  "Je suis content que tu viennes.（我很高兴你来）"
+                ],
+                [
+                  "判断 / 评价",
+                  "il est normal / dommage / possible / utile / bizarre que；trouver bien que",
+                  "Il est dommage qu’il pleuve.（下雨真遗憾）"
+                ],
+                [
+                  "怀疑 / 否定看法",
+                  "douter que；ne pas penser / croire / trouver que",
+                  "Je doute qu’il vienne.（我怀疑他会来）"
+                ],
+                [
+                  "连词",
+                  "pour que；afin que；avant que；jusqu’à ce que；bien que；quoique；à condition que；sans que",
+                  "Je te le dirai avant que tu partes.（你走之前我会告诉你）"
+                ],
+                [
+                  "最高级 / 唯一 / 寻找",
+                  "le seul / le premier / le dernier … qui；chercher quelqu’un qui",
+                  "C’est le seul qui puisse nous aider.（他是唯一能帮我们的人）"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.2,
+                0.42,
+                0.38
+              ]
+            }
+          ]
+        },
+        {
+          "title": "直陈式 vs 虚拟式（对比记忆）",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "语气",
+                "例句",
+                "翻译"
+              ],
+              "rows": [
+                [
+                  "直陈式（肯定看法）",
+                  "Je pense qu’il vient.",
+                  "我觉得他会来。（确定语气）"
+                ],
+                [
+                  "虚拟式（否定看法）",
+                  "Je ne pense pas qu’il vienne.",
+                  "我不觉得他会来。（怀疑语气）"
+                ],
+                [
+                  "虚拟式（必要性）",
+                  "Il faut que tu partes.",
+                  "你得走了。"
+                ],
+                [
+                  "直陈式（简单事实）",
+                  "J’espère que tu vas bien.",
+                  "希望你一切都好。（espérer 用直陈式）"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.3,
+                0.4,
+                0.3
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① espérer que 后接直陈式，是虚拟式家族里的「例外」；② 主句与从句主语相同时用不定式更自然：「Je veux partir.」而不是「Je veux que je parte.」；③ 虚拟式不用来表示「时间」，只看主句的态度。"
+            }
+          ]
+        },
+        {
+          "title": "虚拟式并不等于不真实",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "Je suis heureux que tu sois là. 中“你在这里”可以是事实。虚拟式体现主句对从句的态度，并不是把事实否定。条件式在现代语法中也常归入直陈式的时态；此处按学习用途单独整理。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u02-p1-g05",
+        "edito-b1-u02-p2-g06",
+        "edito-b1-u04-p2-g11",
+        "edito-b1-u08-p1-g22"
+      ]
+    },
+    {
+      "id": "subjunctive-past",
+      "zh": "虚拟式过去时",
+      "fr": "Le subjonctif passé",
+      "level": "拓展",
+      "group": "extension",
+      "description": "在虚拟式从句中表达先已完成的动作。",
+      "chapter": 20,
+      "sections": [
+        {
+          "title": "用途与构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "主句是现在时 / 将来时，而从句动作**已经完成**时使用。构成：**avoir / être 的虚拟式现在时 + 过去分词**（que j’aie parlé / que je sois allé(e)）。"
+            },
+            {
+              "t": "fr",
+              "f": "Je suis content que tu sois venu.",
+              "z": "我很高兴你来了。"
+            },
+            {
+              "t": "fr",
+              "f": "Bien qu’il ait plu, nous sommes sortis.",
+              "z": "尽管下了雨，我们还是出门了。"
+            },
+            {
+              "t": "fr",
+              "f": "Il faut que vous ayez fini avant midi.",
+              "z": "你们必须在中午前完成。"
+            }
+          ]
+        },
+        {
+          "title": "与虚拟式现在时的选择",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "选择标准是**相对时间**：从句动作与主句同时或之后 → 虚拟式现在时；从句动作先于主句 → 虚拟式过去时。"
+            },
+            {
+              "t": "table",
+              "headers": [
+                "主句",
+                "从句",
+                "时态选择"
+              ],
+              "rows": [
+                [
+                  "Je suis content…",
+                  "…que tu viennes.（你现在来 / 你会来）",
+                  "虚拟式现在时"
+                ],
+                [
+                  "Je suis content…",
+                  "…que tu sois venu.（你已经来了）",
+                  "虚拟式过去时"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.24,
+                0.46,
+                0.3
+              ]
+            }
+          ]
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "nonfinite",
+      "zh": "不定式与副动词",
+      "fr": "Infinitif et gérondif",
+      "level": "A2",
+      "group": "extension",
+      "description": "表达动作之间的同时、方式与先后关系。",
+      "chapter": 21,
+      "sections": [
+        {
+          "title": "不定式（le gérondif 之外的「动词变名词」用法）",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**作动词补语**：Je veux partir. / Il essaie de comprendre.（我想走。/ 他试着理解。）",
+                "**介词 + 不定式**：pour, sans, avant de, après, au lieu de（Avant de partir, éteins la lumière. 走之前把灯关掉。）",
+                "**不定式过去时**（先于主句动作）：Après avoir mangé, il est sorti. / Elle regrette d’être partie si tôt.（吃完之后他出门了。/ 她后悔走得太早。）"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "副动词（le gérondif）：en + 现在分词",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "构成：**en + 现在分词**（现在分词 = nous 词干 + -ant：parlant, finissant, faisant）。它必须与主句**同一主语**，表达："
+            },
+            {
+              "t": "table",
+              "headers": [
+                "功能",
+                "例句",
+                "翻译"
+              ],
+              "rows": [
+                [
+                  "同时性",
+                  "Il écoute de la musique en travaillant.",
+                  "他一边工作一边听音乐。"
+                ],
+                [
+                  "方式 / 手段",
+                  "Elle a appris le français en regardant des films.",
+                  "她通过看电影学法语。"
+                ],
+                [
+                  "条件",
+                  "En prenant le métro, tu arriveras plus vite.",
+                  "坐地铁的话你会更快到。"
+                ],
+                [
+                  "强调同时（tout en）",
+                  "Tout en souriant, elle a refusé.",
+                  "她微笑着拒绝了。"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.24,
+                0.46,
+                0.3
+              ]
+            }
+          ]
+        },
+        {
+          "title": "现在分词与过去分词",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**现在分词**（不用 en）：作书面修饰成分；形容词化的形式要与名词配合（une histoire intéressante），不作形容词时形式不变（des enfants parlant anglais）。",
+                "**过去分词**：① 复合时态（j’ai parlé / je suis allé）与被动式（La porte est fermée.）的构成成分；② 独立使用相当于形容词——La porte fermée（关着的门）。"
+              ]
+            },
+            {
+              "t": "note",
+              "title": "注意",
+              "x": "副动词要求主句与副动词动作是「同一主语」：「✗ En entrant dans la salle, la réunion a commencé.」（主语不一致）→「✓ En entrant dans la salle, j’ai vu tout le monde debout.」"
+            },
+            {
+              "t": "part",
+              "x": "第三部分　综合专题"
+            }
+          ]
+        },
+        {
+          "title": "现在分词的特殊形式",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "être → étant，avoir → ayant，savoir → sachant。现在分词表示动作并且不随名词性数变化；形容词化的词如 intéressante 则需要配合。副动词通常与主句动作共用主语。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u07-p2-g21"
+      ]
+    },
+    {
+      "id": "reported",
+      "zh": "间接引语与时态配合",
+      "fr": "Le discours rapporté",
+      "level": "B1",
+      "group": "synthesis",
+      "description": "转述时调整人称、时间参照与时态。",
+      "chapter": 22,
+      "sections": [
+        {
+          "title": "一条总原则",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "从句时态取决于**主句时态**："
+            },
+            {
+              "t": "ul",
+              "x": [
+                "**主句是现在时 / 将来时** → 在结构与语气允许的范围内，从句按相对时间选择（Je pense qu’il viendra / qu’il est venu / qu’il venait）。",
+                "**主句是过去时** → 采用过去参照转述时，从句时态常「后移一步」（présent → imparfait；passé composé → plus-que-parfait；futur → conditionnel）。"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "间接引语转换表（直接引语 → 过去时引导）",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "直接引语",
+                "过去时引导的间接引语",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "现在时",
+                  "未完成过去时",
+                  "« Je suis fatigué. » → Il a dit qu’il était fatigué."
+                ],
+                [
+                  "复合过去时",
+                  "愈过去时",
+                  "« J’ai fini. » → Il a dit qu’il avait fini."
+                ],
+                [
+                  "未完成过去时",
+                  "未完成过去时（不变）",
+                  "« Il pleuvait. » → Il a dit qu’il pleuvait."
+                ],
+                [
+                  "简单将来时",
+                  "条件式现在时",
+                  "« Je viendrai. » → Il a dit qu’il viendrait."
+                ],
+                [
+                  "先将来时",
+                  "条件式过去时",
+                  "« J’aurai fini. » → Il a dit qu’il aurait fini."
+                ],
+                [
+                  "条件式现在时",
+                  "条件式现在时（不变）",
+                  "« Je voudrais partir. » → Il a dit qu’il voudrait partir."
+                ],
+                [
+                  "命令式",
+                  "de + 不定式",
+                  "« Partez ! » → Il a ordonné de partir."
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.22,
+                0.3,
+                0.48
+              ]
+            }
+          ]
+        },
+        {
+          "title": "时间状语与人称也要跟着变",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "直接引语",
+                "间接引语（过去视角）"
+              ],
+              "rows": [
+                [
+                  "aujourd’hui 今天",
+                  "ce jour-là 那天"
+                ],
+                [
+                  "hier 昨天",
+                  "la veille 前一天"
+                ],
+                [
+                  "demain 明天",
+                  "le lendemain 第二天"
+                ],
+                [
+                  "maintenant 现在",
+                  "alors / à ce moment-là 当时"
+                ],
+                [
+                  "il y a deux jours 两天前",
+                  "deux jours plus tôt 更早两天"
+                ],
+                [
+                  "dans deux jours 两天后",
+                  "deux jours plus tard 更晚两天"
+                ],
+                [
+                  "je / mon / nous 我 / 我的 / 我们",
+                  "il / son / ils（按转述视角调整）"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.5,
+                0.5
+              ]
+            }
+          ]
+        },
+        {
+          "title": "疑问句的转换",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**是非问句** → si：「Tu viens ?」→ Il demande si je viens.",
+                "**特殊疑问句** → 疑问词保留/合并：Qu’est-ce que tu fais ? → Il demande ce que je fais. / Où vas-tu ? → Il demande où je vais."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① 忘记改时间状语：「✗ Il a dit qu’il viendrait demain」在隔天转述时应为 le lendemain；② 人称代词与主有形容词不同步；③ 主句现在时时，从句**不要**机械后移：「Il dit qu’il est malade.」✓（不是 était）。"
+            }
+          ]
+        },
+        {
+          "title": "时态配合有语境",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "过去时引导的转述常采用时态后移；若内容仍然成立或是普遍真理，直陈式现在时可以保留。昨天/明天是否改成前一天/第二天，也取决于实际转述日期，并非机械替换。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u10-p1-g28",
+        "edito-b1-u11-p2-g33"
+      ]
+    },
+    {
+      "id": "hypothesis",
+      "zh": "假设句",
+      "fr": "La condition et l’hypothèse",
+      "level": "B1",
+      "group": "synthesis",
+      "description": "根据真实条件或假设选择 si 两侧的时态。",
+      "chapter": 23,
+      "sections": [
+        {
+          "title": "si 的三种组合",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "类型",
+                "结构",
+                "含义",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "真实条件【B1 核心】",
+                  "si + 现在时 → 现在时 / 将来时 / 命令式",
+                  "可能实现",
+                  "Si tu veux, je peux t’aider. / Si j’ai le temps, je viendrai."
+                ],
+                [
+                  "假设（难实现）【B1 核心】",
+                  "si + 未完成过去时 → 条件式现在时",
+                  "与现在/将来事实相反或很难实现",
+                  "Si j’avais de l’argent, je voyagerais."
+                ],
+                [
+                  "假设（过去未实现）【拓展】",
+                  "si + 愈过去时 → 条件式过去时",
+                  "与过去事实相反",
+                  "Si j’avais su, je serais venu."
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.2,
+                0.34,
+                0.2,
+                0.26
+              ]
+            }
+          ]
+        },
+        {
+          "title": "混合假设（时间交叉）【拓展】",
+          "blocks": [
+            {
+              "t": "fr",
+              "f": "Si j’avais accepté ce travail, je vivrais à Paris maintenant.",
+              "z": "如果我当时接受了那份工作，我现在就住在巴黎了。"
+            },
+            {
+              "t": "p",
+              "x": "前一半是过去的条件（愈过去时），后一半是现在的结果（条件式现在时）。"
+            }
+          ]
+        },
+        {
+          "title": "其他条件表达",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "表达",
+                "结构",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "au cas où 万一",
+                  "au cas où + 条件式",
+                  "Au cas où il pleuvrait, prends un parapluie."
+                ],
+                [
+                  "à condition que 只要",
+                  "à condition que + 虚拟式",
+                  "Je viendrai à condition que tu sois là."
+                ],
+                [
+                  "sinon 否则",
+                  "si..., sinon...",
+                  "Dépêche-toi, sinon tu vas rater le train."
+                ],
+                [
+                  "sans 如果没有",
+                  "sans + 名词 / 不定式",
+                  "Sans ton aide, je n’aurais pas réussi."
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.24,
+                0.32,
+                0.44
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① si 从句里永远不用将来时和条件式：「✗ Si j’aurai le temps」/「✗ Si j’aurais le temps」；② si = 如果，只有「条件」意义；「当我…的时候」要用 quand：「✗ Si je serai grand」→「✓ Quand je serai grand」；③ 中文「要是…就好了」常对应 si + 愈过去时 → 条件式过去时。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u09-p1-g25"
+      ]
+    },
+    {
+      "id": "time-relations",
+      "zh": "时间关系与连词",
+      "fr": "Les relations temporelles",
+      "level": "B1",
+      "group": "synthesis",
+      "description": "用连词表达动作的先后与同时。",
+      "chapter": 24,
+      "sections": [
+        {
+          "title": "三个核心概念",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "**先于（antériorité）**：动作 A 在动作 B 之前发生。",
+                "**同时（simultanéité）**：两个动作同时进行。",
+                "**后于（postériorité）**：动作 A 在动作 B 之后发生。"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "表达方式总表",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "关系",
+                "常用结构",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "先于",
+                  "avant de + 不定式；avant que + 虚拟式；jusqu’à ce que + 虚拟式；avant + 名词",
+                  "Avant de partir, ferme la fenêtre. / Elle est partie avant qu’il (n’)arrive."
+                ],
+                [
+                  "同时",
+                  "pendant que；tandis que；alors que；au moment où；en + 副动词",
+                  "Il lit pendant que je cuisine. / Il s’est endormi en regardant la télé."
+                ],
+                [
+                  "后于",
+                  "après + 名词；après que + 直陈式；dès que；une fois que；quand / lorsque",
+                  "Après le dîner, nous sommes sortis. / Dès qu’il est arrivé, il a appelé."
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.12,
+                0.46,
+                0.42
+              ]
+            }
+          ]
+        },
+        {
+          "title": "时间从句里的将来与完成",
+          "blocks": [
+            {
+              "t": "ul",
+              "x": [
+                "将来：**quand / dès que + 简单将来时**（Quand tu arriveras, préviens-moi.）",
+                "将来先完成：**quand / dès que + 先将来时**（Quand tu auras fini, tu pourras sortir.）",
+                "过去先完成：**après que / une fois que + 愈过去时**（Une fois qu’il avait fini, il est parti.）"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "易错点",
+          "blocks": [
+            {
+              "t": "note",
+              "title": "高频错误",
+              "x": "① avant que 与 jusqu’à ce que 后面用虚拟式：「avant qu’il vienne」✓；② après que 在现代法语中接直陈式：「après qu’il est arrivé」✓（规范上 après que 就应接直陈式；接虚拟式虽常见但受到批评，考试按直陈式为准）；③ 「当…时候」的将来不要用 si，要用 quand。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u09-p2-g27"
+      ]
+    },
+    {
+      "id": "time-markers",
+      "zh": "时间标志词",
+      "fr": "Les indicateurs de temps",
+      "level": "A2",
+      "group": "synthesis",
+      "description": "结合动作视角理解 depuis、pendant、en 等表达。",
+      "chapter": 25,
+      "sections": [
+        {
+          "title": "按时态速查",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "时态",
+                "高频标志词",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "现在时",
+                  "maintenant, en ce moment, chaque jour, d’habitude, depuis + 时间",
+                  "Je travaille ici depuis trois ans."
+                ],
+                [
+                  "最近将来时",
+                  "tout de suite, bientôt, dans un instant, ce soir",
+                  "Je vais sortir tout de suite."
+                ],
+                [
+                  "最近过去时",
+                  "venir de, juste, à l’instant",
+                  "Il vient d’appeler."
+                ],
+                [
+                  "复合过去时",
+                  "hier, la semaine dernière, il y a + 时间, déjà, jamais, trois fois",
+                  "Je suis allé à Nice l’année dernière."
+                ],
+                [
+                  "未完成过去时",
+                  "autrefois, avant, à l’époque, quand j’étais petit, souvent（过去）",
+                  "Avant, il habitait à la campagne."
+                ],
+                [
+                  "愈过去时",
+                  "déjà, ne... jamais, avant, deux jours plus tôt, la veille",
+                  "Elle avait déjà mangé quand je suis arrivé."
+                ],
+                [
+                  "简单将来时",
+                  "demain, la semaine prochaine, bientôt, plus tard, dans deux jours",
+                  "Nous partirons dans deux jours."
+                ],
+                [
+                  "条件式现在时",
+                  "si + 未完成过去时, au cas où, Je voudrais…",
+                  "Si j’étais toi, je partirais."
+                ],
+                [
+                  "条件式过去时",
+                  "si + 愈过去时, j’aurais voulu…",
+                  "J’aurais voulu venir, mais j’étais malade."
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.16,
+                0.44,
+                0.4
+              ]
+            }
+          ]
+        },
+        {
+          "title": "最容易混淆的五组",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "词组",
+                "用法",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "il y a + 时长（ago）",
+                  "从过去某点到现在之前",
+                  "Il y a deux ans, j’ai visité Rome.（两年前我去了罗马）"
+                ],
+                [
+                  "depuis + 时长/起点",
+                  "从过去持续到现在（现在时）；持续到过去某点（未完成过去时）",
+                  "J’apprends le français depuis un an.（学了一年，还在学）"
+                ],
+                [
+                  "pendant + 时长",
+                  "已结束的一段时间（常配复合过去时）",
+                  "J’ai travaillé pendant huit heures.（工作了八小时）"
+                ],
+                [
+                  "dans + 时长",
+                  "从说话时起，将来某时刻",
+                  "Le train part dans dix minutes.（火车十分钟后开）"
+                ],
+                [
+                  "en + 时长",
+                  "完成某事所用的时间",
+                  "J’ai fini ce livre en trois jours.（三天读完）"
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.26,
+                0.36,
+                0.38
+              ]
+            },
+            {
+              "t": "table",
+              "headers": [
+                "词组",
+                "用法",
+                "例句"
+              ],
+              "rows": [
+                [
+                  "tout à l’heure",
+                  "刚才（配过去时）或待会儿（配将来时）",
+                  "Tout à l’heure, il est passé. / Je te rappelle tout à l’heure."
+                ],
+                [
+                  "déjà",
+                  "已经（配复合过去时/愈过去时）",
+                  "Tu as déjà vu ce film ?"
+                ],
+                [
+                  "ne... jamais",
+                  "从未（配复合过去时）",
+                  "Je ne suis jamais allé en Europe."
+                ],
+                [
+                  "ne... pas encore",
+                  "还没（配复合过去时）",
+                  "Il n’est pas encore arrivé."
+                ],
+                [
+                  "la veille / le lendemain",
+                  "前一天 / 第二天（过去视角）",
+                  "Il est parti le lendemain matin."
+                ]
+              ],
+              "small": false,
+              "widths": [
+                0.26,
+                0.36,
+                0.38
+              ]
+            },
+            {
+              "t": "note",
+              "title": "使用提示",
+              "x": "时间词是线索不是判据：先判断「事件还是背景、完成还是进行」，再选时态；只背时间词对照表容易被例外绊倒。"
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u01-p2-g02",
+        "edito-b1-u06-p1-g17",
+        "edito-b1-u11-p1-g31",
+        "edito-b1-u12-p2-g35"
+      ]
+    },
+    {
+      "id": "passive",
+      "zh": "被动式与时态",
+      "fr": "Le passif",
+      "level": "A2",
+      "group": "extension",
+      "description": "保持时间参照，用 être + 过去分词转换叙述焦点。",
+      "sections": [
+        {
+          "title": "怎么构成",
+          "blocks": [
+            {
+              "t": "p",
+              "x": "把主动句的直接宾语变成被动句主语，être 采用原主动句的时态，过去分词与新主语配合。动作施事常由 par 引出，也可省略。仅有可被动化的及物动词适用。"
+            },
+            {
+              "t": "fr",
+              "f": "Le professeur explique la règle. → La règle est expliquée par le professeur.",
+              "z": "老师讲解规则。→ 规则由老师讲解。"
+            }
+          ]
+        },
+        {
+          "title": "保持原来的时间",
+          "blocks": [
+            {
+              "t": "table",
+              "headers": [
+                "时态",
+                "被动形式"
+              ],
+              "rows": [
+                [
+                  "现在时",
+                  "La règle est expliquée."
+                ],
+                [
+                  "复合过去时",
+                  "La règle a été expliquée."
+                ],
+                [
+                  "未完成过去时",
+                  "La règle était expliquée."
+                ],
+                [
+                  "简单将来时",
+                  "La règle sera expliquée."
+                ]
+              ]
+            },
+            {
+              "t": "note",
+              "title": "状态与动作",
+              "x": "La porte est fermée 可以描述“门关着”的状态。若强调关门动作，可明确时间或施事：La porte a été fermée par Paul."
+            }
+          ]
+        }
+      ],
+      "links": [
+        "edito-b1-u05-p1-g13"
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "id": "être",
+      "zh": "是",
+      "forms": {
+        "present": [
+          "suis",
+          "es",
+          "est",
+          "sommes",
+          "êtes",
+          "sont"
+        ],
+        "compound-past": [
+          "ai été",
+          "as été",
+          "a été",
+          "avons été",
+          "avez été",
+          "ont été"
+        ],
+        "imperfect": [
+          "étais",
+          "étais",
+          "était",
+          "étions",
+          "étiez",
+          "étaient"
+        ],
+        "future": [
+          "serai",
+          "seras",
+          "sera",
+          "serons",
+          "serez",
+          "seront"
+        ],
+        "conditional": [
+          "serais",
+          "serais",
+          "serait",
+          "serions",
+          "seriez",
+          "seraient"
+        ],
+        "subjunctive": [
+          "sois",
+          "sois",
+          "soit",
+          "soyons",
+          "soyez",
+          "soient"
+        ]
+      }
+    },
+    {
+      "id": "avoir",
+      "zh": "有",
+      "forms": {
+        "present": [
+          "ai",
+          "as",
+          "a",
+          "avons",
+          "avez",
+          "ont"
+        ],
+        "compound-past": [
+          "ai eu",
+          "as eu",
+          "a eu",
+          "avons eu",
+          "avez eu",
+          "ont eu"
+        ],
+        "imperfect": [
+          "avais",
+          "avais",
+          "avait",
+          "avions",
+          "aviez",
+          "avaient"
+        ],
+        "future": [
+          "aurai",
+          "auras",
+          "aura",
+          "aurons",
+          "aurez",
+          "auront"
+        ],
+        "conditional": [
+          "aurais",
+          "aurais",
+          "aurait",
+          "aurions",
+          "auriez",
+          "auraient"
+        ],
+        "subjunctive": [
+          "aie",
+          "aies",
+          "ait",
+          "ayons",
+          "ayez",
+          "aient"
+        ]
+      }
+    },
+    {
+      "id": "aller",
+      "zh": "去",
+      "forms": {
+        "present": [
+          "vais",
+          "vas",
+          "va",
+          "allons",
+          "allez",
+          "vont"
+        ],
+        "compound-past": [
+          "suis allé(e)",
+          "es allé(e)",
+          "est allé(e)",
+          "sommes allé(e)s",
+          "êtes allé(e)(s)",
+          "sont allé(e)s"
+        ],
+        "imperfect": [
+          "allais",
+          "allais",
+          "allait",
+          "allions",
+          "alliez",
+          "allaient"
+        ],
+        "future": [
+          "irai",
+          "iras",
+          "ira",
+          "irons",
+          "irez",
+          "iront"
+        ],
+        "conditional": [
+          "irais",
+          "irais",
+          "irait",
+          "irions",
+          "iriez",
+          "iraient"
+        ],
+        "subjunctive": [
+          "aille",
+          "ailles",
+          "aille",
+          "allions",
+          "alliez",
+          "aillent"
+        ]
+      }
+    },
+    {
+      "id": "faire",
+      "zh": "做",
+      "forms": {
+        "present": [
+          "fais",
+          "fais",
+          "fait",
+          "faisons",
+          "faites",
+          "font"
+        ],
+        "compound-past": [
+          "ai fait",
+          "as fait",
+          "a fait",
+          "avons fait",
+          "avez fait",
+          "ont fait"
+        ],
+        "imperfect": [
+          "faisais",
+          "faisais",
+          "faisait",
+          "faisions",
+          "faisiez",
+          "faisaient"
+        ],
+        "future": [
+          "ferai",
+          "feras",
+          "fera",
+          "ferons",
+          "ferez",
+          "feront"
+        ],
+        "conditional": [
+          "ferais",
+          "ferais",
+          "ferait",
+          "ferions",
+          "feriez",
+          "feraient"
+        ],
+        "subjunctive": [
+          "fasse",
+          "fasses",
+          "fasse",
+          "fassions",
+          "fassiez",
+          "fassent"
+        ]
+      }
+    },
+    {
+      "id": "pouvoir",
+      "zh": "能",
+      "forms": {
+        "present": [
+          "peux",
+          "peux",
+          "peut",
+          "pouvons",
+          "pouvez",
+          "peuvent"
+        ],
+        "compound-past": [
+          "ai pu",
+          "as pu",
+          "a pu",
+          "avons pu",
+          "avez pu",
+          "ont pu"
+        ],
+        "imperfect": [
+          "pouvais",
+          "pouvais",
+          "pouvait",
+          "pouvions",
+          "pouviez",
+          "pouvaient"
+        ],
+        "future": [
+          "pourrai",
+          "pourras",
+          "pourra",
+          "pourrons",
+          "pourrez",
+          "pourront"
+        ],
+        "conditional": [
+          "pourrais",
+          "pourrais",
+          "pourrait",
+          "pourrions",
+          "pourriez",
+          "pourraient"
+        ],
+        "subjunctive": [
+          "puisse",
+          "puisses",
+          "puisse",
+          "puissions",
+          "puissiez",
+          "puissent"
+        ]
+      }
+    },
+    {
+      "id": "venir",
+      "zh": "来",
+      "forms": {
+        "present": [
+          "viens",
+          "viens",
+          "vient",
+          "venons",
+          "venez",
+          "viennent"
+        ],
+        "compound-past": [
+          "suis venu(e)",
+          "es venu(e)",
+          "est venu(e)",
+          "sommes venu(e)s",
+          "êtes venu(e)(s)",
+          "sont venu(e)s"
+        ],
+        "imperfect": [
+          "venais",
+          "venais",
+          "venait",
+          "venions",
+          "veniez",
+          "venaient"
+        ],
+        "future": [
+          "viendrai",
+          "viendras",
+          "viendra",
+          "viendrons",
+          "viendrez",
+          "viendront"
+        ],
+        "conditional": [
+          "viendrais",
+          "viendrais",
+          "viendrait",
+          "viendrions",
+          "viendriez",
+          "viendraient"
+        ],
+        "subjunctive": [
+          "vienne",
+          "viennes",
+          "vienne",
+          "venions",
+          "veniez",
+          "viennent"
+        ]
+      }
+    }
+  ],
+  "source": "法语时态系统总结 A1–B1",
+  "references": [
+    {
+      "label": "OQLF 时间连词与语气",
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/21132/la-grammaire/le-verbe/modes/concordance-des-temps/mode-verbal-avec-apres-que-et-avant-que"
+    },
+    {
+      "label": "OQLF 代词式动词与配合",
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/22954/la-grammaire/le-verbe/verbes-pronominaux/verbe-pronominal-de-sens-reflechi"
+    }
+  ]
+}

@@ -50,6 +50,19 @@ test('legacy APK saves preserve existing grammar and still use atomic ETag prote
  const unavailable=async(url,options)=>url.includes('/learning_records?')?new Response('',{status:503}):fetcher(url,options);
  assert.equal((await handleApi(request(undefined,{method:'PUT',body:{data:old,etag:'existing'}}),env,unavailable)).status,503);
 });
+test('2.0 clients preserve tense records and current clients can explicitly reset them',async()=>{
+ const previous=freshMulti();previous.grammar.tense.topics.present={read:true,bookmarked:true};previous.grammar.practiceMode='tense';previous.grammar.recordsMode='tense';
+ const old=freshMulti();delete old.grammar.tense;delete old.grammar.practiceMode;delete old.grammar.recordsMode;old.grammar.topics[old.grammar.current]={read:true};let written;
+ const fetcher=async(url,options)=>{
+  if(url.endsWith('/user'))return Response.json({id:'a'});
+  if(url.includes('/learning_records?'))return Response.json([{data:previous,etag:'existing'}]);
+  written=JSON.parse(options.body);return Response.json({modified:true,etag:'next'});
+ };
+ assert.equal((await handleApi(request(undefined,{method:'PUT',body:{data:old,etag:'existing'}}),env,fetcher)).status,200);
+ assert.deepEqual(written.p_data.grammar.tense,previous.grammar.tense);assert.equal(written.p_data.grammar.practiceMode,'tense');assert.equal(written.p_data.grammar.recordsMode,'tense');assert.equal(written.p_data.grammar.topics[old.grammar.current].read,true);assert.equal(written.p_expected_etag,'existing');
+ const current=freshMulti();assert.equal((await handleApi(request(undefined,{method:'PUT',body:{data:current,etag:'existing'}}),env,fetcher)).status,200);assert.deepEqual(written.p_data.grammar.tense,current.grammar.tense);
+});
+
 test('avatar API remains public for existing URLs, bounds uploads and rejects disguised images',async()=>{
  const calls=[];const fetcher=async(url,options)=>{calls.push({url,options});return url.endsWith('/user')?Response.json({id:'a'}):url.includes('/public/')?new Response('image'):Response.json({Key:'avatar'});};
  const name='12345678-1234-1234-1234-123456789012.webp';

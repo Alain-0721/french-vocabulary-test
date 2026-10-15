@@ -1,6 +1,7 @@
 import bank from './bank.json' with {type:'json'};
 import {exercises} from './exercises.js';
 import {freshState,summary} from './state.js';
+import {normalizeTense,tenseSummary} from './tense-state.js';
 
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const fail=message=>{throw new Error(message);};
@@ -41,6 +42,10 @@ export function readGrammarBackup(source){
  for(const id of Object.keys(counts))if(!topics[id])fail('练习缺少对应专题的记录。');
  if(s.current!==undefined&&!valid.has(s.current))fail('上次学习的专题无效。');
  const base=freshState();const state={...base,space:'grammar',topics,answers,current:s.current||base.current};
+ state.tense=normalizeTense(s.tense);
+ if(s.practiceMode!==undefined&&!['book','tense'].includes(s.practiceMode))fail('练习类型无效。');
+ if(s.recordsMode!==undefined&&!['book','tense'].includes(s.recordsMode))fail('记录类型无效。');
+ state.practiceMode=s.practiceMode||'book';state.recordsMode=s.recordsMode||'book';
  if(!wrapped||source.scope==='full'){
   if(s.font!==undefined&&!['normal','large'].includes(s.font))fail('阅读字号无效。');
   if(s.theme!==undefined&&!['light','dark','system'].includes(s.theme))fail('界面外观无效。');
@@ -50,7 +55,7 @@ export function readGrammarBackup(source){
   if(s.practiceTopic!=null&&(!valid.has(s.practiceTopic)||(s.practiceUnit&&bank.topics.find(t=>t.id===s.practiceTopic).unit!==s.practiceUnit)))fail('练习专题无效。');
   state.practiceUnit=s.practiceUnit||0;state.practiceTopic=s.practiceTopic||null;
  }
- return {state,scope:wrapped?source.scope:'full',stats:summary(state),answered:Object.keys(answers).length,recorded:Object.keys(topics).length};
+ return {state,scope:wrapped?source.scope:'full',stats:summary(state),tenseStats:tenseSummary(state.tense),tenseAnswered:Object.keys(state.tense.answers).length,answered:Object.keys(answers).length,recorded:Object.keys(topics).length};
 }
 export function restoreGrammarBackup(current,backup){
  const data=backup.scope==='book'?{current:backup.state.current,topics:backup.state.topics,answers:backup.state.answers}:backup.state;
@@ -58,7 +63,7 @@ export function restoreGrammarBackup(current,backup){
 }
 export function normalizeGrammarState(raw){
  const validated=readGrammarBackup(raw).state;
- const pages={grammar:['home','catalog','practice','records','settings','about'],words:['home','study','daily','library','settings','books','dictionary','records','guide','about','practice']};
+ const pages={grammar:['home','catalog','tenses','tense-topic','practice','records','settings','about'],words:['home','study','daily','library','settings','books','dictionary','records','guide','about','practice']};
  const last=Object.fromEntries(Object.entries(pages).map(([space,allowed])=>[space,allowed.includes(raw.last?.[space])?raw.last[space]:'home']));
  return {...validated,space:raw.space,last};
 }

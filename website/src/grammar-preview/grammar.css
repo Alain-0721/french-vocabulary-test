@@ -72,3 +72,49 @@ body:has(.gl-root){background:#fbf8f2;margin:0}.gl-root{--gl-bg:#fbf8f2;--gl-pan
 .gl-theme-dark .gl-track,.gl-theme-dark .gl-table-scroll th,.gl-theme-dark .gl-table-hint{background:var(--gl-soft)}.gl-theme-dark .gl-table-scroll,.gl-theme-dark .gl-table-scroll td,.gl-theme-dark .gl-table-scroll th{border-color:var(--gl-line)}
 .gl-theme-dark .gl-explanation.correct,.gl-theme-dark .gl-answer-options button.correct,.gl-theme-dark .gl-answer-options button.answer,.gl-theme-dark .gl-toggle[aria-checked=true]{background:#344631;border-color:#526a46;color:#c0d5ac!important}.gl-theme-dark .gl-explanation.incorrect,.gl-theme-dark .gl-answer-options button.incorrect{background:#4a332d;border-color:#785547;color:#edc6b0}.gl-theme-dark .gl-explanation p{color:inherit}
 body:has(.gl-space-grammar.gl-theme-dark) .choice-dropdown{background:#292e27;border-color:#414839;color:#e1e5d9}body:has(.gl-space-grammar.gl-theme-dark) .choice-dropdown>button[aria-selected=true]{background:#373a2c;color:#d2ae70}body:has(.gl-space-grammar.gl-theme-dark) .choice-dropdown small{color:#adb6a2}
+
+/* The outer shell stays still; scrolling belongs to the content region only. */
+body:has(.gl-app-shell){overflow:hidden;overscroll-behavior:none}
+.gl-app-shell{position:fixed;inset:0;min-height:0;height:100%;display:flex;flex-direction:column;overflow:hidden}
+.gl-app-shell>.gl-header{position:relative;top:auto;flex-shrink:0}
+.gl-scroll-area{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch}
+.gl-app-shell>.gl-sidebar{top:var(--gl-topbar-height,84px);z-index:60;overflow-y:auto}
+.gl-app-shell .gl-main{padding-bottom:36px}
+.gl-app-shell .gl-menu-dismiss{inset:var(--gl-topbar-height,84px) 0 0}
+.gl-word-host .dp-mobile-nav,.gl-word-host .dp-sidebar{display:none!important}
+.gl-app-shell .gl-word-host{margin-left:230px}
+.gl-app-shell .gl-word-host .dp-main{margin:0!important}
+.gl-app-shell .gl-word-title{margin-left:0;margin-right:0}
+.gl-app-shell .gl-word-host .dp-content{padding-bottom:36px!important}
+.gl-app-shell .gl-sidebar>button.active{color:var(--gl-gold);background:var(--gl-soft)}
+.gl-app-shell .gl-shared-settings{max-width:1080px}
+.gl-bottom-nav{font-family:'Microsoft YaHei','PingFang SC',sans-serif}
+.gl-bottom-nav button.active{color:var(--gl-gold)}
+.gl-bottom-nav button.active:before{background:var(--gl-gold)}
+.gl-space-words .gl-bottom-nav{background:#fffffff5;border-color:var(--gl-line)}
+@media(max-width:1050px){.gl-app-shell .gl-word-host{margin-left:190px}}
+@media(max-width:760px){
+ .gl-app-shell>.gl-bottom-nav{position:relative;flex-shrink:0;left:auto;right:auto;bottom:auto;top:auto;padding:6px 10px max(6px,env(safe-area-inset-bottom));justify-content:space-around}
+ .gl-app-shell>.gl-bottom-nav button{flex:1;min-width:0;min-height:44px;font-family:inherit;font-size:9px;line-height:1.6;font-weight:400;gap:5px;padding:3px 2px}
+ .gl-app-shell>.gl-bottom-nav button span{font:inherit;white-space:nowrap}
+ .gl-app-shell>.gl-bottom-nav button.active:before{left:auto;top:0}
+ .gl-app-shell .gl-main{padding-bottom:28px}
+ .gl-app-shell .gl-word-host{margin-left:0}
+ .gl-app-shell .gl-word-host .dp-content{padding-bottom:28px!important}
+}
+:root[data-preview-theme=dark] .gl-space-words .gl-bottom-nav{background:#1d2936f5}
+
+/* Account controls share typography and actions while surfaces retain the space palette. */
+.gl-app-shell{--gl-account-ink:#283344;--gl-account-muted:#7e8796;--gl-account-accent:#5472db}
+:root[data-preview-theme=dark] .gl-app-shell{--gl-account-ink:#dce4ee;--gl-account-muted:#a6b2c2;--gl-account-accent:#a8bcff}
+.gl-root.gl-app-shell :is(.gl-shared-settings,.gl-profile-menu,.gl-header-end .ac-account){font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:14px;line-height:1.6;color:var(--gl-account-ink)}
+.gl-root.gl-app-shell .gl-shared-settings :is(h1,h2,h3),.gl-root.gl-app-shell .gl-profile-menu strong{color:var(--gl-account-ink)}
+.gl-root.gl-app-shell .gl-shared-settings :is(p,small),.gl-root.gl-app-shell .gl-profile-menu p{color:var(--gl-account-muted)}
+.gl-root.gl-app-shell .gl-shared-settings :is(.gl-eyebrow,.gl-save-status),.gl-root.gl-app-shell .gl-profile-menu button{color:var(--gl-account-accent)}
+.gl-root.gl-app-shell .gl-shared-settings .gl-secondary{color:var(--gl-account-accent)!important}
+.gl-root.gl-app-shell .gl-shared-settings .gl-primary{background:#5472db;color:#fff!important;box-shadow:0 4px 12px #5472db1c}
+.gl-root.gl-app-shell .gl-shared-settings .gl-primary:hover{background:#4663c5}
+.gl-root.gl-app-shell .gl-shared-settings .gl-theme-options button[aria-pressed=true]{background:var(--gl-panel);border-color:var(--gl-account-accent);color:var(--gl-account-accent)!important}
+.gl-root.gl-app-shell :is(.gl-shared-settings,.gl-profile-menu) button:focus-visible{outline-color:var(--gl-account-accent)}
+.gl-root.gl-app-shell .gl-profile-menu{box-shadow:0 12px 30px #26345614}
+.gl-root.gl-app-shell .gl-header-end .ac-account{--ac-panel:var(--gl-panel);--ac-text:var(--gl-account-ink);--ac-muted:var(--gl-account-muted);--ac-line:var(--gl-line)}
