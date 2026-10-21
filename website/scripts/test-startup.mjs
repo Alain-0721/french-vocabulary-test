@@ -17,9 +17,16 @@ const bundle=await build({entryPoints:['src/site.jsx'],bundle:true,write:false,f
 const pause=(ms=30)=>new Promise(r=>setTimeout(r,ms));
 const gate=()=>{let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve};};
 async function ready(w,selector){for(let i=0;i<60&&!w.document.querySelector(selector);i++)await pause();assert.ok(w.document.querySelector(selector),selector);}
-function boot({account=true}={}){
+function boot({account=true,noticeTimers=false}={}){
  const dom=new JSDOM('<div id="root"></div>',{url:'https://app.example.test/',runScripts:'dangerously',pretendToBeVisual:true}),w=dom.window;
  w.structuredClone=structuredClone;w.scrollTo=()=>{};w.HTMLElement.prototype.scrollIntoView=()=>{};w.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
+ if(noticeTimers){
+  const set=w.setTimeout.bind(w),clear=w.clearTimeout.bind(w);let next=-1;
+  w.noticeTimers=new Map();
+  w.setTimeout=(fn,ms,...args)=>{if(ms!==4000&&ms!==6000)return set(fn,ms,...args);const id=next--;w.noticeTimers.set(id,{fn:()=>fn(...args),ms});return id;};
+  w.clearTimeout=id=>{if(!w.noticeTimers.delete(id))clear(id);};
+  w.expireNotices=()=>{const callbacks=[...w.noticeTimers.values()];w.noticeTimers.clear();callbacks.forEach(({fn})=>fn());};
+ }
  w.authGate=gate();w.cloudGate=gate();w.identityUser=account?{id:'slow-user',name:'Alain',email:'test@example.invalid'}:null;w.requests=[];
  w.fetch=async(url,options={})=>{w.requests.push({url,options});return options.method==='PUT'?{ok:true,status:200,json:async()=>({etag:'saved'})}:w.cloudGate.promise;};
  const own=freshMulti();own.grammar.space='words';own.grammar.last.words='study';const main=own.progress['edito-b1'],word=Study.active(main).ids[0];Study.toggle(main,word);Study.vote(main,word,'good');
@@ -44,9 +51,24 @@ test('edits during auth and cloud reads are retained and uploaded only after ETa
  }finally{dom.window.close();}
 });
 test('a newer cloud record cannot overwrite edits made while the App was opening',async()=>{
- const {dom,w,word,own}=boot();try{
+ const {dom,w,word,own}=boot({noticeTimers:true});try{
   await ready(w,'.dp-votes');w.authGate.resolve();await pause(80);await vote(w,'bad');w.cloudGate.resolve({ok:true,status:200,json:async()=>({data:own,etag:'another-device'})});await pause(800);
   assert.equal(saved(w).bundle.progress['edito-b1'].stats[word].bad,1);assert.ok(saved(w).dirty);assert.ok(!w.requests.some(r=>r.options.method==='PUT'));assert.ok(w.document.body.textContent.includes('另一台设备已更新'));
+  assert.equal(w.document.querySelectorAll('.gl-toast,.dp-toast').length,1);assert.equal(w.document.querySelectorAll('[data-learning-notice]').length,1);assert.equal([...w.noticeTimers.values()][0].ms,6000);
+  const timerIds=[...w.noticeTimers.keys()];w.location.hash='/grammar/home';await ready(w,'.gl-space-grammar');await pause();assert.deepEqual([...w.noticeTimers.keys()],timerIds);
+  w.expireNotices();await pause();assert.equal(w.document.querySelectorAll('.gl-toast,.dp-toast').length,0);
+  w.location.hash='/settings';await ready(w,'.gl-shared-settings');assert.match(w.document.querySelector('.gl-shared-settings').textContent,/另一台设备已更新/);
+  w.location.hash='/words/study';await ready(w,'.dp-votes');await vote(w,'good');await pause(800);assert.ok(!w.requests.some(r=>r.options.method==='PUT'));assert.ok(saved(w).dirty);
+ }finally{dom.window.close();}
+});
+
+test('ordinary sync errors appear once and disappear automatically without losing local edits',async()=>{
+ const {dom,w,word}=boot({noticeTimers:true});try{
+  await ready(w,'.dp-votes');w.authGate.resolve();await pause(80);await vote(w,'bad');w.cloudGate.resolve({ok:false,status:503});await ready(w,'[data-learning-notice]');await pause();
+  assert.equal(w.document.querySelectorAll('.gl-toast,.dp-toast').length,1);assert.equal([...w.noticeTimers.values()][0].ms,4000);
+  w.expireNotices();await pause();assert.equal(w.document.querySelectorAll('.gl-toast,.dp-toast').length,0);
+  assert.equal(saved(w).bundle.progress['edito-b1'].stats[word].bad,1);assert.equal(saved(w).dirty,true);
+  w.location.hash='/grammar/home';await ready(w,'.gl-space-grammar');await pause();assert.equal(w.document.querySelectorAll('[data-learning-notice]').length,0);
  }finally{dom.window.close();}
 });
 test('logout cancels a pending cloud read and prevents old responses from restoring the account',async()=>{

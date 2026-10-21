@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "packageId": "app.netlify.franmotest",
-  "versionName": "2.1.1",
-  "versionCode": 13,
-  "apkUrl": "https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.1/Franmotest-2.1.1-Android.apk",
-  "sha256": "7eaf735e120e3d9fe92f65f40d9d24634fc44ab0f1db14034ab3bd74a788e804",
-  "size": 2753996,
-  "notes": "FranLumi 2.1.1：加快打开速度，先恢复本机学习界面，账号验证和云端同步改在后台进行。网络慢时也可继续学习，保留等待期间的新操作和原账号记录。"
+  "versionName": "2.1.2",
+  "versionCode": 14,
+  "apkUrl": "https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.2/Franmotest-2.1.2-Android.apk",
+  "sha256": "c29091e8f36dff1f2df31cca02e5eae80498563170a77d9c13c5c882a7a7ee2b",
+  "size": 2807244,
+  "notes": "FranLumi 2.1.2：更新 3469 条词汇助记，按适用情况显示发音、派生和技巧；新增再测本组，保留累计次数与其他组状态。同步提示去重并自动消失，优化顶部、首页卡片与底部导航。"
 }

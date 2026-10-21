@@ -46,7 +46,7 @@ export function vote(s,id,kind){
   if(counts[kind]>=Number.MAX_SAFE_INTEGER||old&&counts[old]<1)return false;
   s.stats[id]={...counts,[kind]:counts[kind]+1};if(old)s.stats[id][old]--;
   a.votes[id]=kind;
-  if(a.passReason==='automatic'&&s.mastered[a.part]?.attemptId===a.id&&!perfect(s)){delete s.mastered[a.part];a.passReason=null;sync(s);}
+  if(a.passReason==='automatic'&&!a.completion&&s.mastered[a.part]?.attemptId===a.id&&!perfect(s)){delete s.mastered[a.part];a.passReason=null;sync(s);}
   return true;
 }
 export function selectPart(s,bank,part,options={}){
@@ -59,6 +59,16 @@ export function selectPart(s,bank,part,options={}){
 }
 export function repeat(s,bank,options={}){
   s.attempts.push(newAttempt(s,bank,active(s).part,options));s.view=s.attempts.length-1;s.round=s.attempts.length;return true;
+}
+export function repeatGroup(s,bank){
+  const a=active(s),group=groups(bank,a)[a.group];
+  if(!group)return false;
+  // Keep the proof of a completed Part before starting another group self-test.
+  const mastery=s.mastered[a.part];
+  if(mastery?.attemptId===a.id&&!a.completion)a.completion={reason:mastery.reason,votes:{...a.votes}};
+  for(const id of group.ids){delete a.opened[id];delete a.votes[id];}
+  a.passReason=null;a.retestId=crypto.randomUUID();
+  return true;
 }
 export function pass(s,bank,reason='manual',options={}){
   const a=active(s);if(a.passReason||!['manual','automatic'].includes(reason)||reason==='automatic'&&!perfect(s))return false;

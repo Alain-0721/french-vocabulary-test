@@ -55,7 +55,7 @@ test('textbook mnemonics work in both layouts without flipping, voting or changi
   assert.equal(dom.window.currentStudy.stats[entry.id].good,1);assert.ok(row().querySelector('.word-mnemonic'));
   row().querySelector('.study-mnemonic-toggle').click();await pause();assert.equal(row().querySelector('.word-mnemonic'),null);
   row().querySelector('.study-mnemonic-toggle').click();await pause();
-  doc.querySelector('.dp-quiz-actions button').click();await pause();
+  [...doc.querySelectorAll('.dp-quiz-actions button')].find(b=>b.textContent.includes('再测本部分')).click();await pause();
   assert.equal(row().querySelector('.word-mnemonic'),null);assert.equal(dom.window.currentStudy.stats[entry.id].good,1);
   assert.equal(JSON.stringify(dom.window.currentStudy.mastered),JSON.stringify(main.mastered));
  }finally{dom.window.close();}

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import * as S from '../src/preview-study.js';
+import {restoreStudy} from '../src/preview-review.js';
 
 const bank=[
  {id:'a',unite:1,partie:1,group:'Greetings',fr:'bonjour',zh:'你好'},
@@ -11,6 +12,30 @@ const bank=[
  {id:'f',unite:2,partie:1,group:'Travel',fr:'train',zh:'火车'},
 ];
 function rate(s,id,kind){S.toggle(s,id);S.vote(s,id,kind);}
+test('group retest resets only the active group and accumulates fresh ratings after backup restore',()=>{
+ const s=S.create(bank);rate(s,'a','good');rate(s,'b','bad');rate(s,'c','good');S.active(s).group=1;
+ const before=structuredClone(s);S.repeatGroup(s,bank);
+ assert.equal(S.active(s).group,1);assert.deepEqual(S.active(s).votes,{a:'good',b:'bad'});
+ assert.deepEqual(S.active(s).opened,{a:true,b:true});assert.deepEqual(s.stats,before.stats);
+ assert.equal(s.attempts.length,before.attempts.length);assert.notEqual(S.active(s).retestId,undefined);
+ const restored=restoreStudy(s,{bank,level:'B1'});assert.ok(restored);
+ rate(restored,'c','bad');assert.deepEqual(restored.stats.c,{good:1,bad:1});
+ S.repeatGroup(restored,bank);rate(restored,'c','bad');assert.deepEqual(restored.stats.c,{good:1,bad:2});
+ assert.ok(restoreStudy(restored,{bank,level:'B1'}));
+});
+test('retesting a completed group preserves manual and automatic mastery through save and later votes',()=>{
+ for(const reason of ['manual','automatic']){
+ const s=S.create(bank);for(const id of S.active(s).ids)rate(s,id,'good');
+ S.pass(s,bank,reason);s.view=0;const mastery=structuredClone(s.mastered);
+ S.repeatGroup(s,bank);assert.equal(S.active(s).passReason,null);assert.deepEqual(s.mastered,mastery);
+ assert.ok(restoreStudy(s,{bank,level:'B1'}));
+ rate(s,'a','good');rate(s,'b','good');S.pass(s,bank,'automatic');s.view=0;
+ S.vote(s,'a','bad');assert.deepEqual(s.mastered.U1P1,mastery.U1P1);
+ assert.ok(restoreStudy(s,{bank,level:'B1'}));
+ const invalid=structuredClone(s);invalid.attempts[0].completion.reason='invalid';
+ assert.equal(restoreStudy(invalid,{bank,level:'B1'}),null);
+ }
+});
 test('live sorting preserves votes, counters, open words, round and group while restoring source order',()=>{const s=S.create(bank);rate(s,'a','bad');S.active(s).group=1;const before=structuredClone(s),id=S.active(s).id;assert.ok(S.setOrder(s,bank,true,{rng:()=>0}));assert.deepEqual(S.active(s).ids,['b','a','d','c']);assert.equal(S.active(s).id,id);assert.equal(S.active(s).group,1);assert.deepEqual(S.active(s).votes,before.attempts[0].votes);assert.deepEqual(S.active(s).opened,before.attempts[0].opened);assert.deepEqual(s.stats,before.stats);assert.ok(S.setOrder(s,bank,false));assert.deepEqual(S.active(s).ids,['a','b','c','d']);assert.equal(S.setOrder(s,bank,false),false);});
 test('hidden rating rejected and repeated/changed ratings count once per round',()=>{const s=S.create(bank,'A2');assert.equal(s.level,'A2');assert.equal(S.vote(s,'a','good'),false);rate(s,'a','good');assert.equal(S.vote(s,'a','good'),false);S.vote(s,'a','bad');assert.deepEqual(s.stats.a,{good:0,bad:1});});
 test('any Part can be tested without passing earlier Parts',()=>{const s=S.create(bank);assert.ok(S.selectPart(s,bank,'U2P1'));assert.equal(S.active(s).part,'U2P1');assert.equal(s.current,0);S.pass(s,bank);assert.equal(s.current,1);assert.equal(s.mastered.U1P1,undefined);assert.equal(S.active(s).part,'U1P1');});

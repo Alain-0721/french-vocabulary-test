@@ -42,7 +42,12 @@ export function restoreStudy(raw,book){
     }
     for(const [id,c] of Object.entries(s.stats))if(!dictionary.has(id)||!c||!['good','bad'].every(k=>Number.isSafeInteger(c[k])&&c[k]>=0&&(c[k]>=(voteCounts[id]?.[k]||0))))throw Error();
     for(const id of Object.keys(voteCounts))if(!s.stats[id])throw Error();
-    for(const [part,m] of Object.entries(s.mastered)){const a=s.attempts.find(a=>a.id===m?.attemptId&&a.part===part);if(!a||!['manual','automatic'].includes(m.reason)||a.passReason!==m.reason||m.reason==='automatic'&&a.ids.some(id=>a.votes[id]!=='good'))throw Error();}
+    for(const [part,m] of Object.entries(s.mastered)){
+      const a=s.attempts.find(a=>a.id===m?.attemptId&&a.part===part);
+      if(!a||!['manual','automatic'].includes(m.reason))throw Error();
+      const proof=a.completion||{reason:a.passReason,votes:a.votes};
+      if(proof.reason!==m.reason||!proof.votes||Object.entries(proof.votes).some(([id,v])=>!a.ids.includes(id)||!['good','bad'].includes(v))||m.reason==='automatic'&&a.ids.some(id=>proof.votes[id]!=='good'))throw Error();
+    }
     if(s.current!==Object.keys(s.mastered).length||s.completed!==(s.current===order.length))throw Error();
     return s;
   }catch{return null;}
