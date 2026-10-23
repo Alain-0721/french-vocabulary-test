@@ -1,6 +1,6 @@
-# FranLumi 2.1.2 安卓版安装说明
+# FranLumi 2.1.3 安卓版安装说明
 
-[下载安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.2/FranLumi-2.1.2-Android.apk)
+[下载安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.3/FranLumi-2.1.3-Android.apk)
 
 在安卓手机打开下载的 APK，按系统提示允许当前下载工具或文件管理器安装应用。安装完成后直接点击 **FranLumi** 图标。
 
@@ -16,11 +16,11 @@
 
 - **已有账号**：账号与记录已迁到新服务，原账号首次登录需点击“忘记密码”，用原邮箱设置新密码；不要重新注册。更新前请先确保原版已同步并导出完整备份。
 - **游客记录**：先在原网站或旧版 App 的“设置与备份”导出完整备份，再在新版导入。旧版使用的浏览器存储与新版 App 存储分别保存，不会自动搬迁。
-- **已安装旧版 APK**：新版保持同一包名和发布签名，版本名为 2.1.2、内部版本号为 14，可覆盖安装。不要为了更新先卸载；卸载或清除 App 数据会移除尚未同步的本机记录。
+- **已安装旧版 APK**：新版保持同一包名和发布签名，版本名为 2.1.3、内部版本号为 15，可覆盖安装。不要为了更新先卸载；卸载或清除 App 数据会移除尚未同步的本机记录。
 
 ## 更新和下载
 
-[GitHub Release](https://github.com/Alain-0721/french-vocabulary-test/releases/tag/v2.1.2) 提供 APK、安装说明与 SHA-256 校验文件。学习界面与内置词库随 APK 更新，网页版更新不会自动替换 APK 内置界面。以后下载安装新版 APK 覆盖即可。
+[GitHub Release](https://github.com/Alain-0721/french-vocabulary-test/releases/tag/v2.1.3) 提供 APK、安装说明与 SHA-256 校验文件。学习界面与内置词库随 APK 更新，网页版更新不会自动替换 APK 内置界面。以后下载安装新版 APK 覆盖即可。
 
 App 使用安卓系统内置 WebView 显示随安装包附带的页面，无浏览器地址栏，也不使用浏览器打开学习页面。教程中的“下载文件”、项目 GitHub 等外部链接仅在主动点击时打开对应应用。
 

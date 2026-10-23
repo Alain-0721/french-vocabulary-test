@@ -9,6 +9,6 @@ copyFileSync(apk,compatibleApk);
 const manifest={schema:1,packageId:config.packageId,versionName:config.appVersion,versionCode:config.appVersionCode,
  apkUrl:`https://github.com/Alain-0721/french-vocabulary-test/releases/download/v${config.appVersion}/Franmotest-${config.appVersion}-Android.apk`,
  sha256:createHash('sha256').update(readFileSync(apk)).digest('hex'),size:statSync(apk).size,
- notes:`FranLumi ${config.appVersion}：更新 3469 条词汇助记，按适用情况显示发音、派生和技巧；新增再测本组，保留累计次数与其他组状态。同步提示去重并自动消失，优化顶部、首页卡片与底部导航。`};
+ notes:`FranLumi ${config.appVersion}：时态专题改用清晰笔记式结构，直接展示构成、常用不规则词、例外、配合与完整变位查询；重新设计品牌标志，并在未翻开翻译时显示灰色对错累计次数。`};
 writeFileSync(new URL('../../website/public/android-update.json',import.meta.url),JSON.stringify(manifest,null,2)+'\n');
 console.log(`Android update metadata ready: ${manifest.versionName}, build ${manifest.versionCode}`);

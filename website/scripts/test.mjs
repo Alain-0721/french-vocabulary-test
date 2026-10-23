@@ -67,12 +67,14 @@ try{
  const doc=dom.window.document;
  check('Home renders real fresh progress',()=>{assert.match(doc.body.textContent,/Bonjour/);assert.match(doc.body.textContent,/0 \/ 24 Part/);});
  const click=async el=>{assert.ok(el);el.click();await new Promise(r=>setTimeout(r,45));};
+  const waitFor=async predicate=>{const deadline=Date.now()+2000;while(Date.now()<deadline){if(predicate())return;await new Promise(r=>setTimeout(r,25));}assert.fail('UI did not update within 2 seconds');};
  await click([...doc.querySelectorAll('button')].find(e=>e.textContent.includes('继续课本检测')));
  let card=doc.querySelector('.study-main>.quiz-card');const oldId=card.dataset.attempt;
  check('Answer and scores stay hidden initially',()=>{assert.ok(card.querySelector('.answer.invisible'));assert.ok(card.querySelector('.vote:disabled'));});
  await click(card.querySelector('.word-trigger'));await click(card.querySelector('.vote.good'));
  check('Word flip enables scoring and reveals translation',()=>{assert.equal(card.querySelector('.vote.good').disabled,false);assert.ok(card.querySelector('.vote.good.chosen'));});
  await click([...card.querySelectorAll('button')].find(b=>b.textContent.includes('本部分过关')));
+  await waitFor(()=>doc.querySelector('.study-main>.quiz-card')?.dataset.attempt!==oldId);
  card=doc.querySelector('.study-main>.quiz-card');
  check('UI pass creates new card and history keeps old card',()=>{assert.notEqual(card.dataset.attempt,oldId);assert.match(card.textContent,/U1 · P2/);assert.equal(doc.querySelector('.history [data-attempt]').dataset.attempt,oldId);});
  const cache=JSON.parse(dom.window.localStorage.getItem('edito-atelier:v1:guest'));

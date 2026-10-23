@@ -18,7 +18,7 @@ export function WordRow({entry,index,attempt,stats,act,mnemonic}){
     </div>
     <div className={`study-word-bottom${mnemonic?' has-mnemonic':''}`}>
       {mnemonic&&<MnemonicButton word={entry.fr} id={mnemonicId} open={mnemonicOpen} onToggle={()=>setMnemonicAttempt(mnemonicOpen?null:attempt.id)}/>}
-      <div className="dp-votes">{['good','bad'].map(kind=><button key={kind} disabled={!open} aria-label={`${kind==='good'?'正确':'错误'} ${entry.fr}`} aria-pressed={vote===kind} className={`${kind} ${vote===kind?'chosen':''}`} onClick={e=>{e.stopPropagation();act('vote',entry.id,kind,attempt.id);}}>{kind==='good'?<Check size={16}/>:<X size={16}/>}<span className={!open?'hidden':''}>{counts[kind]}</span></button>)}</div>
+      <div className="dp-votes">{['good','bad'].map(kind=><button key={kind} disabled={!open} aria-label={`${kind==='good'?'正确':'错误'} ${entry.fr}`} aria-pressed={vote===kind} className={`${kind} ${vote===kind?'chosen':''}`} onClick={e=>{e.stopPropagation();act('vote',entry.id,kind,attempt.id);}}>{kind==='good'?<Check size={16}/>:<X size={16}/>}<span>{counts[kind]}</span></button>)}</div>
       <span className={`dp-answer ${!open?'hidden':''}`} aria-hidden={!open}>{entry.zh}</span>
     </div>
     {mnemonic&&mnemonicOpen&&<div className="study-mnemonic" onClick={e=>e.stopPropagation()}><Mnemonic text={mnemonic} id={mnemonicId}/></div>}

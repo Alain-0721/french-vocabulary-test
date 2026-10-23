@@ -1,6 +1,6 @@
 # FranLumi · 法语之光
 
-**FranLumi 2.1.2** 是法语集成学习系统，包含独立的 **单词之光** 和 **语法之光**。首次进入选择学习空间，之后记住上次选择，顶部随时切换。网页版、离线 PWA 和独立安卓 App 使用同一套学习内容；登录后两个空间的记录由同一账号保存。仓库另含 **1.0.8** 版 ChatGPT 词汇插件源码、三个 skill、HTML 卡片和 MCP 服务。
+**FranLumi 2.1.3** 是法语集成学习系统，包含独立的 **单词之光** 和 **语法之光**。首次进入选择学习空间，之后记住上次选择，顶部随时切换。网页版、离线 PWA 和独立安卓 App 使用同一套学习内容；登录后两个空间的记录由同一账号保存。仓库另含 **1.0.8** 版 ChatGPT 词汇插件源码、三个 skill、HTML 卡片和 MCP 服务。
 
 ## 在线学习网站
 
@@ -10,9 +10,9 @@ https://franlumi.pages.dev/
 
 [语法使用教程](https://franlumi.pages.dev/#/grammar/about) · [单词使用教程](https://franlumi.pages.dev/#/words/about) · [词库生成与导入教程](website/AI词库生成与导入教程.md) · [下载与安装](https://github.com/Alain-0721/french-vocabulary-test/releases)
 
-**[下载 FranLumi 2.1.2 安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.2/FranLumi-2.1.2-Android.apk)** · [安卓安装说明](android-app/INSTALL.md)。支持 Android 6.0 及以上，界面、四本词库和语法内容内置，直接在 App 中运行。旧版 Franmotest 用户可以检查更新并覆盖安装，原包名、发布签名和本机存储来源保留。账号登录与云同步需要联网。
+**[下载 FranLumi 2.1.3 安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.3/FranLumi-2.1.3-Android.apk)** · [安卓安装说明](android-app/INSTALL.md)。支持 Android 6.0 及以上，界面、四本词库和语法内容内置，直接在 App 中运行。旧版 Franmotest 用户可以检查更新并覆盖安装，原包名、发布签名和本机存储来源保留。账号登录与云同步需要联网。
 
-**2.1.2 更新**：新版 3469 条助记按适用情况展示发音、派生和技巧；课本过关底部新增“再测本组”，中间保留“再测本部分”。同步提示去重并自动消失，顶部选书按钮及两空间首页首张卡片尺寸统一。
+**2.1.3 更新**：A1–B1 时态专题改为清晰的笔记式结构，直接展示构成、常用不规则词、例外、配合与完整变位查询；重新设计法语之光、单词之光和语法之光标志，并让未翻开翻译时的对错累计次数以灰色显示。
 
 **2.1.1 启动优化**：直接打开上次账号的本机记录，联网验证与云端读取在后台进行；网络慢也能继续学习，等待期间的新操作会保存，核对云端版本后再同步。
 
