@@ -1,5 +1,10 @@
 {
   "name": "franmotest",
   "pages_build_output_dir": "./dist-cloudflare",
-  "compatibility_date": "2026-10-06"
+  "compatibility_date": "2026-10-06",
+  "vars": {
+    "SUPABASE_URL": "https://fycftmqnuukbdvbmxfbc.supabase.co",
+    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ5Y2Z0bXFudXVrYmR2Ym14ZmJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNTYwMTksImV4cCI6MjEwNjkzMjAxOX0.EmqIzfK5CpN38Dcg65vZiQaM55IebM9zT5eB5J_wH7s",
+    "ALLOWED_ORIGINS": "https://franlumi.pages.dev,https://franmotest.pages.dev,https://franmotest.netlify.app"
+  }
 }
