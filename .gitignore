@@ -38,5 +38,9 @@ android-app/*.aab
 *.jks
 *.keystore
 
+# Local-only backup import helpers; never publish user data
+website/public/dev-backup.json
+website/public/dev-import-backup.html
+
 # User-provided textbook PDFs and local reference documents
 texte/

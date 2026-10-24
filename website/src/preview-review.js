@@ -14,11 +14,23 @@ export function createDaily(book,main,previous=null){
 }
 export function reviewGroups(quiz,mode){return Array.from({length:5},(_,i)=>({label:mode==='daily'?quiz.themes[i]:`第 ${i+1} 组`,ids:quiz.ids.slice(i*10,i*10+10),part:mode==='daily'?quiz.parts[i]:null}));}
 export function validDaily(quiz,book,main){return !quiz||D.validRound(quiz,book.bank,eligible(main));}
+// 副进度组内排序：教材顺序按词库位置还原；打乱只发生在每组 10 词内部，组与组的归属不变。
+function reorderQuiz(quiz,book,shuffle){
+  const index=new Map(book.bank.map((e,i)=>[e.id,i]));
+  const blocks=Array.from({length:quiz.ids.length/10},(_,g)=>quiz.ids.slice(g*10,g*10+10));
+  return blocks.map(block=>{
+    const ordered=block.slice().sort((a,b)=>index.get(a)-index.get(b));
+    if(!shuffle)return ordered;
+    for(let i=ordered.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ordered[i],ordered[j]]=[ordered[j],ordered[i]];}
+    return ordered;
+  }).flat();
+}
 export function reviewAction(quiz,mode,action,id,kind,book){
   if(!quiz)return null;const next=structuredClone(quiz),core=mode==='daily'?D:V;
   if(action==='toggle')return core.toggle(next,id)?next:quiz;
   if(action==='vote')return core.vote(next,id,kind)?next:quiz;
   if(action==='group'&&Number.isInteger(id)&&id>=0&&id<5){next.group=id;return next;}
+  if(action==='order'){const shuffle=id===true;next.shuffled=shuffle;next.ids=reorderQuiz(next,book,shuffle);return next;}
   if(action==='repeat')return mode==='daily'?{...next,round:next.round+1,launchId:crypto.randomUUID(),opened:{},votes:{},group:0}:V.restart(next,practiceBank(book),false);
   if(action==='next'&&mode==='practice')return V.restart(next,practiceBank(book),true);
   return quiz;

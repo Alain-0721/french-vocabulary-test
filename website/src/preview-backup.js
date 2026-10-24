@@ -3,6 +3,7 @@ import {downloadText} from './vocabulary-guide.js';
 import * as Study from './preview-study.js';
 import {normalizeGrammarState} from './grammar-preview/backup.js';
 import {D,V,practiceBank,eligible,restoreStudy,convertClassicMain} from './preview-review.js';
+import {validMistakeRound} from './mistake-review.js';
 
 const safeId=id=>typeof id==='string'&&id.length>0&&id.length<=150&&!['__proto__','prototype','constructor'].includes(id);
 export function fullBackup(books,progress,settings,bookId,secondary,theme){return {version:1,mode:'multi-atelier-preview',exportedAt:new Date().toISOString(),bookId,books,progress,settings,secondary,theme};}
@@ -15,13 +16,16 @@ function restoreBook(b,existing){
   const entries=validateEntries(b.bank);return {...makeImportedBook({entries,summary:vocabularySummary(entries),filename:b.sourceFilename||''},b,b.id),remember:false};
 }
 function restoreSecondary(raw,book,main){
-  const r={daily:null,practice:null,dailyHistory:[],practiceHistory:[],dailyAllowed:eligible(main)};if(!raw)return r;
+  const r={daily:null,practice:null,dailyHistory:[],practiceHistory:[],mistakes:null,mistakesHistory:[],mistakeStats:{},dailyAllowed:eligible(main)};if(!raw)return r;
   const validRound=(q,allowed)=>Number.isSafeInteger(q?.round)&&q.round>=1&&typeof q.launchId==='string'&&q.launchId.length>0&&/^\d{4}-\d{2}-\d{2}$/.test(q.day)&&D.validRound(q,book.bank,allowed);
   if(raw.daily){if(!validRound(raw.daily,eligible(main)))throw Error(`${book.name} 的每日检测记录无效。`);r.daily=structuredClone(raw.daily);}
   if(raw.practice){r.practice=V.restore(raw.practice,practiceBank(book));if(!r.practice)throw Error(`${book.name} 的普通检测记录无效。`);}
   if(raw.dailyStats){r.dailyStats=structuredClone(raw.dailyStats);for(const [id,c] of Object.entries(r.dailyStats))if(!book.bank.some(e=>e.id===id)||!c||!['good','bad'].every(k=>Number.isSafeInteger(c[k])&&c[k]>=0))throw Error('每日累计记录无效。');}
   if(raw.dailySerial!==undefined){if(!Number.isSafeInteger(raw.dailySerial)||raw.dailySerial<0)throw Error('每日轮次无效。');r.dailySerial=raw.dailySerial;}
   for(const mode of ['daily','practice']){const history=raw[mode+'History']||[];if(!Array.isArray(history)||history.length>20)throw Error('复习历史格式无效。');r[mode+'History']=history.map(h=>{if(mode==='daily'){if(!Array.isArray(h.allowed)||new Set(h.allowed).size!==h.allowed.length||h.allowed.some(p=>!main.order.includes(p))||!validRound(h.round,h.allowed))throw Error('每日检测历史无效。');return structuredClone(h);}const restored=V.restore(h,practiceBank(book));if(!restored)throw Error('普通检测历史无效。');return restored;});}
+  if(raw.mistakes){if(!validMistakeRound(raw.mistakes,main))throw Error(`${book.name} 的易错复习记录无效。`);r.mistakes=structuredClone(raw.mistakes);}
+  if(raw.mistakesHistory){if(!Array.isArray(raw.mistakesHistory)||raw.mistakesHistory.length>20)throw Error('易错复习历史格式无效。');r.mistakesHistory=raw.mistakesHistory.map(h=>{if(!validMistakeRound(h,main))throw Error('易错复习历史无效。');return structuredClone(h);});}
+  if(raw.mistakeStats){r.mistakeStats={};for(const [id,s] of Object.entries(raw.mistakeStats)){if(!book.bank.some(e=>e.id===id)||!s||!Number.isSafeInteger(s.streak)||s.streak<0||typeof s.consolidated!=='boolean'||!Array.isArray(s.rounds)||s.rounds.some(n=>!Number.isSafeInteger(n)||n<1))throw Error('易错巩固记录无效。');r.mistakeStats[id]={streak:s.streak,consolidated:s.consolidated,rounds:[...s.rounds]};}}
   return r;
 }
 export function readBackup(raw,existing,current){

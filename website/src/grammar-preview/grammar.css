@@ -24,7 +24,7 @@ body:has(.gl-root){background:#fbf8f2;margin:0}.gl-root{--gl-bg:#fbf8f2;--gl-pan
 .gl-header-end .ac-trigger{min-height:36px}
 .gl-production .gl-guide-entry{margin-bottom:20px}
 @media(min-width:761px){.gl-production .gl-word-host .dp-sidebar{display:flex;top:84px}.gl-production.gl-top-collapsed .gl-word-host .dp-sidebar{top:44px}.gl-production .gl-word-host .dp-main{margin-left:232px}.gl-production .gl-word-title{margin-left:232px}}
-:root[data-preview-theme=dark] .gl-root.gl-space-words{--gl-bg:#131d28;--gl-panel:#1d2936;--gl-ink:#d4deec;--gl-muted:#a1b1c6;--gl-line:#324152;--gl-gold:#8da5f6;--gl-soft:#25364b;background:var(--gl-bg)}
+:root[data-preview-theme=dark] .gl-root.gl-space-words{--gl-bg:#131d28;--gl-panel:#1d2936;--gl-ink:#d4deec;--gl-muted:#a1b1c6;--gl-line:#324152;--gl-gold:#8da5f6;--gl-soft:#25364b;--panel:#1d2936;--line:#324152;--blue:#8da5f6;--muted:#a1b1c6;--green:#63a98b;--bg:#131d28;background:var(--gl-bg)}
 :root[data-preview-theme=dark] .gl-space-words .gl-header{background:#1d2936f5}
 :root[data-preview-theme=dark] .gl-space-words .gl-space-switch{background:#25364b}
 :root[data-preview-theme=dark] .gl-space-words .gl-space-switch button[aria-pressed=true]{background:#1d2936;color:#8da5f6}
