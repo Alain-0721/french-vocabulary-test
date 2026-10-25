@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "packageId": "app.netlify.franmotest",
-  "versionName": "2.1.5",
-  "versionCode": 17,
-  "apkUrl": "https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.5/Franmotest-2.1.5-Android.apk",
-  "sha256": "bbe64cec2fa143481a25ff0a2d827c05dd7dc40571d9523eecaa4f1e9cc7ac3d",
+  "versionName": "2.1.6",
+  "versionCode": 18,
+  "apkUrl": "https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.6/Franmotest-2.1.6-Android.apk",
+  "sha256": "0d13e4ceef15296f2ee160b48ce928b423760a85f611bdea875baca030b84615",
   "size": 2827724,
-  "notes": "FranLumi 2.1.5：课本过关新增 Part 快捷下拉，显示中法主题名与课本页数；易错复习刷新按钮固定在标题行右侧，优化窄屏标题布局。"
+  "notes": "FranLumi 2.1.6：主题分组新增已判词数、对错数量与正确率小字统计；隐藏分组选择条的横向滑块。"
 }

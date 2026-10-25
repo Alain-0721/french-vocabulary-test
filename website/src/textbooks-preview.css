@@ -33,6 +33,9 @@
 @media(max-width:760px){.dp-page-heading.inner{flex-wrap:wrap}.dp-page-heading.inner>.choice-menu{max-width:100%;width:100%;order:1;margin-top:14px}.dp-page-heading.inner>div{flex:1 1 100%}.dp-page-heading.inner .choice-trigger{min-height:38px}}
 .dp-page-heading.inner>.dp-button.icon-only{align-self:flex-start;margin:-46px -16px 0 auto;flex-shrink:0}
 .study-part-grid .chapter-page{color:#8fa3c2}
+.dp-theme{align-items:center}.study-theme-score{display:grid;gap:4px;justify-items:end;margin-left:auto;white-space:nowrap;font-size:8px;color:#a8b1c0}.theme-score-row{display:flex;align-items:center;gap:7px}.study-theme-score .score-good{display:flex;align-items:center;gap:2px;color:#76a58d}.study-theme-score .score-bad{display:flex;align-items:center;gap:2px;color:#b76a78}.study-theme-score i{width:2px;height:2px;border-radius:50%;background:#bec8d8;flex-shrink:0}.study-theme-score b{font-weight:500;color:#8498c0}
+.dp-group-tabs{scrollbar-width:none;-ms-overflow-style:none}.dp-group-tabs::-webkit-scrollbar{display:none}
+@media(max-width:480px){.study-theme-score{font-size:9px;padding:7px 10px;gap:4px}.dp-theme{gap:10px 12px}}
 /* Per-round records inside each Part (学习记录 · 课本过关) */
 .study-round-list{display:grid;gap:10px;margin-bottom:18px}
 .study-round-details{background:#fff;border:1px solid #e5eaf2;border-radius:9px;padding:0}
