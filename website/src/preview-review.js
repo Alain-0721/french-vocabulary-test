@@ -1,18 +1,14 @@
 import '../../assets/daily-core.js';
-import '../../assets/vocabulary-core.js';
-import ordinaryBank from '../../assets/vocabulary-bank.json' with {type:'json'};
 import * as Study from './preview-study.js';
 
-export const D=globalThis.DailyCore,V=globalThis.VocabCore;
+export const D=globalThis.DailyCore;
 export const day=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 export const eligible=main=>main.order.filter(p=>main.mastered[p]);
-export const practiceBank=book=>book.id==='edito-b1'?ordinaryBank:book.bank?.filter(e=>Number(e.unite)===1&&[1,2].includes(Number(e.partie)))||[];
-export function createPractice(book){try{return V.create(practiceBank(book));}catch{return null;}}
 export function createDaily(book,main,previous=null){
   const allowed=eligible(main),problem=D.problem(book.bank,allowed);
   return problem?{problem,round:null}:{problem:null,round:D.create(book.bank,allowed,crypto.randomUUID(),day(),previous)};
 }
-export function reviewGroups(quiz,mode){return Array.from({length:5},(_,i)=>({label:mode==='daily'?quiz.themes[i]:`第 ${i+1} 组`,ids:quiz.ids.slice(i*10,i*10+10),part:mode==='daily'?quiz.parts[i]:null}));}
+export function reviewGroups(quiz){return Array.from({length:5},(_,i)=>({label:quiz.themes[i],ids:quiz.ids.slice(i*10,i*10+10),part:quiz.parts[i]}));}
 export function validDaily(quiz,book,main){return !quiz||D.validRound(quiz,book.bank,eligible(main));}
 // 副进度组内排序：教材顺序按词库位置还原；打乱只发生在每组 10 词内部，组与组的归属不变。
 function reorderQuiz(quiz,book,shuffle){
@@ -25,14 +21,13 @@ function reorderQuiz(quiz,book,shuffle){
     return ordered;
   }).flat();
 }
-export function reviewAction(quiz,mode,action,id,kind,book){
-  if(!quiz)return null;const next=structuredClone(quiz),core=mode==='daily'?D:V;
-  if(action==='toggle')return core.toggle(next,id)?next:quiz;
-  if(action==='vote')return core.vote(next,id,kind)?next:quiz;
+export function reviewAction(quiz,action,id,kind,book){
+  if(!quiz)return null;const next=structuredClone(quiz);
+  if(action==='toggle')return D.toggle(next,id)?next:quiz;
+  if(action==='vote')return D.vote(next,id,kind)?next:quiz;
   if(action==='group'&&Number.isInteger(id)&&id>=0&&id<5){next.group=id;return next;}
   if(action==='order'){const shuffle=id===true;next.shuffled=shuffle;next.ids=reorderQuiz(next,book,shuffle);return next;}
-  if(action==='repeat')return mode==='daily'?{...next,round:next.round+1,launchId:crypto.randomUUID(),opened:{},votes:{},group:0}:V.restart(next,practiceBank(book),false);
-  if(action==='next'&&mode==='practice')return V.restart(next,practiceBank(book),true);
+  if(action==='repeat')return {...next,round:next.round+1,launchId:crypto.randomUUID(),opened:{},votes:{},group:0};
   return quiz;
 }
 

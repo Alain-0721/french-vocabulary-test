@@ -19,10 +19,10 @@ test('invalid counters and substituted built-in banks cannot restore',()=>{
  const s=freshMulti();s.progress['edito-b1'].stats.unknown={good:2,bad:0};assert.equal(restoreMulti(s),null);
  const b=structuredClone(freshMulti());b.books[0].bank[0].zh='substitute';assert.equal(restoreMulti(b),null);
 });
-test('old full backup migrates main, daily and ordinary records without altering source',()=>{
+test('old full backup migrates main and daily records without altering source',()=>{
  let old=fresh();for(let i=0;i<4;i++)old=bookAction(old,currentAttempt(old.main).id,'pass');old=makeDaily(old).state;
  const id=old.daily.ids[0];D.toggle(old.daily,id);D.vote(old.daily,id,'bad');old.dailyStats=structuredClone(old.daily.stats);old.dailySerial=old.daily.round;old=makeDaily(old).state;
- const before=JSON.stringify(old),s=migrateClassic(old);assert.ok(s);assert.equal(JSON.stringify(old),before);assert.equal(s.progress['edito-b1'].current,4);assert.deepEqual(s.secondary['edito-b1'].dailyStats,old.dailyStats);assert.deepEqual(s.secondary['edito-b1'].dailyHistory,old.dailyHistory);for(const key of ['ids','votes','stats','round','group'])assert.deepEqual(s.secondary['edito-b1'].practice[key],old.ordinary[key]);
+ const before=JSON.stringify(old),s=migrateClassic(old);assert.ok(s);assert.equal(JSON.stringify(old),before);assert.equal(s.progress['edito-b1'].current,4);assert.deepEqual(s.secondary['edito-b1'].dailyStats,old.dailyStats);assert.deepEqual(s.secondary['edito-b1'].dailyHistory,old.dailyHistory);assert.equal(s.secondary['edito-b1'].practice,undefined);
 });
 test('cloud API isolates accounts and deployments, migrates read-only, validates origin and ETags',async()=>{
  const base=resolve('.netlify'),dir=await mkdtemp(join(base,'multi-api-test-'));assert.ok(dir.startsWith(base));

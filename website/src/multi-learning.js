@@ -20,6 +20,7 @@ export function migrateClassic(raw){
   const old=restoreBundle(raw);if(!old)return null;
   const s=freshMulti(),converted=readBackup(old,initialBooks,s.progress);
   s.progress=converted.progress;
-  s.secondary['edito-b1']={daily:old.daily,practice:old.ordinary,dailyHistory:old.dailyHistory,practiceHistory:old.ordinaryHistory,dailyAllowed:s.progress['edito-b1'].order.filter(p=>s.progress['edito-b1'].mastered[p]),dailyStats:old.dailyStats,dailySerial:old.dailySerial};
+  // 普通检测功能已移除；旧版普通练习记录不再迁移。
+  s.secondary['edito-b1']={daily:old.daily,dailyHistory:old.dailyHistory,dailyAllowed:s.progress['edito-b1'].order.filter(p=>s.progress['edito-b1'].mastered[p]),dailyStats:old.dailyStats,dailySerial:old.dailySerial};
   return restoreMulti(touchMulti(s));
 }

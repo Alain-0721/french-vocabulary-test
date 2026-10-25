@@ -10,7 +10,7 @@ let passed=0;
 function check(name,fn){fn();passed++;console.log('✓ '+name);}
 try{
  await build({entryPoints:['src/engine.js'],bundle:true,platform:'node',format:'esm',outfile:join(dir,'engine.mjs'),logLevel:'silent'});
- const {bank,ordinaryBank,T,D,V,fresh,currentAttempt,bookAction,makeDaily,restoreBundle,importRecord}=await import(pathToFileURL(join(dir,'engine.mjs')));
+ const {bank,T,D,fresh,currentAttempt,bookAction,makeDaily,restoreBundle,importRecord}=await import(pathToFileURL(join(dir,'engine.mjs')));
  let s=fresh();const first=currentAttempt(s.main),id=first.ids[0];
  check('1110 stable entries and 24 Parts',()=>{assert.equal(bank.length,1110);assert.equal(new Set(bank.map(e=>e.id)).size,1110);assert.equal(s.main.order.length,24);});
  check('Fresh users start U1P1 without mastered Parts',()=>{assert.equal(first.part,'U1P1');assert.equal(s.main.current,0);assert.equal(s.daily,null);});
@@ -58,8 +58,6 @@ try{
  globalThis.testUser={id:'test-user-a'};
  assert.equal((await (await api(request(),{deploy:{context:'deploy-preview'}})).json()).data,null);console.log('✓ Accounts and preview deployments have isolated progress');passed++;
  delete globalThis.testUser;
- const ordinary=V.create(ordinaryBank);
- check('Ordinary mode is 50 words and separate from main',()=>{assert.equal(ordinary.ids.length,50);assert.equal(new Set(ordinary.ids).size,50);assert.equal(T.create(bank).current,0);});
  const dom=new JSDOM('<!DOCTYPE html><div id="root"></div>',{url:'https://example.test/#/home',pretendToBeVisual:true,runScripts:'dangerously'});
  dom.window.structuredClone=structuredClone;dom.window.scrollTo=()=>{};
  const result=await build({entryPoints:['src/main.jsx'],bundle:true,write:false,format:'iife',platform:'browser',loader:{'.css':'empty'},plugins:[{name:'auth-test',setup(b){b.onResolve({filter:/^@netlify\/identity$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:'export const getUser=async()=>null,getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,refreshSession=async()=>null,onAuthChange=()=>()=>{};export const login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},updateUser=async()=>{},acceptInvite=async()=>{};',loader:'js'}));}}],logLevel:'silent'});

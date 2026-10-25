@@ -2,7 +2,7 @@ import {validateEntries,makeImportedBook,vocabularySummary,sameVocabulary} from 
 import {downloadText} from './vocabulary-guide.js';
 import * as Study from './preview-study.js';
 import {normalizeGrammarState} from './grammar-preview/backup.js';
-import {D,V,practiceBank,eligible,restoreStudy,convertClassicMain} from './preview-review.js';
+import {D,eligible,restoreStudy,convertClassicMain} from './preview-review.js';
 import {validMistakeRound} from './mistake-review.js';
 
 const safeId=id=>typeof id==='string'&&id.length>0&&id.length<=150&&!['__proto__','prototype','constructor'].includes(id);
@@ -16,13 +16,14 @@ function restoreBook(b,existing){
   const entries=validateEntries(b.bank);return {...makeImportedBook({entries,summary:vocabularySummary(entries),filename:b.sourceFilename||''},b,b.id),remember:false};
 }
 function restoreSecondary(raw,book,main){
-  const r={daily:null,practice:null,dailyHistory:[],practiceHistory:[],mistakes:null,mistakesHistory:[],mistakeStats:{},dailyAllowed:eligible(main)};if(!raw)return r;
+  // 普通检测已移除：旧备份中的 practice / practiceHistory 一律忽略。
+  const r={daily:null,dailyHistory:[],mistakes:null,mistakesHistory:[],mistakeStats:{},dailyAllowed:eligible(main)};if(!raw)return r;
   const validRound=(q,allowed)=>Number.isSafeInteger(q?.round)&&q.round>=1&&typeof q.launchId==='string'&&q.launchId.length>0&&/^\d{4}-\d{2}-\d{2}$/.test(q.day)&&D.validRound(q,book.bank,allowed);
-  if(raw.daily){if(!validRound(raw.daily,eligible(main)))throw Error(`${book.name} 的每日检测记录无效。`);r.daily=structuredClone(raw.daily);}
-  if(raw.practice){r.practice=V.restore(raw.practice,practiceBank(book));if(!r.practice)throw Error(`${book.name} 的普通检测记录无效。`);}
+  // 每日轮次只在有判定时保留；0 判定的空轮次（旧版本会生成）不进入恢复结果。
+  if(raw.daily&&Object.keys(raw.daily.votes||{}).length){if(!validRound(raw.daily,eligible(main)))throw Error(`${book.name} 的每日检测记录无效。`);r.daily=structuredClone(raw.daily);}
   if(raw.dailyStats){r.dailyStats=structuredClone(raw.dailyStats);for(const [id,c] of Object.entries(r.dailyStats))if(!book.bank.some(e=>e.id===id)||!c||!['good','bad'].every(k=>Number.isSafeInteger(c[k])&&c[k]>=0))throw Error('每日累计记录无效。');}
   if(raw.dailySerial!==undefined){if(!Number.isSafeInteger(raw.dailySerial)||raw.dailySerial<0)throw Error('每日轮次无效。');r.dailySerial=raw.dailySerial;}
-  for(const mode of ['daily','practice']){const history=raw[mode+'History']||[];if(!Array.isArray(history)||history.length>20)throw Error('复习历史格式无效。');r[mode+'History']=history.map(h=>{if(mode==='daily'){if(!Array.isArray(h.allowed)||new Set(h.allowed).size!==h.allowed.length||h.allowed.some(p=>!main.order.includes(p))||!validRound(h.round,h.allowed))throw Error('每日检测历史无效。');return structuredClone(h);}const restored=V.restore(h,practiceBank(book));if(!restored)throw Error('普通检测历史无效。');return restored;});}
+  {const history=raw.dailyHistory||[];if(!Array.isArray(history)||history.length>20)throw Error('复习历史格式无效。');r.dailyHistory=history.map(h=>{if(!Object.keys(h.round?.votes||{}).length)return null;if(!Array.isArray(h.allowed)||new Set(h.allowed).size!==h.allowed.length||h.allowed.some(p=>!main.order.includes(p))||!validRound(h.round,h.allowed))throw Error('每日检测历史无效。');return structuredClone(h);}).filter(Boolean);}
   if(raw.mistakes){if(!validMistakeRound(raw.mistakes,main))throw Error(`${book.name} 的易错复习记录无效。`);r.mistakes=structuredClone(raw.mistakes);}
   if(raw.mistakesHistory){if(!Array.isArray(raw.mistakesHistory)||raw.mistakesHistory.length>20)throw Error('易错复习历史格式无效。');r.mistakesHistory=raw.mistakesHistory.map(h=>{if(!validMistakeRound(h,main))throw Error('易错复习历史无效。');return structuredClone(h);});}
   if(raw.mistakeStats){r.mistakeStats={};for(const [id,s] of Object.entries(raw.mistakeStats)){if(!book.bank.some(e=>e.id===id)||!s||!Number.isSafeInteger(s.streak)||s.streak<0||typeof s.consolidated!=='boolean'||!Array.isArray(s.rounds)||s.rounds.some(n=>!Number.isSafeInteger(n)||n<1))throw Error('易错巩固记录无效。');r.mistakeStats[id]={streak:s.streak,consolidated:s.consolidated,rounds:[...s.rounds]};}}
@@ -42,10 +43,10 @@ export function readBackup(raw,existing,current){
   if(data?.mode==='multi-atelier-main'){
     if(data.version!==1)throw Error('主进度版本无效。');
     const book=restoreBook(data.book,existing),s=book.bank&&restoreStudy(data.main,book);if(!s)throw Error('课本主进度或累计记录无效。');
-    return {books:existing.some(b=>b.id===book.id)?existing.map(b=>b.id===book.id?book:b):[...existing,book],progress:{...current,[book.id]:s},bookId:book.id,secondary:{[book.id]:{daily:null,practice:null}},label:`${book.name} 主进度`};
+    return {books:existing.some(b=>b.id===book.id)?existing.map(b=>b.id===book.id?book:b):[...existing,book],progress:{...current,[book.id]:s},bookId:book.id,secondary:{[book.id]:{daily:null}},label:`${book.name} 主进度`};
   }
   const book=existing.find(b=>b.id==='edito-b1'),main=book&&convertClassicMain(data?.mode==='atelier'?data.main:data,book);
-  if(main)return {books:existing,progress:{...current,[book.id]:main},bookId:book.id,secondary:{[book.id]:{daily:null,practice:null}},label:'原 Édito B1 网站 / 插件主进度'};
+  if(main)return {books:existing,progress:{...current,[book.id]:main},bookId:book.id,secondary:{[book.id]:{daily:null}},label:'原 Édito B1 网站 / 插件主进度'};
   throw Error('请选择有效的网站备份、旧版网站完整备份或插件主进度文件。');
 }
 export function downloadJSON(data,filename){downloadText(filename,JSON.stringify(data,null,2),'application/json');}

@@ -63,7 +63,7 @@ export function restoreGrammarBackup(current,backup){
 }
 export function normalizeGrammarState(raw){
  const validated=readGrammarBackup(raw).state;
- const pages={grammar:['home','catalog','tenses','tense-topic','practice','records','settings','about'],words:['home','study','daily','library','settings','books','dictionary','records','guide','about','practice']};
+ const pages={grammar:['home','catalog','tenses','tense-topic','practice','records','settings','about'],words:['home','study','daily','library','settings','books','dictionary','records','guide','about']};
  const last=Object.fromEntries(Object.entries(pages).map(([space,allowed])=>[space,allowed.includes(raw.last?.[space])?raw.last[space]:'home']));
  return {...validated,space:raw.space,last};
 }

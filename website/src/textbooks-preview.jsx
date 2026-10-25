@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {BookOpen, Library, CalendarDays, ChartNoAxesCombined, ChevronDown, ChevronRight, ArrowRight, ArrowUpRight, Check, X, Plus, Search, Sparkles, Layers, RotateCcw, LockKeyhole, CheckCircle2, Bookmark, Info, Upload, ArrowLeft, GraduationCap, Settings2,LayoutDashboard,Shuffle,CircleAlert} from 'lucide-react';
+import {BookOpen, Library, CalendarDays, ChartNoAxesCombined, ChevronDown, ChevronRight, ArrowRight, ArrowUpRight, Check, X, Plus, Search, Sparkles, Layers, RotateCcw, LockKeyhole, CheckCircle2, Bookmark, Info, Upload, ArrowLeft, GraduationCap, Settings2,LayoutDashboard,CircleAlert} from 'lucide-react';
 import '../../assets/textbook-core.js';
 import bank from '../../assets/textbook-bank.json';
 import partTitles from '../../assets/part-titles.json';
@@ -18,10 +18,11 @@ import {touchMulti,migrateClassic} from './multi-learning.js';
 import * as Study from './preview-study.js';
 import {Quiz,PartDirectory,Records,Settings,About} from './study-preview-ui.jsx';
 import {Home,SettingsAndBackup,LibraryStatistics,ReviewQuiz,DailyIntro,MistakeReview,PRODUCTION} from './navigation-preview-ui.jsx';
-import {createDaily,createPractice,reviewAction,eligible,validDaily,day} from './preview-review.js';
+import {createDaily,reviewAction,eligible,validDaily,day} from './preview-review.js';
 import {ensureMistakeRound,mistakeAction,mistakeIds,applyJudge,validMistakeRound} from './mistake-review.js';
 import {fullBackup,mainBackup,readBackup,downloadJSON} from './preview-backup.js';
 import {AccountMenu,AccountAvatar} from './account-menu.jsx';
+import {ChoiceMenu} from './choice-menu.jsx';
 import {PwaStatus} from './pwa-ui.jsx';
 import {LearningNotice} from './learning-notice.jsx';
 
@@ -30,12 +31,18 @@ const core = Study;
 const nav = [
   ['home','首页',LayoutDashboard],['study','课本过关',BookOpen],['daily','每日检测',CalendarDays],['mistakes','易错复习',CircleAlert],['library','词库记录',ChartNoAxesCombined],['settings','设置',Settings2],
 ];
-const pageTitles={...Object.fromEntries(nav.map(([id,label])=>[id,label])),books:'我的课本',dictionary:'完整词库',records:'学习记录',guide:'词库生成与导入教程',about:'网站介绍与使用教程',practice:'普通词汇检测',settings:'设置与备份'};
+const pageTitles={...Object.fromEntries(nav.map(([id,label])=>[id,label])),books:'我的课本',dictionary:'完整词库',records:'学习记录',guide:'词库生成与导入教程',about:'网站介绍与使用教程',settings:'设置与备份'};
 const navigationPage=page=>['dictionary','records'].includes(page)?'library':page;
 const ready = b => !!b.bank;
 const createProgress = (book,options={}) => core.create(book.bank,book.level,options);
 const freshProgress = (books=initialBooks,options={}) => Object.fromEntries(books.filter(ready).map(b=>[b.id,createProgress(b,options)]));
 const shortPart = p => p?.replace(/^U(\d+)P(\d+)$/,'U$1 · P$2') || '全书完成';
+export const pageFor = (book,part) => {
+  const pages=new Set(book.bank.filter(e=>Study.key(e)===part&&e.book_page).map(e=>e.book_page));
+  if(!pages.size)return '';
+  const list=[...pages].sort((a,b)=>Number(a)-Number(b));
+  return '课本第 '+list.join('–')+' 页';
+};
 const titleFor = (book,part) => book.imported ? book.titles[part] : book.id==='edito-b1' ? partTitles[part] : ({U1P1:{fr:'Les premiers mots',zh:'最初的几个词'},U1P2:{fr:'Les objets du quotidien',zh:'日常的小物件'}}[part]);
 const themeFor = (book,entry) => entry.group_zh||(book.id==='edito-b1'?themeTitles[entry.group]:book.id==='my-notebook'?(entry.partie===1?'最初的几个词':'日常的小物件'):'');
 const bookStatus = b => b.status==='ready'?'词库已就绪':b.status==='demo'?'演示词表':'待添加词库';
@@ -85,9 +92,9 @@ export function App({production=false,previewPage,onPreviewNavigate,learning:pro
   function generateDaily(){
     if(!ready(book))return;
     const own=secondary[bookId]||{};const previous=own.daily||{stats:own.dailyStats||{},round:own.dailySerial||0};const result=createDaily(book,state,previous);setDailyProblem(result.problem||'');
-    setSecondary(old=>{const prev=old[bookId]||{},history=prev.daily?[{round:prev.daily,allowed:prev.dailyAllowed||eligible(state)},...(prev.dailyHistory||[])].slice(0,20):prev.dailyHistory||[];return {...old,[bookId]:{...prev,daily:result.round,dailyAllowed:eligible(state),dailyStats:result.round?.stats||prev.dailyStats||prev.daily?.stats||{},dailySerial:result.round?.round||prev.dailySerial||prev.daily?.round||0,dailyHistory:history}};});
+    setSecondary(old=>{const prev=old[bookId]||{};const retired=prev.daily&&Object.keys(prev.daily.votes).length?[{round:prev.daily,allowed:prev.dailyAllowed||eligible(state)},...(prev.dailyHistory||[])]:prev.dailyHistory||[];return {...old,[bookId]:{...prev,daily:result.round,dailyAllowed:eligible(state),dailyStats:result.round?.stats||prev.dailyStats||prev.daily?.stats||{},dailySerial:result.round?.round||prev.dailySerial||prev.daily?.round||0,dailyHistory:retired.slice(0,20)}};});
   }
-  function review(mode,action,id,kind,attemptId){setSecondary(old=>{const own=old[bookId]||{},q=own[mode];if(!q||attemptId&&(mode==='daily'?q.launchId:`practice-${q.round}`)!==attemptId)return old;const next=reviewAction(q,mode,action,id,kind,book);if(next===q)return old;const hKey=mode+'History',history=['repeat','next'].includes(action)?[mode==='daily'?{round:q,allowed:eligible(state)}:q,...(own[hKey]||[])].slice(0,20):own[hKey]||[];return {...old,[bookId]:{...own,[mode]:next,...(mode==='daily'?{dailyStats:next.stats,dailySerial:next.round}:{}),[hKey]:history}};});}
+  function review(action,id,kind,attemptId){setSecondary(old=>{const own=old[bookId]||{},q=own.daily;if(!q||attemptId&&q.launchId!==attemptId)return old;const next=reviewAction(q,action,id,kind,book);if(next===q)return old;const history=action==='repeat'?[...(Object.keys(q.votes).length?[{round:q,allowed:eligible(state)}]:[]),...(own.dailyHistory||[])].slice(0,20):own.dailyHistory||[];return {...old,[bookId]:{...own,daily:next,dailyStats:next.stats,dailySerial:next.round,dailyHistory:history}};});}
   function reviewMistakes(action,id,kind,attemptId){
     setSecondary(old=>{
       const own=old[bookId]||{},q=own.mistakes,main=progress[bookId];
@@ -143,7 +150,6 @@ export function App({production=false,previewPage,onPreviewNavigate,learning:pro
   useEffect(()=>{const media=matchMedia('(prefers-color-scheme: dark)'),apply=()=>{document.documentElement.dataset.previewTheme=(commonTheme||theme)==='system'?(media.matches?'dark':'light'):(commonTheme||theme);};apply();media.addEventListener('change',apply);return ()=>media.removeEventListener('change',apply);},[theme,commonTheme]);
   useEffect(()=>{if(page!=='mistakes'||!ready(book))return;setSecondary(old=>{const own=old[bookId]||{},main=progress[bookId];const next=ensureMistakeRound(main,own.mistakes,own.mistakeStats);if(next===own.mistakes)return old;return {...old,[bookId]:{...own,mistakes:next}};});},[page,bookId,allowedStamp]);
   useEffect(()=>{if(page!=='daily'||!ready(book))return;const timer=setInterval(()=>{if(secondary[bookId]?.daily?.day!==day())generateDaily();},60000);return ()=>clearInterval(timer);},[page,bookId,allowedStamp,secondary[bookId]?.daily?.day]);
-  useEffect(()=>{if(page!=='practice'||!ready(book))return;setSecondary(old=>old[bookId]?.practice?old:{...old,[bookId]:{...old[bookId],practice:createPractice(book)}});},[page,bookId]);
   useEffect(()=>{
     if(page!=='study'||!state||attempt.passReason||attempt.group!==core.groups(book.bank,attempt).length-1||!core.perfect(state))return;
     const captured=attempt.id;setAutoPart(captured);
@@ -152,7 +158,7 @@ export function App({production=false,previewPage,onPreviewNavigate,learning:pro
   },[state,bookId,page,settings.shuffle]);
   useEffect(()=>{
     if(!state||!secondary[bookId]?.daily||validDaily(secondary[bookId].daily,book,state))return;
-    setSecondary(old=>{const own=old[bookId];if(!own?.daily||validDaily(own.daily,book,state))return old;return {...old,[bookId]:{...own,daily:null,dailyStats:own.daily.stats,dailySerial:own.daily.round,dailyHistory:[{round:own.daily,allowed:own.dailyAllowed},...(own.dailyHistory||[])].slice(0,20)}};});
+    setSecondary(old=>{const own=old[bookId];if(!own?.daily||validDaily(own.daily,book,state))return old;const retired=Object.keys(own.daily.votes).length?[{round:own.daily,allowed:own.dailyAllowed},...(own.dailyHistory||[])]:own.dailyHistory||[];return {...old,[bookId]:{...own,daily:null,dailyStats:own.daily.stats,dailySerial:own.daily.round,dailyHistory:retired.slice(0,20)}};});
   },[state,bookId,secondary[bookId]?.daily]);
   const shown=books.filter(b=>(filter==='all'||filter==='ready'&&ready(b)||filter==='pending'&&!ready(b))&&`${b.name} ${b.level} ${b.edition}`.toLowerCase().includes(query.toLowerCase()));
   function reset(){setBookId('edito-b1');setProgress(freshProgress(books,{shuffle:settings.shuffle}));setSecondary({});setQuery('');setFilter('all');setAdding(false);setNotes(false);setImporting(null);go('home');setToast('预览进度已重置；导入词库与设置保留，正式学习记录未改动。');}
@@ -208,16 +214,15 @@ export function App({production=false,previewPage,onPreviewNavigate,learning:pro
         {page==='guide'&&<VocabularyGuide production={production} onImport={()=>setImporting({target:''})} notify={setToast}/>}
         {page==='settings'&&!embedded&&<><div className="dp-page-heading"><div><div className="dp-eyebrow">MES PRÉFÉRENCES</div><h1>设置与备份</h1><p>备份学习记录，调整界面外观、卡片布局与词汇顺序。</p></div></div><SettingsAndBackup production={production} learning={learning} onAccount={()=>openAccount()} onGuest={()=>{const guest=learning.guest();if(!guest){setToast('没有有效游客记录。');return;}setBackupPreview({...readBackup(guest,books,progress),filename:'本机游客记录'});}} book={book} settings={settings} onChange={changeSettings} theme={theme} onTheme={changeTheme} onFullBackup={()=>downloadJSON(production?learning.bundle:fullBackup(books,progress,settings,bookId,secondary,theme),production?'franmo-multibook-backup.json':'atelier-multibook-preview-backup.json')} onMainBackup={()=>downloadJSON(mainBackup(book,state),`${book.id}-${production?'':'preview-'}main-progress.json`)} onImport={()=>backupInput.current.click()} go={go}/></>}
         {page==='about'&&<><div className="dp-page-heading"><div><div className="dp-eyebrow">FRANMOTEST</div><h1>网站介绍与使用教程</h1></div></div><About go={go} production={production}/></>}
-        {!['home','books','guide','settings','about'].includes(page)&&<><div className="dp-context"><button onClick={()=>go('books')}><ArrowLeft size={14}/>我的课本</button><span>/</span><strong>{book.name}</strong><span className="context-level">{book.level}</span><span className="context-status">{bookStatus(book)}</span></div><div className="dp-page-heading inner"><div><div className="dp-eyebrow">{page==='study'?'APPRENDRE':page==='daily'?'RÉVISER':page==='mistakes'?'RÉVISION DES ERREURS':page==='records'?'MES PROGRÈS':'LE VOCABULAIRE'}</div><h1>{pageTitles[page]}</h1><p>{page==='study'?'按主题检测，点击整行翻词；页面底部可任选 Part。':page==='daily'?'只复习当前课本已过关的内容，不混入其他课本词汇。':page==='mistakes'?'集中复习错误率高的词和最近判错的词，不改变课本过关。':page==='practice'?'第一单元 P1＋P2 混合练习，五组各十词；累计独立，不改变课本过关。':'浏览完整词库，按 Part 查看每个词的累计正确与错误次数。'}</p></div>{page!=='study'&&<button className="dp-button" onClick={()=>go('books')}><Library size={15}/>切换课本</button>}</div>
+        {!['home','books','guide','settings','about'].includes(page)&&<><div className="dp-context"><button onClick={()=>go('books')}><ArrowLeft size={14}/>我的课本</button><span>/</span><strong>{book.name}</strong><span className="context-level">{book.level}</span><span className="context-status">{bookStatus(book)}</span></div><div className="dp-page-heading inner"><div><div className="dp-eyebrow">{page==='study'?'APPRENDRE':page==='daily'?'RÉVISER':page==='mistakes'?'RÉVISION DES ERREURS':page==='records'?'MES PROGRÈS':'LE VOCABULAIRE'}</div><h1>{pageTitles[page]}</h1><p>{page==='study'?'按主题检测，点击整行翻词；页面底部可任选 Part。':page==='daily'?'只复习当前课本已过关的内容，不混入其他课本词汇。':page==='mistakes'?'集中复习错误率高的词和最近判错的词，不改变课本过关。':'浏览完整词库，按 Part 查看每个词的累计正确与错误次数。'}</p></div>{page==='study'&&<ChoiceMenu presentation="dropdown" label="选择 Part 进行检测" value={currentPart} options={Study.parts(book.bank).map(p=>{const title=titleFor(book,p.key),passed=!!state.mastered[p.key];return {value:p.key,label:shortPart(p.key)+' · '+[title?.zh,title?.fr].filter(Boolean).join(' · '),description:[(passed?'已过关 · 可重测':'开始检测'),pageFor(book,p.key),book.name].filter(Boolean).join(' · ')};})} onChange={value=>act('part',value)}/>}{page==='mistakes'&&secondary[bookId]?.mistakes&&<button className="dp-button icon-only" aria-label="重新扫描易错词" title="重新扫描易错词" onClick={()=>reviewMistakes('refresh',null,null,secondary[bookId].mistakes.launchId)}><RotateCcw size={15}/></button>}</div>
         {!ready(book)?<section className="dp-unavailable"><Cover book={book}/><div><span className="dp-status pending">词库待添加</span><h2>课本已选好，下一步添加词库。</h2><p>{book.name} 目前只有课本信息。导入对应的词条与章节后，就能开始检测并保存这本课本自己的进度。</p><button className="dp-button primary" onClick={()=>setImporting({target:book.id})}><Upload size={16}/>一键导入词库</button><button className="dp-text-button" onClick={()=>choose('edito-b1')}>先体验 Édito B1<ArrowRight size={14}/></button></div></section>:
           page==='study'?<div className="study-page">
             {book.notice&&<div className="vi-message"><Info size={17}/><span>{book.notice}</span></div>}
             <Quiz book={book} state={state} attempt={attempt} act={act} auto={autoPart===attempt.id} settings={settings} onSettings={changeSettings} titleFor={titleFor} themeFor={themeFor}/>
             <PartDirectory book={book} state={state} act={act} titleFor={titleFor}/>
           </div>:
-          page==='daily'?<><DailyIntro book={book} state={state} onGenerate={generateDaily}/>{secondary[bookId]?.daily&&validDaily(secondary[bookId].daily,book,state)?<ReviewQuiz book={book} quiz={secondary[bookId].daily} mode="daily" settings={settings} changeSettings={changeSettings} act={(...args)=>review('daily',...args)} themeFor={themeFor}/>:<section className="dp-empty"><span className="empty-icon"><CalendarDays size={33}/></span><h2>先为 {book.name} 积累一点进度</h2><p>{dailyProblem||'需要至少过关 4 个 Part，各组需有足够的同主题词汇。'}<br/>最近已过关 Part 抽两组，前两个各一组，其余已过关 Part 抽一组；每组 10 词。</p><div className="daily-course"><BookOpen size={16}/>{book.name}<span>本书已过关 {state.current} 个 Part</span></div><div className="vi-actions"><button className="dp-button primary" onClick={()=>go('study')}>继续本书检测<ArrowRight size={15}/></button><button className="dp-button" onClick={()=>backupInput.current.click()}><Upload size={15}/>导入已有进度</button></div></section>}</>:
+          page==='daily'?<><DailyIntro book={book} state={state} onGenerate={generateDaily}/>{secondary[bookId]?.daily&&validDaily(secondary[bookId].daily,book,state)?<ReviewQuiz book={book} quiz={secondary[bookId].daily} settings={settings} changeSettings={changeSettings} act={(...args)=>review(...args)} themeFor={themeFor}/>:<section className="dp-empty"><span className="empty-icon"><CalendarDays size={33}/></span><h2>先为 {book.name} 积累一点进度</h2><p>{dailyProblem||'需要至少过关 4 个 Part，各组需有足够的同主题词汇。'}<br/>最近已过关 Part 抽两组，前两个各一组，其余已过关 Part 抽一组；每组 10 词。</p><div className="daily-course"><BookOpen size={16}/>{book.name}<span>本书已过关 {state.current} 个 Part</span></div><div className="vi-actions"><button className="dp-button primary" onClick={()=>go('study')}>继续本书检测<ArrowRight size={15}/></button><button className="dp-button" onClick={()=>backupInput.current.click()}><Upload size={15}/>导入已有进度</button></div></section>}</>:
           page==='mistakes'?<MistakeReview book={book} state={state} secondary={secondary[bookId]} mistakeReview={reviewMistakes} settings={settings} changeSettings={changeSettings} themeFor={themeFor} titleFor={titleFor}/>:
-          page==='practice'?secondary[bookId]?.practice?<ReviewQuiz book={book} quiz={secondary[bookId].practice} mode="practice" settings={settings} changeSettings={changeSettings} act={(...args)=>review('practice',...args)} themeFor={themeFor}/>:<section className="dp-empty"><Shuffle size={30}/><h2>本书暂不满足五组十词的条件</h2><p>第一单元 P1 和 P2 各需要至少 25 个不同词条。可继续完整主题的课本过关。</p><button className="dp-button primary" onClick={()=>go('study')}>继续课本过关<ArrowRight size={15}/></button></section>:
           <LibraryStatistics production={production} key={book.id} book={book} state={state} view={page} go={go} titleFor={titleFor} themeFor={themeFor} secondary={secondary[bookId]}/>}
         </>}
       </div>

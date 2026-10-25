@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 import {initialBooks} from '../src/books.js';
 import {mnemonicFor} from '../src/vocabulary-mnemonics.js';
 import * as Study from '../src/preview-study.js';
-import {createDaily,createPractice} from '../src/preview-review.js';
+import {createDaily} from '../src/preview-review.js';
 
 test('all 3469 supplied entries have reviewed mnemonics scoped to exact textbook content',()=>{
   let count=0;
@@ -35,10 +35,10 @@ const bundle=await build({stdin:{contents:`
  return next;});
  return <Quiz book={f.book} state={state} attempt={Study.active(state)} act={act} settings={{layout:f.layout}} onSettings={()=>{}} titleFor={()=>({})} themeFor={()=>''}/>;}
  function App(){const [quiz,setQuiz]=useState(f.quiz);window.currentQuiz=quiz;
- return f.view==='library'?<LibraryStatistics book={f.book} state={f.main} view="library" go={()=>{}} titleFor={()=>({})} themeFor={()=>''}/>:<ReviewQuiz book={f.book} quiz={quiz} mode={f.view} settings={{layout:'right'}} changeSettings={()=>{}} themeFor={()=>''} act={(a,id,k)=>setQuiz(q=>reviewAction(q,f.view,a,id,k,f.book))}/>;}
+ return f.view==='library'?<LibraryStatistics book={f.book} state={f.main} view="library" go={()=>{}} titleFor={()=>({})} themeFor={()=>''}/>:<ReviewQuiz book={f.book} quiz={quiz} settings={{layout:'right'}} changeSettings={()=>{}} themeFor={()=>''} act={(a,id,k)=>setQuiz(q=>reviewAction(q,a,id,k,f.book))}/>;}
  createRoot(document.getElementById('root')).render(f.view==='study'?<StudyApp/>:<App/>);`,resolveDir:process.cwd(),loader:'jsx'},bundle:true,write:false,format:'iife',loader:{'.css':'empty'},logLevel:'silent'});
 const pause=()=>new Promise(r=>setTimeout(r,40));
-async function mount(view,layout='right'){const dom=new JSDOM('<div id="root"></div>',{url:'http://localhost',runScripts:'dangerously',pretendToBeVisual:true});dom.window.structuredClone=structuredClone;dom.window.fixture={book,main,quiz:view==='practice'?createPractice(book):quiz,view,layout};dom.window.eval(bundle.outputFiles[0].text);await pause();return dom;}
+async function mount(view,layout='right'){const dom=new JSDOM('<div id="root"></div>',{url:'http://localhost',runScripts:'dangerously',pretendToBeVisual:true});dom.window.structuredClone=structuredClone;dom.window.fixture={book,main,quiz,view,layout};dom.window.eval(bundle.outputFiles[0].text);await pause();return dom;}
 test('textbook mnemonics work in both layouts without flipping, voting or changing mastery; a retest collapses them',async()=>{
  for(const layout of ['classic','right']){
  const dom=await mount('study',layout),doc=dom.window.document,row=()=>doc.querySelector('.study-word-row');
@@ -86,7 +86,4 @@ test('daily mnemonics reveal independently of translation and scoring and reset 
 test('complete dictionary uses the existing collapsed word details for mnemonics and retains source information',async()=>{
  const dom=await mount('library'),doc=dom.window.document;
  try{const details=doc.querySelector('.np-dictionary details');assert.equal(details.open,false);assert.equal(details.querySelector('.word-mnemonic p').textContent,mnemonicFor(book,book.bank[0]));assert.ok(details.textContent.includes('原书来源'));details.querySelector('summary').click();assert.equal(details.open,true);details.querySelector('summary').click();assert.equal(details.open,false);assert.ok(!doc.body.textContent.includes('助记解析'));}finally{dom.window.close();}
-});
-test('ordinary practice retains its existing row controls',async()=>{
- const dom=await mount('practice');try{const doc=dom.window.document;assert.equal(doc.querySelectorAll('.study-word-row').length,10);assert.equal(doc.querySelector('.study-mnemonic-toggle'),null);doc.querySelector('.dp-word-trigger').click();await pause();assert.ok(!doc.querySelector('.dp-answer').classList.contains('hidden'));}finally{dom.window.close();}
 });
