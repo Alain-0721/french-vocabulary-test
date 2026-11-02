@@ -96,8 +96,8 @@ body:has(.gl-app-shell){overflow:hidden;overscroll-behavior:none}
 .gl-space-words .gl-bottom-nav button.active{color:var(--gl-gold)}
 @media(max-width:1050px){.gl-app-shell .gl-word-host{margin-left:190px}}
 @media(max-width:760px){
- .gl-app-shell>.gl-bottom-nav{position:relative;flex-shrink:0;left:auto;right:auto;bottom:auto;top:auto;padding:6px 10px max(6px,env(safe-area-inset-bottom));justify-content:space-around}
- .gl-app-shell>.gl-bottom-nav button{flex:1;min-width:0;min-height:44px;font-family:inherit;font-size:9px;line-height:1.6;font-weight:400;gap:5px;padding:3px 2px}
+ .gl-app-shell>.gl-bottom-nav{position:relative;flex-shrink:0;left:auto;right:auto;bottom:auto;top:auto;padding:3px 10px max(3px,env(safe-area-inset-bottom));justify-content:space-around}
+ .gl-app-shell>.gl-bottom-nav button{flex:1;min-width:0;min-height:40px;font-family:inherit;font-size:9px;line-height:1.3;font-weight:400;gap:3px;padding:2px}
  .gl-app-shell>.gl-bottom-nav button span{font:inherit;white-space:nowrap}
  .gl-app-shell>.gl-bottom-nav button.active:before{left:auto;top:0}
  .gl-app-shell .gl-main{padding-bottom:28px}

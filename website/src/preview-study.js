@@ -18,7 +18,7 @@ function shuffle(ids,rng){
 }
 function newAttempt(s,bank,part,options={}){
   const ids=sourceGroups(bank,part).flatMap(ids=>options.shuffle?shuffle(ids,options.rng||Math.random):ids);
-  return {id:crypto.randomUUID(),part,round:s.attempts.filter(a=>a.part===part).length+1,group:0,ids,opened:{},votes:{},passReason:null,shuffled:!!options.shuffle};
+  return {id:crypto.randomUUID(),part,round:s.attempts.filter(a=>a.part===part).length+1,group:0,ids,opened:{},votes:{},votesAt:{},judgments:{},passReason:null,shuffled:!!options.shuffle};
 }
 function sync(s){s.current=masteredCount(s);s.completed=s.current===s.order.length;return s;}
 export function create(bank,level='B1',options={}){
@@ -46,6 +46,9 @@ export function vote(s,id,kind){
   if(counts[kind]>=Number.MAX_SAFE_INTEGER||old&&counts[old]<1)return false;
   s.stats[id]={...counts,[kind]:counts[kind]+1};if(old)s.stats[id][old]--;
   a.votes[id]=kind;
+  const at=new Date().toISOString(),roundKey=`${a.id}:${a.retestId||'base'}:${id}`;
+  a.votesAt={...(a.votesAt||{}),[id]:at};
+  a.judgments={...(a.judgments||{}),[roundKey]:{wordId:id,vote:kind,at}};
   if(a.passReason==='automatic'&&!a.completion&&s.mastered[a.part]?.attemptId===a.id&&!perfect(s)){delete s.mastered[a.part];a.passReason=null;sync(s);}
   return true;
 }
@@ -66,7 +69,7 @@ export function repeatGroup(s,bank){
   // Keep the proof of a completed Part before starting another group self-test.
   const mastery=s.mastered[a.part];
   if(mastery?.attemptId===a.id&&!a.completion)a.completion={reason:mastery.reason,votes:{...a.votes}};
-  for(const id of group.ids){delete a.opened[id];delete a.votes[id];}
+  for(const id of group.ids){delete a.opened[id];delete a.votes[id];if(a.votesAt)delete a.votesAt[id];}
   a.passReason=null;a.retestId=crypto.randomUUID();
   return true;
 }

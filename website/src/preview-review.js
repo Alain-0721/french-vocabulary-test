@@ -38,6 +38,8 @@ export function restoreStudy(raw,book){
     const attemptIds=new Set(),rounds={},voteCounts={};
     for(const a of s.attempts){
       if(typeof a.id!=='string'||!a.id||attemptIds.has(a.id)||!order.includes(a.part)||!Array.isArray(a.ids)||typeof a.shuffled!=='boolean'||![null,'manual','automatic'].includes(a.passReason)||!a.opened||!a.votes)throw Error();
+      if(a.votesAt!==undefined&&(!a.votesAt||typeof a.votesAt!=='object'||Array.isArray(a.votesAt)||Object.entries(a.votesAt).some(([id,at])=>!a.ids.includes(id)||typeof at!=='string'||!Number.isFinite(Date.parse(at)))))throw Error();
+      if(a.judgments!==undefined&&(!a.judgments||typeof a.judgments!=='object'||Array.isArray(a.judgments)||Object.values(a.judgments).some(row=>!row||!a.ids.includes(row.wordId)||!['good','bad'].includes(row.vote)||typeof row.at!=='string'||!Number.isFinite(Date.parse(row.at)))))throw Error();
       attemptIds.add(a.id);rounds[a.part]=(rounds[a.part]||0)+1;if(a.round!==rounds[a.part])throw Error();
       const expected=book.bank.filter(e=>Study.key(e)===a.part).map(e=>e.id);
       if(a.ids.length!==expected.length||new Set(a.ids).size!==expected.length||a.ids.some(id=>!expected.includes(id)))throw Error();

@@ -1,6 +1,6 @@
 import React,{useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {Sun,Moon,BookOpen,ArrowRight,ArrowLeft,ChevronRight,ChevronDown,Check,Bookmark,Search,Library,House,ChartNoAxesCombined,Settings2,CalendarDays,PenLine,Layers,X,CheckCircle2,RotateCcw,Download,Lightbulb,GraduationCap,Clock,ArrowUpRight,CircleAlert} from 'lucide-react';
+import {Sun,Moon,BookOpen,ArrowRight,ArrowLeft,ChevronRight,ChevronDown,Check,Bookmark,Search,Library,House,ChartNoAxesCombined,Settings2,CalendarDays,PenLine,Layers,X,CheckCircle2,RotateCcw,Download,Lightbulb,GraduationCap,Clock,ArrowUpRight,NotebookPen} from 'lucide-react';
 import {App as WordApp} from '../textbooks-preview.jsx';
 import {startNativeApp} from '../native-app.js';
 import {ChoiceMenu} from '../choice-menu.jsx';
@@ -25,14 +25,14 @@ import './grammar.css';
 import {TenseCatalog,TenseReader,TensePractice,TenseRecords,TenseHomeCard,tenseBank,freshTense} from './tense-ui.jsx';
 
 const nav=[['home','首页',House],['catalog','课本语法',BookOpen],['tenses','时态专题',Clock],['practice','练习复习',PenLine],['records','学习记录',ChartNoAxesCombined]];
-const wordNav=[['home','首页',House],['study','课本过关',BookOpen],['daily','每日检测',CalendarDays],['mistakes','易错复习',CircleAlert],['library','词库记录',ChartNoAxesCombined]];
+const wordNav=[['home','首页',House],['study','课本过关',BookOpen],['daily','每日检测',CalendarDays],['mistakes','易错复习',NotebookPen],['library','学习记录',ChartNoAxesCombined]];
 const sectionNames={original:'课本原文',summary:'知识总结',supplement:'补充复习'};
 const practiceTopics=bank.topics.filter(t=>exercises.some(q=>q.topic===t.id));
 const practiceUnits=bank.units.filter(u=>practiceTopics.some(t=>t.unit===u.number));
 const questionsInUnit=u=>exercises.filter(q=>!u||practiceTopics.find(t=>t.id===q.topic)?.unit===u);
 const unitOptions=[{value:'0',label:'全部单元',description:`${practiceUnits.length} 个单元 · ${exercises.length} 道练习题`},...practiceUnits.map(u=>({value:String(u.number),label:`U${u.number} · ${u.zh}`,description:`${practiceTopics.filter(t=>t.unit===u.number).length} 个专题 · ${questionsInUnit(u.number).length} 题`}))];
 const levels=[['review','需要复习'],['understood','基本理解'],['confident','熟练']];
-function parseRoute(){const h=location.hash.slice(2).split('/');if(h[0]==='settings'||h[1]==='settings')return {page:'settings'};if(['grammar','words'].includes(h[0]))return {space:h[0],page:h[1]||'home',id:h[2]};if(['home','study','textbook','daily','mistakes','library','settings','books','dictionary','records','guide','about'].includes(h[0]))return {space:'words',page:h[0]==='textbook'?'study':h[0]};return null;}
+function parseRoute(){const h=location.hash.slice(2).split('/');if(h[0]==='settings'||h[1]==='settings')return {page:'settings'};if(['grammar','words'].includes(h[0]))return {space:h[0],page:h[1]||'home',id:h[2]};if(['home','study','textbook','daily','mistakes','library','settings','books','dictionary','records','growth','guide','about'].includes(h[0]))return {space:'words',page:h[0]==='textbook'?'study':h[0]};return null;}
 function saveFile(name,content){if(globalThis.FranmotestNative?.saveText){globalThis.FranmotestNative.saveText(name,content,'application/json');return;}const url=URL.createObjectURL(new Blob([content],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 
 export function App({production=false}){
@@ -51,7 +51,7 @@ export function App({production=false}){
  const practiceOptions=[{value:'all',label:`全部语法 · ${questionsInUnit(practiceUnit).length} 题`,description:practiceUnit?`单元 ${practiceUnit} 综合练习`:'全书综合练习'},...practiceTopics.filter(t=>!practiceUnit||t.unit===practiceUnit).map(t=>({value:t.id,label:`${t.zh} · ${exercises.filter(q=>q.topic===t.id).length} 题`,description:`U${t.unit} · Part ${t.part} · ${t.fr}`}))];
  useEffect(()=>{if(production)return;try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));setStorageSaved(true);}catch{setStorageSaved(false);setToast('本机暂时无法保存，请导出预览备份。');}},[state,production]);
  useEffect(()=>{const fn=()=>setRoute(parseRoute());window.addEventListener('hashchange',fn);return()=>window.removeEventListener('hashchange',fn);},[]);
-  useEffect(()=>{if(route?.space&&(!production||!['loading','checking'].includes(learning.sync)))setState(s=>{const allowed=route.space==='grammar'?['home','catalog','tenses','tense-topic','practice','records','settings','books','study','daily','mistakes','library','dictionary','guide','about']:['home','study','daily','mistakes','library','books','dictionary','records','guide','about','settings'];const page=allowed.includes(route.page)?route.page:s.last[route.space];return s.space===route.space&&s.last[route.space]===page?s:{...s,space:route.space,last:{...s.last,[route.space]:page}};});},[route?.space,route?.page,production,['loading','checking'].includes(learning.sync)]);
+  useEffect(()=>{if(route?.space&&(!production||!['loading','checking'].includes(learning.sync)))setState(s=>{const allowed=route.space==='grammar'?['home','catalog','tenses','tense-topic','practice','records','settings','books','study','daily','mistakes','library','dictionary','guide','about']:['home','study','daily','mistakes','library','books','dictionary','records','growth','guide','about','settings'];const page=allowed.includes(route.page)?route.page:s.last[route.space];return s.space===route.space&&s.last[route.space]===page?s:{...s,space:route.space,last:{...s.last,[route.space]:page}};});},[route?.space,route?.page,production,['loading','checking'].includes(learning.sync)]);
  useEffect(()=>{if(!toast)return;const timer=setTimeout(()=>setToast(''),3500);return()=>clearTimeout(timer);},[toast]);
  useEffect(()=>{document.documentElement.dataset.franlumi='true';startNativeApp();const back=window.franmotestBack;window.franmotestBack=()=>{const close=document.querySelector('.gl-menu-dismiss');if(close){close.click();return true;}return back?.()||false;};return()=>{delete document.documentElement.dataset.franlumi;window.franmotestBack=back;};},[]);
  useEffect(()=>{const key=e=>{if(e.key==='Escape'){setBookOpen(false);setAccountOpen(false);}};document.addEventListener('keydown',key);return()=>document.removeEventListener('keydown',key);},[]);
@@ -89,7 +89,7 @@ export function App({production=false}){
   {accountOpen&&<div className="gl-profile-menu"><strong>本地体验空间</strong><p>本轮预览不连接正式账号。学习记录只保存到当前设备。</p><button onClick={()=>go('settings')}>设置<Settings2 size={16}/></button></div>}
   <aside className="gl-sidebar"><div className="gl-eyebrow">{space==='grammar'?'GRAMMAIRE':'VOCABULAIRE'}</div><h2>{space==='grammar'?'语法之光':'单词之光'}</h2>{currentNav.map(([id,label,Icon])=><button key={id} className={page===id||page==='topic'&&id==='catalog'||page==='tense-topic'&&id==='tenses'?'active':''} onClick={()=>go(id)}><Icon size={18}/>{label}{(page===id||page==='topic'&&id==='catalog'||page==='tense-topic'&&id==='tenses')&&<span/>}</button>)}{space==='grammar'&&<div className="gl-side-progress"><Sun size={21}/><strong>每理解一点，<br/>就多一点光。</strong><span>{stats.read} / 36 专题已阅读</span><div className="gl-track"><i style={{width:stats.read/36*100+'%'}}/></div></div>}</aside>
   <div ref={scrollArea} className="gl-scroll-area" role="region" aria-label="学习内容">
-  {page==='settings'?<main className="gl-main gl-shared-settings"><PageIntro eyebrow="MES PRÉFÉRENCES" title="设置与备份"/>{production&&<><NativeUpdateSettings/><AppDownload/></>}<SharedSettings production={production} learning={learning} onAccount={openAccount} state={state} setState={setSharedSettings} saved={learning.sync!=='memory'} onExport={exportGrammar} onImport={()=>backupInput.current.click()} go={go}/></main>:space==='words'?<div className={`gl-word-host${page==='home'?' gl-word-home':''}`}><div className="gl-word-title"><span>VOCABULAIRE</span><h1>{page==='home'?'今天，多记住一个词。':'单词之光'}</h1><p>从一个词开始，积累表达的力量。</p></div><WordApp embedded production={production} learning={learning} commonTheme={state.theme} previewPage={page} onPreviewNavigate={next=>go(next,undefined,'words')}/></div>:<>
+  {page==='settings'?<main className="gl-main gl-shared-settings"><PageIntro eyebrow="MES PRÉFÉRENCES" title="设置与备份"/>{production&&<><NativeUpdateSettings/><AppDownload/></>}<SharedSettings production={production} learning={learning} onAccount={openAccount} state={state} setState={setSharedSettings} saved={learning.sync!=='memory'} onExport={exportGrammar} onImport={()=>backupInput.current.click()} go={go}/></main>:space==='words'?<div className={`gl-word-host${page==='home'?' gl-word-home':''}`}>{page==='home'&&<div className="gl-word-title"><span>VOCABULAIRE</span><h1>{page==='home'?'今天，多记住一个词。':'单词之光'}</h1><p>从一个词开始，积累表达的力量。</p></div>}<WordApp embedded production={production} learning={learning} commonTheme={state.theme} previewPage={page} onPreviewNavigate={next=>go(next,undefined,'words')}/></div>:<>
 
    <main className="gl-main">{production&&<PwaStatus/>}
     {page==='home'&&<>{production&&<><NativeUpdateBanner/><AppDownloadShortcut/></>}
@@ -144,7 +144,7 @@ export function App({production=false}){
    </main>
   </>}
   </div>
-  <nav className="gl-bottom-nav" aria-label={space==='grammar'?'语法导航':'单词导航'}>{currentNav.map(([id,label,Icon])=><button key={id} className={page===id||page==='topic'&&id==='catalog'||page==='tense-topic'&&id==='tenses'||space==='words'&&['records','dictionary'].includes(page)&&id==='library'?'active':''} onClick={()=>go(id)}><Icon size={21}/><span>{label}</span></button>)}</nav>
+  <nav className="gl-bottom-nav" aria-label={space==='grammar'?'语法导航':'单词导航'}>{currentNav.map(([id,label,Icon])=><button key={id} className={page===id||page==='topic'&&id==='catalog'||page==='tense-topic'&&id==='tenses'||space==='words'&&['records','dictionary','growth'].includes(page)&&id==='library'?'active':''} onClick={()=>go(id)}><Icon size={21}/><span>{label}</span></button>)}</nav>
 
   <input ref={backupInput} type="file" accept=".json,application/json" aria-label="导入学习备份文件" hidden onChange={prepareGrammarImport}/>
   {backupPreview&&<GrammarRestoreDialog backup={backupPreview} close={()=>setBackupPreview(null)} restore={restoreGrammar}/>}

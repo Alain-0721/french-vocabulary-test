@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "packageId": "app.netlify.franmotest",
-  "versionName": "2.1.6",
-  "versionCode": 18,
-  "apkUrl": "https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.6/Franmotest-2.1.6-Android.apk",
-  "sha256": "0d13e4ceef15296f2ee160b48ce928b423760a85f611bdea875baca030b84615",
-  "size": 2827724,
-  "notes": "FranLumi 2.1.6：主题分组新增已判词数、对错数量与正确率小字统计；隐藏分组选择条的横向滑块。"
+  "versionName": "2.1.7",
+  "versionCode": 19,
+  "apkUrl": "https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.7/Franmotest-2.1.7-Android.apk",
+  "sha256": "651276180e289dd5ea7fb209b135b9104d922fdd04634aac7c56e9f4de22b433",
+  "size": 2844108,
+  "notes": "FranLumi 2.1.7：新增成长之路曲线与主动错题本；课本过关、每日检测、易错复习支持翻译/题目切换、单词检测和手动错题标记。"
 }

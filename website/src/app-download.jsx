@@ -4,7 +4,7 @@ import {usePwa,installPwa} from './pwa.js';
 import {isNativeApp} from './native-app.js';
 import {checkNativeUpdate} from './native-updates.js';
 import './pwa.css';
-const apk='https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.3/FranLumi-2.1.3-Android.apk';
+const apk='https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.7/FranLumi-2.1.7-Android.apk';
 const websiteHome=(import.meta.env?.VITE_SITE_URL||'https://franlumi.pages.dev/').replace(/\/$/,'')+'/#/home';
 export function AppDownload({id}){
  const pwa=usePwa(),[type,setType]=useState(isNativeApp?'android':'web'),[help,setHelp]=useState(false),[busy,setBusy]=useState(false);
@@ -19,5 +19,5 @@ export function AppDownload({id}){
 }
 export function AppDownloadShortcut(){
  if(isNativeApp)return null;
- return <button className="app-download-shortcut" onClick={()=>{const target=document.getElementById('home-app-download');target?.scrollIntoView({behavior:'smooth',block:'start'});target?.focus({preventScroll:true});}}><Smartphone size={18}/><span><strong>下载 App</strong><small>网页版 / 安卓版 · 选择你的版本</small></span><ChevronRight size={17}/></button>;
+ return <button className="app-download-shortcut" onClick={()=>{const target=document.getElementById('home-app-download');target?.scrollIntoView?.({behavior:'smooth',block:'start'});target?.focus({preventScroll:true});}}><Smartphone size={18}/><span><strong>下载 App</strong><small>网页版 / 安卓版 · 选择你的版本</small></span><ChevronRight size={17}/></button>;
 }

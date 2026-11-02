@@ -1,14 +1,16 @@
 import React,{useId,useState} from 'react';
-import {BookOpen,CheckCircle2,Check,X,ChevronDown,ChevronRight,RotateCcw,Settings2,Shuffle,ArrowRight,Library,Upload,Info} from 'lucide-react';
+import {BookOpen,CheckCircle2,Check,X,ChevronDown,ChevronRight,RotateCcw,Settings2,Shuffle,ArrowRight,Library,Upload,Info,NotebookPen} from 'lucide-react';
 import {ChoiceMenu} from './choice-menu.jsx';
 import * as Study from './preview-study.js';
 import {pageFor} from './textbooks-preview.jsx';
 import {Mnemonic,MnemonicButton} from './mnemonic-ui.jsx';
 import {mnemonicFor} from './vocabulary-mnemonics.js';
+import {WordTestPanel} from './word-test-ui.jsx';
+import {useFollowQuizWords} from './quiz-scroll.js';
 
 const shortPart=p=>p.replace(/^U(\d+)P(\d+)$/,'U$1 · P$2');
 
-export function WordRow({entry,index,attempt,stats,act,mnemonic}){
+export function WordRow({entry,index,attempt,stats,act,mnemonic,manual=false,onToggleManual}){
   const open=!!attempt.opened[entry.id],vote=attempt.votes[entry.id],counts=stats||{good:0,bad:0};
   const [mnemonicAttempt,setMnemonicAttempt]=useState(null),mnemonicId=useId(),mnemonicOpen=mnemonicAttempt===attempt.id;
   function flip(){act('toggle',entry.id,null,attempt.id);}
@@ -17,8 +19,8 @@ export function WordRow({entry,index,attempt,stats,act,mnemonic}){
       <button className="dp-word-trigger" aria-expanded={open} onClick={e=>{e.stopPropagation();flip();}}><span>{String(index+1).padStart(2,'0')}</span><strong lang="fr">{entry.fr}</strong><ChevronDown size={14} className={open?'opened':''}/></button>
       <span className={`dp-ipa ${!open?'hidden':''}`} aria-hidden={!open}>{entry.ipa||'未提供音标'}</span>
     </div>
-    <div className={`study-word-bottom${mnemonic?' has-mnemonic':''}`}>
-      {mnemonic&&<MnemonicButton word={entry.fr} id={mnemonicId} open={mnemonicOpen} onToggle={()=>setMnemonicAttempt(mnemonicOpen?null:attempt.id)}/>}
+    <div className={`study-word-bottom${mnemonic||onToggleManual?' has-mnemonic':''}`}>
+      <div className="study-word-actions">{onToggleManual&&<button type="button" className="study-manual-toggle" aria-label={`${manual?'移出':'加入'}错题本：${entry.fr}`} title={manual?'移出错题本':'加入错题本'} aria-pressed={manual} onClick={e=>{e.stopPropagation();onToggleManual(entry.id);}}><NotebookPen size={13}/></button>}{mnemonic&&<MnemonicButton word={entry.fr} id={mnemonicId} open={mnemonicOpen} onToggle={()=>setMnemonicAttempt(mnemonicOpen?null:attempt.id)}/>}</div>
       <div className="dp-votes">{['good','bad'].map(kind=><button key={kind} disabled={!open} aria-label={`${kind==='good'?'正确':'错误'} ${entry.fr}`} aria-pressed={vote===kind} className={`${kind} ${vote===kind?'chosen':''}`} onClick={e=>{e.stopPropagation();act('vote',entry.id,kind,attempt.id);}}>{kind==='good'?<Check size={16}/>:<X size={16}/>}<span>{counts[kind]}</span></button>)}</div>
       <span className={`dp-answer ${!open?'hidden':''}`} aria-hidden={!open}>{entry.zh}</span>
     </div>
@@ -26,21 +28,23 @@ export function WordRow({entry,index,attempt,stats,act,mnemonic}){
   </div>;
 }
 
-export function Quiz({book,state,attempt,act,auto,settings,onSettings,titleFor,themeFor}){
+export function Quiz({book,state,attempt,act,auto,settings,onSettings,titleFor,themeFor,manualMistakes=[],onToggleManual,tests,onStartTest,onAnswerTest,onNextTest,mode='translation'}){
   const grouped=Study.groups(book.bank,attempt),group=grouped[attempt.group]||grouped[0],title=titleFor(book,attempt.part);
+  useFollowQuizWords(`${attempt.id}:${attempt.retestId||''}:${attempt.group}:${attempt.part}:${attempt.shuffled?'random':'textbook'}:${mode}`);
   const dictionary=new Map(book.bank.map(e=>[e.id,e]));
   const done=Object.keys(attempt.votes).length,passed=!!state.mastered[attempt.part],good=Object.values(attempt.votes).filter(v=>v==='good').length,bad=done-good,last=attempt.group===grouped.length-1;
   const first=dictionary.get(group.ids[0]);
   const groupDone=group.ids.filter(id=>attempt.votes[id]).length,groupGood=group.ids.filter(id=>attempt.votes[id]==='good').length,groupBad=groupDone-groupGood;
+  const testRequest={source:'study',scope:shortPart(attempt.part)+' · '+group.label,ids:group.ids};
   return <section className={`dp-quiz study-quiz layout-${settings.layout}`}>
     <header className="quiz-heading"><div><div className="quiz-meta"><span>{book.name}</span><i/>{shortPart(attempt.part)}<span>第 {attempt.round} 轮</span>{passed&&<span className="dp-status available">已过关 · 可重测</span>}</div><h2 lang="fr">{title?.fr}</h2><p>{title?.zh}</p></div><span className="quiz-word-count">{grouped.length} 组 · {attempt.ids.length} 词</span></header>
     <div className="study-tools"><ChoiceMenu presentation="dropdown" label="切换词汇顺序" value={attempt.shuffled?'random':'textbook'} options={[{value:'textbook',label:'按教材顺序',description:'保留课本中的词汇顺序'},{value:'random',label:'按混乱排序',description:'只打乱当前主题内的词汇，保留已判记录'}]} onChange={value=>{const shuffle=value==='random';onSettings({shuffle});act('order',shuffle,null,attempt.id);}}/><ChoiceMenu presentation="dropdown" label="切换卡片布局" value={settings.layout} options={[{value:'classic',label:'对错在左 · 翻译在右'},{value:'right',label:'翻译在左 · 对错在右'}]} onChange={layout=>onSettings({layout})}/></div>
     <div className="quiz-completion"><span>本部分已判 <b>{done}</b> / {attempt.ids.length} 词</span><span className="study-live-score" role="status" aria-live="polite" aria-label="本轮对错与正确率"><span className="score-good">✔ {good}</span><span className="score-bad">✘ {bad}</span><span>正确率 <b>{done?Math.round(good/done*100)+'%':'—'}</b></span></span><div className="dp-track"><span style={{width:done/attempt.ids.length*100+'%'}}/></div></div>
     <div className="dp-group-tabs" role="tablist" aria-label="主题分组">{grouped.map((g,i)=><button role="tab" aria-selected={attempt.group===i} key={g.label} className={attempt.group===i?'active':''} onClick={()=>act('group',i,null,attempt.id)}>第 {i+1} 组</button>)}</div>
     <div className="dp-theme"><span>{String(attempt.group+1).padStart(2,'0')}</span><div><h3 lang="fr">{group.label}</h3><p>{themeFor(book,first)}</p></div><small className="study-theme-score"><span className="theme-score-row"><span>{group.ids.length} 词</span><i/><b>已判 {groupDone}</b></span><span className="theme-score-row"><span className="score-good">✔ {groupGood}</span><span className="score-bad">✘ {groupBad}</span></span><span className="theme-score-row"><span>正确率 <b>{groupDone?Math.round(groupGood/groupDone*100)+'%':'—'}</b></span></span></small></div>
-    <div className="dp-word-list">{group.ids.map((id,i)=><WordRow key={`${id}:${attempt.retestId||''}`} entry={dictionary.get(id)} index={i} attempt={attempt} stats={state.stats[id]} act={act} mnemonic={mnemonicFor(book,dictionary.get(id))}/>)}</div>
+    {mode==='translation'?<><div className="dp-word-list">{group.ids.map((id,i)=><WordRow key={`${id}:${attempt.retestId||''}`} entry={dictionary.get(id)} index={i} attempt={attempt} stats={state.stats[id]} act={act} manual={manualMistakes.includes(id)} onToggleManual={onToggleManual} mnemonic={mnemonicFor(book,dictionary.get(id))}/>)}</div>
     <div className="dp-quiz-footer"><span>{book.name} · 本组完整主题词汇</span><span>{attempt.group+1} / {grouped.length} 组</span></div>
-    <div className="dp-quiz-actions study-retest-actions"><button className="dp-button" onClick={()=>{act('repeat-group',null,null,attempt.id);document.querySelector('.dp-group-tabs')?.scrollIntoView({block:'start',behavior:'smooth'});}}><RotateCcw size={15}/>再测本组</button><button className="dp-button" onClick={()=>act('repeat',null,null,attempt.id)}><RotateCcw size={15}/>再测本部分</button><button className="dp-button primary" disabled={last&&!!attempt.passReason} onClick={()=>{if(last)act('pass',null,null,attempt.id);else{act('group',attempt.group+1,null,attempt.id);document.querySelector('.dp-group-tabs')?.scrollIntoView({block:'start',behavior:'smooth'});}}}>{last?<CheckCircle2 size={16}/>:<ArrowRight size={16}/>} {last?(auto?'正在完成本轮…':attempt.passReason?'本轮已完成':'本部分过关'):'下一组'}</button></div>
+    <div className="dp-quiz-actions study-retest-actions"><button className="dp-button" onClick={()=>act('repeat-group',null,null,attempt.id)}><RotateCcw size={15}/>再测本组</button><button className="dp-button" onClick={()=>act('repeat',null,null,attempt.id)}><RotateCcw size={15}/>再测本部分</button><button className="dp-button primary" disabled={last&&!!attempt.passReason} onClick={()=>{if(last)act('pass',null,null,attempt.id);else act('group',attempt.group+1,null,attempt.id);}}>{last?<CheckCircle2 size={16}/>:<ArrowRight size={16}/>} {last?(auto?'正在完成本轮…':attempt.passReason?'本轮已完成':'本部分过关'):'下一组'}</button></div></>:<WordTestPanel request={testRequest} tests={tests} onStart={onStartTest} onAnswer={onAnswerTest} onNext={onNextTest}/>}
   </section>;
 }
 
@@ -63,7 +67,7 @@ export function Records({book,state,titleFor,production=false}){
         </div>
       </details>;})}</div>}
       <div className="study-stats-header"><span>词汇 / 释义</span><span>正确次数</span><span>错误次数</span></div>{stats.entries.map(e=><div key={e.id} className="study-stats-row"><span><strong lang="fr">{e.fr}</strong><small>{e.zh}</small></span><span>{e.good}</span><span>{e.bad}</span></div>)}</div>}</section>;})}</div>
-    <p className="dp-preview-caption">点击任意 Part 查看每个词的累计次数。同一轮改选替换判定，重测新一轮增加次数。{production?'学习记录自动保存，可在设置中备份。':'当前预览记录刷新后重置。'}</p></>;
+    <p className="dp-preview-caption">点击任意 Part 查看每个词的累计次数。同一轮改选替换判定，重测新一轮增加次数。{production?'学习记录自动保存，可在设置中备份。':'当前预览记录保存在本机，可在设置中备份。'}</p></>;
 }
 
 export function Settings({settings,onChange,production=false}){
@@ -79,8 +83,9 @@ export function About({go,production=false}){
     ['切换布局与顺序','卡片上方可立即切换布局和主题内顺序，默认按教材顺序。'],
     ['查看助记','在课本过关或每日检测中点击序号下方的小灯泡，独立展开或收起助记，不改变翻词和自评；完整词库中点击词条即可查看。'],
     ['过关与重测','本轮全部词判断正确会自动过关，也可手动点击“本部分过关”。只标记当前 Part，不代替其他章节过关。点“再测本部分”开始新一轮，旧轮的对错次数保留。'],
-    ['查看每个词的统计','进入“词库记录”的“学习记录”，点击 Part 展开每个词的累计正确与错误次数。同一轮重复点击同一个判定不加次数；改选会替换旧判定；新一轮可再次累计。'],
+    ['查看每个词的统计','进入“学习记录”的“检测记录”，点击 Part 展开每个词的累计正确与错误次数。同一轮重复点击同一个判定不加次数；改选会替换旧判定；新一轮可再次累计。'],
     ['每日检测','每日检测只从本书已过关的 Part 抽取五组十词。最近已过关 Part 两组、前两个各一组，其余已过关 Part 一组，每组保持同一主题；词数不足时提示继续学习。'],
+    ['易错复习与错题本','在课本过关或每日检测中，点击单词序号旁的错题本按钮加入或移出。错题本按 Part 分组，可切换翻译与题目复习；取消错题标记后，单词会进入“已巩固”。'],
     ['邮箱验证码找回密码','登录窗口点击“忘记密码”，输入注册邮箱，填写邮件中的 6 位验证码，再设置新密码。验证码 10 分钟有效，60 秒后可重发；新密码至少 8 位，可以与旧密码相同。原账号和学习记录保留。'],
     ['备份与跨设备继续',production?'游客记录保存在本机，登录后可在其他设备继续。在设置中导出完整备份或本书主进度；导入先检查，再确认恢复。旧版 Édito B1 网站备份和插件主进度也可迁移。':'在“设置与备份”导出多课本完整备份或本书主进度，刷新或换设备后可导入继续。导入先检查并预览，再确认恢复。正式 Édito B1 网站和插件导出的主进度也可迁移到预览；账号同步继续在正式站管理。'],
   ];

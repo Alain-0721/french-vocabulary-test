@@ -2,6 +2,32 @@
 export const MISTAKE_RATE = 0.5;
 export const MISTAKE_MIN = 3;
 
+export function withTestResults(main,tests,bank){
+  if(!tests)return main;
+  const stats=structuredClone(main.stats),attempts=[...main.attempts],map=new Map(bank.map(e=>[e.id,e]));
+  for(const source of ['study','daily'])for(const [id,c] of Object.entries(tests.stats?.[source]||{})){
+    const old=stats[id]||{good:0,bad:0};stats[id]={good:old.good+c.good,bad:old.bad+c.bad};
+  }
+  for(const q of [...(tests.history||[])].reverse()){
+    if(q.source==='mistakes')continue;
+    const parts=new Map();
+    for(const x of q.questions){const e=map.get(x.wordId);if(!e)continue;const part=`U${e.unite}P${e.partie}`;if(!parts.has(part))parts.set(part,{part,ids:[],votes:{}});const a=parts.get(part);a.ids.push(x.wordId);a.votes[x.wordId]=q.answers[x.wordId]===x.correct?'good':'bad';}
+    attempts.push(...parts.values());
+  }
+  return {...main,stats,attempts};
+}
+
+export function manualMistakeRound(main,bank,manual=[],previous){
+  const allowed=new Set(manual),parts=main.order.map(part=>({part,ids:bank.filter(e=>`U${e.unite}P${e.partie}`===part&&allowed.has(e.id)).map(e=>e.id)})).filter(p=>p.ids.length);
+  const ids=parts.flatMap(p=>p.ids);
+  if(!ids.length)return null;
+  if(previous&&ids.length===previous.ids.length&&ids.every(id=>previous.ids.includes(id)))return previous;
+  const previousPart=previous?.parts?.[previous?.group]?.part;
+  const matchingGroup=parts.findIndex(group=>group.part===previousPart);
+  const group=matchingGroup>=0?matchingGroup:Math.min(previous?.group||0,parts.length-1);
+  return {round:(previous?.round||0)+1,launchId:crypto.randomUUID(),ids,parts,opened:Object.fromEntries(Object.entries(previous?.opened||{}).filter(([id])=>allowed.has(id))),votes:Object.fromEntries(Object.entries(previous?.votes||{}).filter(([id])=>allowed.has(id))),group};
+}
+
 export function mistakeEligible(main, {exclude} = {}) {
   const words = new Map();
   main.attempts.forEach((attempt, order) => {
@@ -69,10 +95,10 @@ export function mistakeRound(main, mistakeStats, round = 1) {
   return {round, launchId: crypto.randomUUID(), ids, parts, opened: {}, votes: {}, group: 0};
 }
 
-export function validMistakeRound(quiz, main) {
+export function validMistakeRound(quiz, main, bank) {
   if (!Number.isSafeInteger(quiz?.round) || quiz.round < 1 || typeof quiz.launchId !== 'string' || !quiz.launchId) return false;
   if (!Array.isArray(quiz.ids) || !quiz.ids.length || new Set(quiz.ids).size !== quiz.ids.length) return false;
-  if (!quiz.ids.every(id => main.stats[id])) return false;
+  if (!quiz.ids.every(id => main.stats[id] || bank?.some(e=>e.id===id))) return false;
   if (!Array.isArray(quiz.parts) || !quiz.parts.length) return false;
   let covered = 0;
   for (const group of quiz.parts) {
