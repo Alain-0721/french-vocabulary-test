@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync, existsSync, readdirSync, mkdtempSync, rmSync} from 'node:fs';
+import {readFileSync, existsSync, readdirSync, mkdtempSync, mkdirSync, rmSync} from 'node:fs';
 import {join} from 'node:path';
 import vm from 'node:vm';
 import {build} from 'esbuild';
@@ -107,15 +107,16 @@ test('语法数据只在第一次进入语法空间时加载', async () => {
 });
 
 test('打包后入口不再包含词库内容，数据各自成块', async () => {
-  // 输出写到 gitignored 的 .netlify/，不在小容量的 /tmp 里写。
-  const dir = mkdtempSync(join('.netlify', 'lazy-test-'));
+  // 输出写到 gitignored 的 .local/，不在小容量的 /tmp 里写。
+  mkdirSync('.local', {recursive: true});
+  const dir = mkdtempSync(join('.local', 'lazy-test-'));
   try {
-    const auth = `export const getUser=async()=>null,refreshSession=async()=>{},getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,onAuthChange=()=>()=>{},login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},updateUser=async()=>{},acceptInvite=async()=>{};`;
+    const auth = `export const getUser=async()=>null,refreshSession=async()=>{},getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,onAuthChange=()=>()=>{},login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},updateUser=async()=>{},acceptInvite=async()=>{},verifyPasswordRecovery=async()=>({}),resetRecoveredPassword=async()=>({unchanged:false});`;
     const result = await build({
       entryPoints: ['src/site.jsx'], bundle: true, splitting: true, format: 'esm', platform: 'browser',
       outdir: dir, loader: {'.css': 'empty'}, logLevel: 'silent',
       plugins: [{name: 'identity-fixture', setup(b) {
-        b.onResolve({filter: /^@netlify\/identity$/}, () => ({path: 'identity', namespace: 'mock'}));
+        b.onResolve({filter: /(^|\/)supabase-identity\.js$/}, () => ({path: 'identity', namespace: 'mock'}));
         b.onLoad({filter: /.*/, namespace: 'mock'}, () => ({contents: auth, loader: 'js'}));
       }}],
     });
@@ -143,19 +144,19 @@ test('打包后入口不再包含词库内容，数据各自成块', async () =>
 });
 
 test('构建产物：数据块独立、预缓存不含数据块、首页不引用数据块', (t) => {
-  if (!existsSync('dist/sw.js') || !existsSync('dist/index.html')) {
+  if (!existsSync('dist-cloudflare/sw.js') || !existsSync('dist-cloudflare/index.html')) {
     t.skip('先跑 vite build 再验证产物');
     return;
   }
-  const sw = readFileSync('dist/sw.js', 'utf8');
+  const sw = readFileSync('dist-cloudflare/sw.js', 'utf8');
   const list = JSON.parse(sw.match(/const FILES=(.*);/)[1]);
   for (const name of ['data-b1-', 'data-inspire-a1-', 'data-a2-', 'data-a1-', 'data-mnemonics-', 'data-grammar-', 'data-tense-', 'data-conjugation-']) {
-    assert.ok(readdirSync('dist/assets').some(f => f.startsWith(name)), `应生成 ${name} 数据块`);
+    assert.ok(readdirSync('dist-cloudflare/assets').some(f => f.startsWith(name)), `应生成 ${name} 数据块`);
     assert.ok(!list.some(f => f.includes(name)), `预缓存不应包含 ${name}`);
   }
-  const html = readFileSync('dist/index.html', 'utf8');
+  const html = readFileSync('dist-cloudflare/index.html', 'utf8');
   assert.ok(!html.includes('data-'), '首页不应引用数据块');
-  const entry = readdirSync('dist/assets').find(f => f.startsWith('index-') && f.endsWith('.js'));
+  const entry = readdirSync('dist-cloudflare/assets').find(f => f.startsWith('index-') && f.endsWith('.js'));
   assert.ok(entry, '应生成入口 chunk');
 });
 

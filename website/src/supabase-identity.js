@@ -11,7 +11,7 @@ const checked=result=>{
  }
  return result.data;
 };
-const redirect=()=>import.meta.env.VITE_SITE_URL||location.origin+'/';
+const redirect=()=>import.meta.env?.VITE_SITE_URL||location.origin+'/';
 export async function getUser(){
  const {session}=checked(await supabaseClient().auth.getSession());if(!session)return null;
  return normalizeUser(checked(await supabaseClient().auth.getUser()).user);

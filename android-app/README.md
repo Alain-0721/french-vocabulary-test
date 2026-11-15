@@ -1,43 +1,41 @@
-# FranLumi 2.1.3 · 独立 Android App
+# FranLumi 2.1.7 · Android App
 
-Android APK 自带 React 学习界面与四本完整词库及 Édito B1 语法内容、时态专题和助记，通过原生 Activity 和 Android WebView 在应用内运行。移除了 TWA、Custom Tabs 和 Android Browser Helper，学习不依赖外部浏览器，首次启动即可离线检测。
+APK 自带 React 学习界面、四本完整词库、语法、时态与助记，通过原生 Activity 和系统 WebView 运行，首次启动可离线学习。源码版本名为 `2.1.7`、内部版本号 `19`，最低 Android 6.0（API 23）。[下载安装说明](INSTALL.md) · [GitHub Releases](https://github.com/Alain-0721/french-vocabulary-test/releases)。
 
-包名 `app.netlify.franmotest`，版本名 `2.1.3`，内部版本号 `15`，最低 Android 6.0（API 23）。同一发布签名允许覆盖升级此前版本。
+## 本机资源与账号
 
-[下载安装说明](INSTALL.md) · [下载 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.3/FranLumi-2.1.3-Android.apk)
+`MainActivity` 使用 `WebViewAssetLoader` 读取 APK 内置页面。账号与会话由 Supabase 管理，云端进度和头像请求连接配置的 Cloudflare Pages。缺失静态资源返回 404，不回退旧站。确认邮件与恢复链接映射回内置页面。
 
-## 界面、文件与账号
+原生文件选择器支持词库、备份和头像；导出通过系统保存窗口。返回键先关闭弹窗或菜单，再返回上一页。WebView 禁用文件 URL、明文、混合内容、第三方 Cookie、自动弹窗与发布版调试；不申请广泛存储、相机或定位权限。
 
-`MainActivity` 使用官方 `WebViewAssetLoader` 加载 APK 内置页面与脚本。迁移构建通过 Cloudflare Pages 接口同步记录和头像，通过 Supabase 登录并保存会话，不访问旧 Netlify 账号服务。原虚拟来源保留以继续读取已安装 App 的本机记录；缺失静态资源返回 404。新网站的邮件回调会映射回内置页面，保留同一本机存储。
+包名与 namespace `app.netlify.franmotest`、本地虚拟来源 `https://franmotest.netlify.app`、原发布签名和学习存储键继续保留，用于覆盖升级和读取已有记录；虚拟来源由 APK 本地加载器处理，并非在线服务。原生桥接名称也保持与内置页面一致。
 
-原生文件选择器支持词库和备份导入、头像选择；文件导出通过系统保存窗口写入用户指定位置。返回键先关闭弹窗或菜单，再返回上一页，首页连续返回退出。系统栏、刘海、键盘与深色外观由原生窗口处理。学习卡片保持现有无蓝色点击高亮设置。
+账号用户可联网同步；游客通过完整备份迁移。旧 TWA 浏览器存储与当前 App 数据分别保存，不能假定覆盖安装会读取 Chrome 的私有记录。更新时不要先卸载或清除 App 数据。
 
-WebView 禁用文件 URL 访问、明文与混合内容、第三方 Cookie、自动弹窗与发布版调试；不加载外站学习页面。不申请存储、相机、定位等广泛权限。外部 HTTPS 或邮件链接仅由用户主动点击打开。Android App Links 使用正式网站已有证书关联，邮箱确认与找回密码链接可回到 App 中处理。
+## 构建与检查
 
-App 数据与原浏览器数据分开。账号用户登录同步；游客通过完整备份迁移。不要假定覆盖旧版 TWA APK 能自动取得 Chrome 私有存储。
+需要 Node.js 22+、JDK 17、Android SDK Platform 36、Build Tools 36.1.0。Gradle wrapper 为 8.11.1，Android Gradle Plugin 为 8.9.1。先安装 `website` 依赖，并提供 [Cloudflare 部署说明](../website/CLOUDFLARE.md) 中的三个公开 `VITE_` 变量。
 
-## 构建
-
-需要 Node.js 22+、JDK 17、Android SDK Platform 36、Build Tools 36.1.0。Gradle wrapper 为 8.11.1，Android Gradle Plugin 为 8.9.1。先在 `../website` 安装 npm 依赖。
+`generate.mjs` 以 Vite `android` 模式构建并复制到 `app/src/main/assets/public/`，检查四本词库和原生文件桥接，并排除网站 Service Worker 与更新元数据。生成目录不提交到 Git。
 
 ```powershell
-# 在 android-app 目录
-npm ci
-npm run build
+# 在 android-app 目录：只生成网页资源
+node scripts/generate.mjs
+
+# 构建独立调试包及静态检查，不签署正式发布包
+.\gradlew.bat --offline assembleDebug lintDebug
 ```
 
-`generate.mjs` 先以 Vite `android` 模式构建共享界面，复制到 `app/src/main/assets/public/`，确认内置四本词库且不包含网站 Service Worker。生成目录不提交到 Git。网页版正常构建仍提供 PWA。
+本机工具配置位于仓库根 `.local/android-tools/config.json`，包含 `jdkPath` 和 `androidSdkPath`；设置 `JAVA_HOME`、`ANDROID_HOME` 或 Android Studio 的工具路径后再运行 Gradle。
 
-`build.mjs` 读取项目根目录 `.netlify/android-tools/config.json` 中的 `jdkPath` 与 `androidSdkPath`，生成 Release/Debug、运行 Android Lint，再对发布 APK 对齐、签名与校验。签名配置为 `app-config.json`，密码只从本机 `.netlify/android-signing/password.json` 读取。私有密钥与密码不进入仓库或 Release。请私下备份，未来升级需继续使用相同签名并增加内部版本号。
+正式发布时，`npm run build` 调用 `build.mjs`，构建 Release/Debug、运行 Lint，并对发布 APK 对齐、签名和校验。签名路径见 `app-config.json`，密码只从 `.local/android-signing/password.json` 读取。密钥、密码和工具不提交到 Git；请单独安全备份，未来升级必须使用同一签名并增加内部版本号。发布产物位于 `.local/releases/android-<版本>/`。
 
-迁移构建需提供 [网站迁移说明](../website/CLOUDFLARE-MIGRATION.md) 中的公开环境变量。产物位于 `.netlify/releases/android-2.1.3/`。也可用 Android Studio 打开本目录构建。应用发布为 APK；Google Play 上架需另行准备 AAB 和商店资料。
+在 `website` 运行 `npm run test:android`，验证原生桥接和真实 Java 更新校验。发布白名单会检查复制的网页资源及最终 APK，不允许调试备份或私钥混入。
 
-```powershell
-# 在 website 目录，先构建 native assets
-node node_modules/vite/bin/vite.js build --mode android
-npm run test:android
-```
+## 更新约定
 
-AndroidX 和保留的 Gradle/icon 模板采用 Apache-2.0，原创代码许可见根目录 LICENSE；词库的教材数据许可与质量说明见 DATA_NOTICE.md。
+App 从 GitHub main 的更新清单读取版本，从同仓库 Release 下载 APK，校验 SHA-256、大小、包名、版本和签名后进入系统安装窗口。网页版部署不会替换已安装 APK 的界面。
 
-自动更新兼容约定：旧版原生更新器限定 `Franmotest-<版本>-Android.apk` 的 GitHub 地址。每次发布必须同时上传此兼容文件名与 `FranLumi-<版本>-Android.apk`，两者为同一签名 APK 字节；`android-update.json` 指向兼容名称。更改显示品牌不能改变已安装更新器的下载地址约定。
+旧更新器要求 `Franmotest-<版本>-Android.apk` 下载名称，因此每次发布需同时提供该兼容文件与 `FranLumi-<版本>-Android.apk`；两者必须是同一签名 APK 字节。`android-update.json` 指向兼容文件名，不存在另一个旧版在线服务。
+
+AndroidX 和保留的 Gradle/icon 模板采用 Apache-2.0；原创代码见根目录 LICENSE，教材数据范围见 DATA_NOTICE.md。

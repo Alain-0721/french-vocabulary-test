@@ -6,10 +6,10 @@ const user={id:'11111111-1111-1111-1111-111111111111',email:'test@example.test',
 const encode=value=>Buffer.from(JSON.stringify(value)).toString('base64url');
 const token=encode({alg:'HS256',typ:'JWT'})+'.'+encode({sub:user.id,role:'authenticated',aud:'authenticated',exp:Math.floor(Date.now()/1000)+3600})+'.test-signature';
 const bundle=await build({entryPoints:['src/supabase-identity.js'],bundle:true,write:false,format:'iife',globalName:'Identity',platform:'browser',define:{
- 'import.meta.env.VITE_SUPABASE_URL':'"https://project.supabase.co"','import.meta.env.VITE_SUPABASE_ANON_KEY':'"public-test-key"','import.meta.env.VITE_SITE_URL':'"https://franmotest.pages.dev/"'
+ 'import.meta.env.VITE_SUPABASE_URL':'"https://project.supabase.co"','import.meta.env.VITE_SUPABASE_ANON_KEY':'"public-test-key"','import.meta.env.VITE_SITE_URL':'"https://franlumi.pages.dev/"'
 },logLevel:'silent'});
 function browser(saved){
- const dom=new JSDOM('',{url:'https://franmotest.pages.dev/',runScripts:'dangerously',pretendToBeVisual:true}),w=dom.window,calls=[];
+ const dom=new JSDOM('',{url:'https://franlumi.pages.dev/',runScripts:'dangerously',pretendToBeVisual:true}),w=dom.window,calls=[];
  w.Headers=Headers;w.Request=Request;w.Response=Response;
  w.fetch=async(url,options={})=>{
   calls.push({url,options});assert.equal(new URL(url).hostname,'project.supabase.co');
@@ -46,7 +46,7 @@ test('real Supabase SDK remembers sessions, verifies restored accounts, preserve
   const saved=first.w.localStorage.getItem('franmotest:supabase-session:v1');assert.ok(saved);assert.ok(!saved.includes('test-password'));
   const profile=await identity.updateUser({data:{full_name:'Camille'}});assert.equal(profile.name,'Camille');
   await identity.requestPasswordRecovery(user.email);
-  const recovery=first.calls.find(c=>c.url.includes('/recover'));assert.equal(new URL(recovery.url).searchParams.get('redirect_to'),'https://franmotest.pages.dev/');
+  const recovery=first.calls.find(c=>c.url.includes('/recover'));assert.equal(new URL(recovery.url).searchParams.get('redirect_to'),'https://franlumi.pages.dev/');
   assert.equal((await identity.getSettings()).disableSignup,false);
   next=browser(saved);assert.equal((await next.w.Identity.refreshSession()).id,'old-account');assert.equal((await next.w.Identity.getUser()).id,'old-account');
   await identity.logout();assert.equal(await identity.getUser(),null);assert.equal(first.w.localStorage.getItem('franmotest:supabase-session:v1'),null);

@@ -17,7 +17,7 @@ plugin-package/.codex-plugin/
 plugin-package/mcp.json
 .DS_Store
 
-.netlify/
+.local/
 .wrangler/
 supabase/.temp/
 website/dist/

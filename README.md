@@ -10,7 +10,7 @@ https://franlumi.pages.dev/
 
 [语法使用教程](https://franlumi.pages.dev/#/grammar/about) · [单词使用教程](https://franlumi.pages.dev/#/words/about) · [词库生成与导入教程](website/AI词库生成与导入教程.md) · [下载与安装](https://github.com/Alain-0721/french-vocabulary-test/releases)
 
-**[下载 FranLumi 2.1.7 安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.7/FranLumi-2.1.7-Android.apk)** · [安卓安装说明](android-app/INSTALL.md)。支持 Android 6.0 及以上，界面、四本词库和语法内容内置，直接在 App 中运行。旧版 Franmotest 用户可以检查更新并覆盖安装，原包名、发布签名和本机存储来源保留。账号登录与云同步需要联网。
+**[下载 FranLumi 2.1.7 安卓 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.7/FranLumi-2.1.7-Android.apk)** · [安卓安装说明](android-app/INSTALL.md)。支持 Android 6.0 及以上，界面、四本词库和语法内容内置，直接在 App 中运行。旧版 App 用户可以检查更新并覆盖安装，原包名、发布签名和本机存储来源保留。账号登录与云同步需要联网。
 
 **2.1.7 更新**：学习记录新增“成长之路”，以每日、每周、每月、累计曲线展示达标与复习情况；新增主动错题本和“已巩固”管理。课本过关、每日检测、易错复习统一提供“翻译 / 题目”切换，题目支持选择、判断和双向检测。成长达标需至少 3 个不同轮次、最近 5 次错误率严格低于 30%，且最近一次答对。
 
@@ -26,7 +26,7 @@ https://franlumi.pages.dev/
 
 **2.0 更新**：品牌统一为 FranLumi · 法语之光。单词空间保留原蓝色风格、多课本检测与逐词统计；语法空间采用暖色风格，提供 Édito B1 全书 12 个单元、24 个 Part、36 个语法专题、69 张知识表格和 216 道自编练习。支持左框选单元、右框选语法、点击题目翻开中文、答案解析与学习统计；设置包含独立外观、字号、翻译、备份恢复与教程。顶栏可以收起，手机底部导航更紧凑。
 
-旧网址 https://franmotest.pages.dev/ 继续提供 2.0 和旧 App 更新接口。浏览器游客记录按网址分别保存：更换网址前请在旧站导出完整备份，在新站导入；登录用户可在新站登录原账号读取云端记录。2.0 完整备份包含两个空间；旧版单词备份继续在单词空间导入。旧 APK 保存单词记录时，后台保留已有语法记录。
+当前网站只保留 FranLumi，App 更新由 GitHub 提供。浏览器游客记录按网址分别保存：更换网址前请在旧站导出完整备份，在新站导入；登录用户可在新站登录原账号读取云端记录。2.0 完整备份包含两个空间；旧版单词备份继续在单词空间导入。旧 APK 保存单词记录时，后台保留已有语法记录。
 
 **1.1.7 更新**：词汇顺序与卡片布局在按钮下方直接展开选项；安卓版新增 Édito A1 2022 词库（566 条词条、20 个 Part），保留原学习记录。网站同时修复 Edge 缓存刷新时的 `ERR_FAILED`。
 
@@ -36,7 +36,7 @@ https://franlumi.pages.dev/
 
 **1.1.4 更新**：找回密码支持邮箱 6 位验证码验证后设置新密码，验证码 10 分钟有效，支持重发；新密码可以与旧密码相同。网站与安卓版均可使用，原账号和学习记录保留。
 
-**1.1.3 迁移更新**：网站改由 Cloudflare Pages 托管，账号、云端记录和头像改由 Supabase 提供，新版运行不依赖 Netlify。原账号、昵称、头像和逐词统计保留；原账号首次登录请用原邮箱“忘记密码”设置新密码，不要重新注册。旧 APK 的更新地址已经内置，首次请手动下载新版覆盖安装，保留本机数据；新版从 GitHub 检查更新。
+**1.1.3 迁移更新**：网站由 Cloudflare Pages 托管，账号、云端记录和头像由 Supabase 提供。原账号、昵称、头像和逐词统计保留；原账号首次登录请用原邮箱“忘记密码”设置新密码，不要重新注册。旧 APK 的更新地址已经内置，首次请手动下载新版覆盖安装，保留本机数据；新版从 GitHub 检查更新。
 
 单词空间主导航为 **首页、课本过关、每日检测、易错复习、学习记录**，语法空间为 **首页、课本语法、时态专题、练习复习、学习记录**。设置统一从右上角头像进入，两空间设置内容一致、保留各自配色。首页展示课本进度、学习入口与 App 下载；安卓版首页仅在有新版时提示更新。
 
@@ -63,7 +63,7 @@ Part 和主题提供法中双语标题。Édito B2 是待导入的课本选项�
 
 旧网址的游客记录需先导出再到新网址导入；网站与 ChatGPT 插件通过主进度文件迁移，不自动互相同步。设计预览 `textbooks-preview.html` 使用独立演示数据，检测进度刷新后重置。
 
-网站源码位于 [`website/`](website/README.md)，部署与数据迁移见 [Cloudflare 与 Supabase 说明](website/CLOUDFLARE-MIGRATION.md)。旧网址的浏览器本机存储不会自动搬到新网址，请先在旧站导出完整备份，再到新站导入。
+网站源码位于 [`website/`](website/README.md)，部署见 [Cloudflare 与 Supabase 说明](website/CLOUDFLARE.md)。旧网址的浏览器本机存储不会自动搬到新网址，请先在旧站导出完整备份，再到新站导入。
 
 安卓 App 源码位于 [`android-app/`](android-app/README.md)，通过原生 Activity 与系统 WebView 运行 APK 自带的页面与词库，学习过程无需调用浏览器。App 内导入与备份使用系统文件窗口；原账号可联网同步，游客通过完整备份迁移。APK 经发布签名，网站通过 Digital Asset Links 关联应用；签名密钥与密码仅保存在本机，不进入仓库或 Release。
 
@@ -84,7 +84,7 @@ Part 和主题提供法中双语标题。Édito B2 是待导入的课本选项�
 - `plugin-package/`：三个 skill、词库与内置 HTML 后备卡片。
 - `assets/`：界面模板、抽词/评分核心、词库和双语标题。
 - `website/`：React/Vite 多课本网站、词库导入教程、Supabase 账号界面、Cloudflare 接口和数据库迁移。
-- `netlify.toml`：保留的旧版构建配置，供历史构建和只读导出使用。
+- `website/wrangler.jsonc`：Cloudflare Pages Worker、Supabase 公开配置和允许来源。
 - `*-bridge.js`：MCP Apps 宿主桥接代码。
 - `worker-source.mjs`：MCP 路由、用户隔离和云端记录逻辑。
 - `db/`、`drizzle/`：数据库结构和迁移，不含用户数据。

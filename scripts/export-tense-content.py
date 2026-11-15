@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(root / '.netlify/tense-summary'))
+sys.path.insert(0, str(root / '.local/tense-summary'))
 modules = [importlib.import_module(name) for name in ['part2a', 'part2b', 'part2c', 'part2d', 'part3', 'part4']]
 meta = [
  (5,'present','现在时','Le présent','A1','now','表达现在的事实、习惯与持续状态。'),

@@ -8,8 +8,8 @@ test('published metadata passes the real legacy Java validator while renamed and
  const root=resolve('..'),source=readFileSync(join(root,'android-app/app/src/main/java/app/netlify/franmotest/AppUpdater.java'),'utf8');
  const validation=source.match(/    static void validate\(JSONObject data\) throws Exception \{[\s\S]*?\n    \}/)?.[0];assert.ok(validation);
  const release=source.match(/private static final String RELEASE = "([^"]+)";/)?.[1];assert.ok(release);
- const config=JSON.parse(readFileSync(join(root,'.netlify/android-tools/config.json'),'utf8'));
- const dirRoot=join(root,'.netlify/legacy-update-contract');mkdirSync(dirRoot,{recursive:true});const dir=mkdtempSync(join(dirRoot,'check-'));
+ const config=JSON.parse(readFileSync(join(root,'.local/android-tools/config.json'),'utf8'));
+ const dirRoot=join(root,'.local/legacy-update-contract');mkdirSync(dirRoot,{recursive:true});const dir=mkdtempSync(join(dirRoot,'check-'));
  const harness=`import java.util.HashMap;
  public class LegacyUpdateContract {
  static final long MAX_APK=64L*1024*1024;static final String RELEASE="${release}";

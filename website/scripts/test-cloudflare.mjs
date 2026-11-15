@@ -9,6 +9,17 @@ import {loadAllBookBanks} from '../src/books.js';
 await loadAllBookBanks();
 const env={SUPABASE_URL:'https://backend.test',SUPABASE_ANON_KEY:'public-test-key',ALLOWED_ORIGINS:'https://franmotest.netlify.app'};
 const request=(path='/api/multi-progress',{method='GET',token='a',origin='https://app.test',body,headers={}}={})=>new Request('https://app.test'+path,{method,headers:{Origin:origin,...token?{Authorization:'Bearer '+token}:{},...headers},...body!==undefined?{body:typeof body==='string'?body:JSON.stringify(body)}:{}});
+test('current deployment rejects the retired website before sending credentials to the backend',async()=>{
+ const config=JSON.parse(await readFile('wrangler.jsonc','utf8'));
+ assert.equal(config.name,'franlumi');
+ let calls=0;const fetcher=async()=>{calls++;throw Error('Retired website must not reach the backend');};
+ const retired=new Request('https://franlumi.pages.dev/api/multi-progress',{method:'PUT',headers:{Origin:'https://franmotest.pages.dev',Authorization:'Bearer test-token','Content-Type':'application/json'},body:JSON.stringify({data:freshMulti(),etag:null})});
+ assert.equal((await handleApi(retired,config.vars,fetcher)).status,403);
+ const native=new Request('https://franlumi.pages.dev/api/multi-progress',{method:'OPTIONS',headers:{Origin:'https://franmotest.netlify.app'}});
+ const response=await handleApi(native,config.vars,fetcher);
+ assert.equal(response.status,204);assert.equal(response.headers.get('Access-Control-Allow-Origin'),'https://franmotest.netlify.app');assert.equal(calls,0);
+});
+
 test('Pages shell excludes its server worker from offline storage and routes only APIs through it',async()=>{
  const sw=await readFile('dist-cloudflare/sw.js','utf8');
  const files=JSON.parse(sw.match(/const FILES=(\[[^;]+\]);/)[1]);

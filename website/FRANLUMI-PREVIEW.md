@@ -40,7 +40,7 @@
 
 练习与记录提供课本/时态切换。时态题库包含 44 道原创语境题和 216 道变位题（共 260 道）；填空支持重音输入、重音错误提示与改答，每题最后提交计分。独立 tense 字段随完整备份保存，旧备份迁移添加空记录；课本范围恢复保留时态记录。
 
-内容快照在 src/grammar-preview/tense-bank.json；scripts/export-tense-content.py 可从本机 .netlify/tense-summary 源稿重新生成（源稿不随代码上传）。变位/题库/备份检查：node scripts/test-tense.mjs。仅本地 App 模式验证与独立调试 APK，不发布网页、GitHub 或正式更新清单。
+内容快照在 src/grammar-preview/tense-bank.json；scripts/export-tense-content.py 可从本机 .local/tense-summary 源稿重新生成（源稿不随代码上传）。变位/题库/备份检查：node scripts/test-tense.mjs。仅本地 App 模式验证与独立调试 APK，不发布网页、GitHub 或正式更新清单。
 
 ## 时态构成与全人称变位扩充 — 2026-10-15
 

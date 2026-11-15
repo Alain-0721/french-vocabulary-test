@@ -28,7 +28,7 @@ function worker({redirectedShell=false}={}){
 test('offline shell and build assets survive navigation; private APIs, previews and writes bypass cache',async()=>{
  const w=worker();await w.event('install');assert.equal(w.skipped(),0);
  assert.equal(await (await w.fetch('/#/study',{mode:'navigate'})).text(),'offline shell');assert.equal(await (await w.fetch('/assets/app.js')).text(),'asset');
- for(const [path,options] of [['/api/multi-progress',{}],['/api/avatar/abc.png',{}],['/.netlify/identity/user',{}],['/textbooks-preview.html',{mode:'navigate'}],['https://other.test/assets/app.js',{}],['/assets/app.js',{method:'POST'}]])assert.equal(await w.fetch(path,options),null);
+ for(const [path,options] of [['/api/multi-progress',{}],['/api/avatar/abc.png',{}],['/.private/auth/user',{}],['/textbooks-preview.html',{mode:'navigate'}],['https://other.test/assets/app.js',{}],['/assets/app.js',{method:'POST'}]])assert.equal(await w.fetch(path,options),null);
  await w.event('activate');assert.equal(w.claimed(),1);assert.ok(!w.stores.has('franmo-app-old'));assert.ok(w.stores.has('other-app'));
  w.handlers.get('message')({data:{type:'IGNORE'}});assert.equal(w.skipped(),0);w.handlers.get('message')({data:{type:'ACTIVATE_UPDATE'}});assert.equal(w.skipped(),1);
 });
@@ -37,7 +37,7 @@ test('Cloudflare redirected HTML cache serves manual-redirect navigation without
  for(const path of ['/#/study','/#/home']){const response=await w.fetch(path,{mode:'navigate',redirect:'manual'});assert.equal(response.redirected,false);assert.equal(response.status,200);assert.equal(response.headers.get('Content-Type'),'text/html');assert.equal(await response.text(),'offline shell');}
 });
 test('production worker precaches every generated script, stylesheet and manifest icon',()=>{
- const output=process.env.FRANMOTEST_BACKEND==='supabase'?'dist-cloudflare':'dist';
+ const output='dist-cloudflare';
  assert.ok(existsSync(output+'/sw.js'),'Build the matching backend before test:pwa');const sw=readFileSync(output+'/sw.js','utf8');assert.ok(!sw.includes('__PRECACHE_FILES__'));const list=JSON.parse(sw.match(/const FILES=(.*);/)[1]);
  for(const file of list)assert.ok(existsSync(output+file),file+' is missing');
  assert.ok(list.includes('/index.html'));assert.ok(list.includes('/manifest.webmanifest'));assert.ok(list.some(file=>file.startsWith('/assets/browser-')));
@@ -50,8 +50,8 @@ test('local account selector stores display data only, rejects invalid records a
  map.set(LAST_ACCOUNT,'{"id":"../../other","name":"Alain"}');assert.equal(readLocalAccount(storage),null);rememberLocalAccount(null,storage);assert.equal(map.size,0);
 });
 
-const auth=`export const getUser=async()=>{window.authReads++;return window.testIdentity;},refreshSession=async()=>{window.authReads++;},getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,onAuthChange=()=>()=>{},login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},updateUser=async()=>{},acceptInvite=async()=>{};`;
-const ui=await build({entryPoints:['src/site.jsx'],bundle:true,write:false,format:'iife',platform:'browser',define:{'import.meta.env.PROD':'false'},loader:{'.css':'empty'},logLevel:'silent',plugins:[{name:'identity-fixture',setup(b){b.onResolve({filter:/^@netlify\/identity$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:auth,loader:'js'}));}}]});
+const auth=`export const getUser=async()=>{window.authReads++;return window.testIdentity;},refreshSession=async()=>{window.authReads++;},getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,onAuthChange=()=>()=>{},login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},updateUser=async()=>{},acceptInvite=async()=>{},verifyPasswordRecovery=async()=>({}),resetRecoveredPassword=async()=>({unchanged:false});`;
+const ui=await build({entryPoints:['src/site.jsx'],bundle:true,write:false,format:'iife',platform:'browser',define:{'import.meta.env.PROD':'false'},loader:{'.css':'empty'},logLevel:'silent',plugins:[{name:'identity-fixture',setup(b){b.onResolve({filter:/(^|\/)supabase-identity\.js$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:auth,loader:'js'}));}}]});
 const pause=(ms=100)=>new Promise(resolve=>setTimeout(resolve,ms));
 async function waitForLocalAccount(w){
  const deadline=Date.now()+2000;

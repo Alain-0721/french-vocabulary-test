@@ -14,7 +14,7 @@
     "test:navigation": "node scripts/test-preview-navigation.mjs",
     "test:mnemonics": "node scripts/test-mnemonics.mjs",
     "test:startup": "node scripts/test-startup.mjs",
-    "test:account": "node scripts/test-account-session.mjs",
+    "test:account": "node scripts/test-account-session.mjs && node scripts/test-supabase-account.mjs",
     "test:production": "node scripts/test-multi-production.mjs",
     "test:profile": "node scripts/test-account-profile.mjs",
     "test:pwa": "node scripts/test-pwa.mjs",
@@ -23,12 +23,11 @@
     "build:cloudflare": "vite build --mode cloudflare",
     "test:choices": "node scripts/test-choice-navigation.mjs",
     "test:recovery": "node scripts/test-password-recovery.mjs && node scripts/test-supabase-account.mjs",
-    "test:cloudflare": "node scripts/test-cloudflare.mjs && node scripts/test-supabase-account.mjs && node scripts/test-migration-local.mjs"
+    "test:cloudflare": "node scripts/test-cloudflare.mjs && node scripts/test-supabase-account.mjs && node scripts/test-migration-local.mjs",
+    "test:release": "node scripts/test-release-files.mjs",
+    "check:release": "node scripts/release-files.mjs"
   },
   "dependencies": {
-    "@netlify/blobs": "latest",
-    "@netlify/functions": "latest",
-    "@netlify/identity": "latest",
     "@supabase/supabase-js": "^2.117.2",
     "lucide-react": "^0.468.0",
     "react": "^19.2.0",
@@ -37,12 +36,11 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
-    "@netlify/vite-plugin": "latest",
     "@types/node": "latest",
     "@vitejs/plugin-react": "latest",
     "jsdom": "^30.1.1",
-    "netlify-cli": "latest",
     "typescript": "latest",
-    "vite": "latest"
+    "vite": "latest",
+    "esbuild": "0.28.1"
   }
 }

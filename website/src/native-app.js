@@ -23,7 +23,7 @@ export function startNativeApp(){
     const link=event.target.closest?.('a[href]');
     if(!link||link.hasAttribute('download'))return;
     const url=new URL(link.href,location.href);
-    if(url.origin===location.origin&&!url.pathname.startsWith('/.netlify/')&&!link.hasAttribute('data-external'))return;
+    if(url.origin===location.origin&&!link.hasAttribute('data-external'))return;
     if(['https:','mailto:'].includes(url.protocol)&&globalThis.FranmotestNative?.openExternal){event.preventDefault();globalThis.FranmotestNative.openExternal(url.href);}
   });
 }

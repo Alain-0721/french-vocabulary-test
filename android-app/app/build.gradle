@@ -8,11 +8,15 @@ android {
         targetSdk 36
         versionCode = (project.findProperty('qaVersionCode') ?: '19').toString().toInteger()
         versionName = (project.findProperty('qaVersionName') ?: '2.1.7').toString()
-        def migrated = System.getenv('FRANMOTEST_BACKEND') == 'supabase'
-        def apiHost = migrated ? new URI(System.getenv('VITE_SITE_URL')).host : 'franmotest.netlify.app'
-        def authHost = migrated ? new URI(System.getenv('VITE_SUPABASE_URL')).host : 'franmotest.netlify.app'
+        def apiUrl = System.getenv('VITE_SITE_URL')
+        def authUrl = System.getenv('VITE_SUPABASE_URL')
+        if (!apiUrl || !authUrl) throw new GradleException('Configure Cloudflare and Supabase URLs before building')
+        def apiUri = new URI(apiUrl)
+        def authUri = new URI(authUrl)
+        if (apiUri.scheme != 'https' || authUri.scheme != 'https') throw new GradleException('Backend URLs must use HTTPS')
+        def apiHost = apiUri.host
+        def authHost = authUri.host
         if (!(apiHost ==~ /[a-z0-9.-]+/) || !(authHost ==~ /[a-z0-9.-]+/)) throw new GradleException('Invalid backend host')
-        buildConfigField 'boolean', 'MIGRATED_BACKEND', migrated.toString()
         buildConfigField 'String', 'API_HOST', '"' + apiHost + '"'
         buildConfigField 'String', 'AUTH_HOST', '"' + authHost + '"'
         manifestPlaceholders.appLinkHost = apiHost
