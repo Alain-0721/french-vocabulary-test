@@ -54,9 +54,10 @@ const bundle=await build({stdin:{contents:`
  import {TenseCatalog,TenseReader} from './src/grammar-preview/tense-ui.jsx';
  import {freshTense} from './src/grammar-preview/tense-state.js';
  import bank from './src/grammar-preview/tense-bank.json';
+ import conjugations from './src/grammar-preview/conjugation-bank.json';
  const root=createRoot(document.getElementById('root'));
- window.showCatalog=()=>root.render(<TenseCatalog state={freshTense()} open={t=>window.selected=t.id}/>);
- window.showReader=id=>root.render(<TenseReader key={id} topic={bank.topics.find(t=>t.id===id)} state={freshTense()} update={()=>{}} open={()=>{}} go={()=>{}} practice={id=>window.practiced=id} bookBank={{topics:[]}} openBook={()=>{}}/>);
+ window.showCatalog=()=>root.render(<TenseCatalog state={freshTense()} open={t=>window.selected=t.id} bank={bank}/>);
+ window.showReader=id=>root.render(<TenseReader key={id} topic={bank.topics.find(t=>t.id===id)} state={freshTense()} update={()=>{}} open={()=>{}} go={()=>{}} practice={id=>window.practiced=id} bookBank={{topics:[]}} openBook={()=>{}} bank={bank} conjugationBank={conjugations}/>);
  `,resolveDir:process.cwd(),loader:'jsx'},bundle:true,write:false,format:'iife',platform:'browser',loader:{'.css':'empty'},logLevel:'silent'});
 const pause=()=>new Promise(r=>setTimeout(r,80));
 test('catalog, every reader, verb selection and translation toggles work without losing content',async()=>{

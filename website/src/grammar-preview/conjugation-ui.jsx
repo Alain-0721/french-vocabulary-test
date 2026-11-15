@@ -1,13 +1,14 @@
 import React,{useMemo,useState} from 'react';
 import {Search,ChevronDown} from 'lucide-react';
 import {ChoiceMenu} from '../choice-menu.jsx';
-import data from './conjugation-bank.json';
 import './conjugation.css';
 
 export const conjugationNames={'present':'现在时','near-future':'最近将来时','recent-past':'最近过去时','ongoing':'现在进行时','imperative':'命令式','compound-past':'复合过去时','imperfect':'未完成过去时','pluperfect':'愈过去时','simple-past':'简单过去时','future':'简单将来时','future-perfect':'先将来时','conditional':'条件式现在时','conditional-past':'条件式过去时','subjunctive':'虚拟式现在时','subjunctive-past':'虚拟式过去时'};
 const canonical=x=>x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,'');
-export function ConjugationPanel({tense:fixedTense,compact=false}){
+// 变位数据由进入语法空间时加载，父组件通过 data 传入；未传入时只显示加载提示。
+export function ConjugationPanel({tense:fixedTense,compact=false,data}){
  const [tense,setTense]=useState(fixedTense||'present'),[verb,setVerb]=useState('être'),[query,setQuery]=useState(''),[kind,setKind]=useState('all');
+ if(!data)return <section className="cg-panel" aria-label="完整变位查询"><p>正在加载变位数据…</p></section>;
  const selectedTense=fixedTense||tense,Panel=compact?'details':'section';
  const matching=useMemo(()=>data.models.filter(m=>(kind==='all'||kind==='regular'&&['regular','spelling'].includes(m.family)||kind==='irregular'&&!['regular','spelling'].includes(m.family))&&canonical(`${m.id} ${m.zh} ${m.familyWords.join(' ')}`).includes(canonical(query))),[query,kind]);
  const exact=query.trim()?matching.find(m=>canonical(m.id)===canonical(query)):null;
@@ -22,4 +23,3 @@ export function ConjugationPanel({tense:fixedTense,compact=false}){
  {!compact&&<p className="gl-source-note">{data.models.length} 个变位模型 · 覆盖 {new Set(data.models.flatMap(m=>m.familyWords)).size} 个同族索引词。{data.scope}<span className="tl-sources">{data.references.map(r=><a key={r.url} href={r.url} target="_blank" rel="noreferrer">{r.label}</a>)}</span></p>}
  </Panel>;
 }
-export {data as conjugationBank};

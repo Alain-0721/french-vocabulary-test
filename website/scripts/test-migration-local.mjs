@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
 import {freshMulti} from '../src/multi-learning.js';
+import {loadAllBookBanks} from '../src/books.js';
+await loadAllBookBanks();
 import * as Study from '../src/preview-study.js';
 const fixture=`const listeners=new Set();export const getUser=async()=>null,refreshSession=async()=>{},getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null;export const onAuthChange=fn=>{listeners.add(fn);return()=>listeners.delete(fn)};export const logout=()=>{for(const fn of listeners)fn('logout',null)};`;
 const bundle=await build({stdin:{contents:`import React from 'react';import {createRoot} from 'react-dom/client';import {useMultiLearning} from './src/useMultiLearning.js';import {logout} from '@netlify/identity';window.testLogout=logout;function App(){window.learning=useMultiLearning();return React.createElement('div',null,window.learning.sync)}createRoot(document.getElementById('root')).render(React.createElement(App));`,resolveDir:process.cwd(),loader:'jsx'},bundle:true,write:false,format:'iife',platform:'browser',define:{'import.meta.env.VITE_SUPABASE_URL':'"https://project.supabase.co"','import.meta.env.VITE_SUPABASE_ANON_KEY':'"public-test-key"'},plugins:[{name:'auth-boundary',setup(b){b.onResolve({filter:/^@netlify\/identity$/},()=>({path:'auth',namespace:'fixture'}));b.onLoad({filter:/.*/,namespace:'fixture'},()=>({contents:fixture,loader:'js'}));}}],logLevel:'silent'});

@@ -5,6 +5,8 @@ import vm from 'node:vm';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
 import {freshMulti} from '../src/multi-learning.js';
+import {loadAllBookBanks} from '../src/books.js';
+await loadAllBookBanks();
 import {LAST_ACCOUNT,rememberLocalAccount,readLocalAccount} from '../src/offline-account.js';
 import * as Study from '../src/preview-study.js';
 

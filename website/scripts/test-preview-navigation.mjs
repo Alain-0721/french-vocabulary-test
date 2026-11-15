@@ -4,7 +4,9 @@ import * as S from '../src/preview-study.js';
 import {createDaily,reviewAction,eligible,restoreStudy,convertClassicMain,D} from '../src/preview-review.js';
 import {fullBackup,mainBackup,readBackup} from '../src/preview-backup.js';
 import bank from '../../assets/textbook-bank.json' with {type:'json'};
-import {editoA2Book,inspireBook} from '../src/supplied-books.js';
+import {initialBooks,loadAllBookBanks} from '../src/books.js';
+await loadAllBookBanks();
+const editoA2Book=initialBooks.find(b=>b.id==='edito-a2-2022'),inspireBook=initialBooks.find(b=>b.id==='inspire-a1');
 
 const b1={id:'edito-b1',name:'Édito B1',level:'B1',edition:'2023 版',bank},books=[b1,editoA2Book,inspireBook];
 const fresh=()=>Object.fromEntries(books.map(b=>[b.id,S.create(b.bank,b.level)]));

@@ -4,6 +4,8 @@ import {performance} from 'node:perf_hooks';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
 import {freshMulti} from '../src/multi-learning.js';
+import {loadAllBookBanks} from '../src/books.js';
+await loadAllBookBanks();
 import * as Study from '../src/preview-study.js';
 import {rememberLocalAccount} from '../src/offline-account.js';
 

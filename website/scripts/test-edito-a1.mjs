@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readFile} from 'node:fs/promises';
 import {parseCSVText,parseCSV,vocabularySummary} from '../src/vocabulary-import.js';
-import {editoA1Book} from '../src/supplied-books.js';
+import {initialBooks,loadAllBookBanks} from '../src/books.js';
+await loadAllBookBanks();
+const editoA1Book=initialBooks.find(b=>b.id==='edito-a1-2022');
 import {freshMulti,restoreMulti} from '../src/multi-learning.js';
 import * as Study from '../src/preview-study.js';
 

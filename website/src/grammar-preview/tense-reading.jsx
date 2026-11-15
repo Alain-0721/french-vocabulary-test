@@ -1,7 +1,7 @@
 import React,{useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {ChevronDown,ArrowRight,PenLine} from 'lucide-react';
 import {ChoiceMenu} from '../choice-menu.jsx';
-import {ConjugationPanel,conjugationBank,conjugationNames} from './conjugation-ui.jsx';
+import {ConjugationPanel,conjugationNames} from './conjugation-ui.jsx';
 import {buildTenseLesson,formulas,formulaExamples} from './tense-layout.js';
 import {sharedPastReference} from './tense-notes.js';
 
@@ -37,7 +37,7 @@ function PastReference(){return <details className="tl-shared-reference"><summar
 export function Blocks({blocks,tense}){return blocks.map((b,i)=>b.t==='past-reference'?<PastReference key={i}/>:b.t==='fr'?<Example key={i} block={b}/>:b.t==='table'?<KnowledgeTable key={i} block={b} tense={tense}/>:b.t==='ul'||b.t==='ol'?React.createElement(b.t==='ul'?'ul':'ol',{key:i},b.x.map((x,n)=><li key={n}><Rich text={x}/></li>)):b.t==='note'?<aside className="tl-note" key={i}><strong>{b.title}</strong><p><Rich text={b.x}/></p></aside>:b.t==='h3'||b.t==='h4'||b.t==='part'?<h3 key={i}>{b.x}</h3>:<p key={i}><Rich text={b.x||''}/></p>);}
 
 function loadView(key){try{return JSON.parse(sessionStorage.getItem(key))||{};}catch{return {};}}
-export function TenseLesson({topic,practice,questionCount}){
+export function TenseLesson({topic,practice,questionCount,conjugationBank}){
  const tabs=buildTenseLesson(topic,conjugationBank.supplements[topic.id]);
  const storageKey=`franlumi:tense-view:${topic.id}`,saved=useRef(loadView(storageKey));
  const [active,setActive]=useState(()=>tabs.some(t=>t.id===saved.current.active)?saved.current.active:tabs[0].id);
@@ -82,7 +82,7 @@ export function TenseLesson({topic,practice,questionCount}){
     const id=sectionKey(tab,s),open=isExpanded(tab,s,i);
     return <details className="tl-reading-section" key={id} open={open} onToggle={e=>{const next=e.currentTarget.open;setExpanded(old=>old[id]===next?old:{...old,[id]:next});}}><summary><span className="tl-section-number">{String(i+1).padStart(2,'0')}</span><span className="tl-section-heading"><strong>{s.title}</strong>{s.hint&&<small>{s.hint}</small>}</span><ChevronDown size={17}/></summary><div><Blocks blocks={s.blocks} tense={topic.id}/></div></details>;
    })}
-   {tab.id==='verbs'&&conjugationNames[topic.id]&&<ConjugationPanel tense={topic.id} compact/>}
+   {tab.id==='verbs'&&conjugationNames[topic.id]&&<ConjugationPanel tense={topic.id} compact data={conjugationBank}/>}
    {questionCount>0&&<button className="gl-practice-link tl-section-practice" onClick={()=>practice(topic.id)}><PenLine size={18}/><span><strong>练习这个专题</strong><small>{questionCount} 道题</small></span><ArrowRight size={17}/></button>}
    <div className="tl-next-section">{tabs.findIndex(t=>t.id===tab.id)<tabs.length-1&&<button className="gl-secondary" onClick={()=>select(tabs[tabs.findIndex(t=>t.id===tab.id)+1].id)}>继续：{tabs[tabs.findIndex(t=>t.id===tab.id)+1].label}<ArrowRight size={15}/></button>}</div>
   </div>)}

@@ -5,6 +5,8 @@ import {PGlite} from '@electric-sql/pglite';
 import {handleApi} from '../cloudflare/worker.js';
 import {normalizeUser} from '../src/supabase-client.js';
 import {freshMulti,restoreMulti} from '../src/multi-learning.js';
+import {loadAllBookBanks} from '../src/books.js';
+await loadAllBookBanks();
 const env={SUPABASE_URL:'https://backend.test',SUPABASE_ANON_KEY:'public-test-key',ALLOWED_ORIGINS:'https://franmotest.netlify.app'};
 const request=(path='/api/multi-progress',{method='GET',token='a',origin='https://app.test',body,headers={}}={})=>new Request('https://app.test'+path,{method,headers:{Origin:origin,...token?{Authorization:'Bearer '+token}:{},...headers},...body!==undefined?{body:typeof body==='string'?body:JSON.stringify(body)}:{}});
 test('Pages shell excludes its server worker from offline storage and routes only APIs through it',async()=>{

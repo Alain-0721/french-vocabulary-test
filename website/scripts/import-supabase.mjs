@@ -20,7 +20,7 @@ async function bytes(name,record){
 const records=new Map();
 for(const name of ['edito-progress','franmo-progress-v2'])for(const record of await readStore(name)){
  const raw=JSON.parse(await bytes(name,record));
- const data=name==='franmo-progress-v2'?restoreMulti(raw):migrateClassic(raw);
+ const data=name==='franmo-progress-v2'?restoreMulti(raw):await migrateClassic(raw);
  if(!data)throw Error('A source learning record failed validation.');
  const id=record.key.replace(/^user\//,'');
  if(!users.some(u=>u.id===id))throw Error('Account export is missing an owner; no source records will be discarded.');

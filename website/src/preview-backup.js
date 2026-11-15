@@ -10,10 +10,23 @@ import {restoreGrowth} from './learning-growth.js';
 const safeId=id=>typeof id==='string'&&id.length>0&&id.length<=150&&!['__proto__','prototype','constructor'].includes(id);
 export function fullBackup(books,progress,settings,bookId,secondary,theme){return {version:1,mode:'multi-atelier-preview',exportedAt:new Date().toISOString(),bookId,books,progress,settings,secondary,theme};}
 export function mainBackup(book,main){return {version:1,mode:'multi-atelier-main',exportedAt:new Date().toISOString(),book,main};}
-function restoreBook(b,existing){
+// options.allowStoredBanks 只用于本机 / 云端已保存的记录：
+// 文件里保存的内置词库直接采用（本节尚未加载时也一样）；文件里没有词库的
+// 内置课本保留描述，不报错。导入外部备份文件时不传此项，保持严格校验。
+function restoreBook(b,existing,options={}){
   if(!safeId(b?.id)||typeof b.name!=='string'||!b.name.trim()||b.name.length>48||!['A1','A2','B1','B2','C1','C2','自由'].includes(b.level)||typeof b.edition!=='string'||b.edition.length>80)throw Error('课本信息无效。');
   const known=existing.find(e=>e.id===b.id);
-  if(known&&(known.supplied||['edito-b1','my-notebook'].includes(b.id))){if(!b.bank||!sameVocabulary(b.bank,known.bank))throw Error('备份中的内置词库与网站版本不一致，请使用匹配的进度文件。');return known;}
+  if(known&&(known.supplied||['edito-b1','my-notebook'].includes(b.id))){
+    if(b.bank){
+      if(known.bank){if(!sameVocabulary(b.bank,known.bank))throw Error('备份中的内置词库与网站版本不一致，请使用匹配的进度文件。');return known;}
+      if(options.allowStoredBanks)return {...known,bank:b.bank,bankVersion:b.bankVersion};
+      throw Error('备份中的内置词库与网站版本不一致，请使用匹配的进度文件。');
+    }
+    // 文件里没有这本内置课本的词库：用当前网站版本补齐，进度仍逐条校验；
+    // 当前也没有词库时无法校验，仍按原规则拒绝。
+    if(known.bank||options.allowStoredBanks)return known;
+    throw Error('备份中的内置词库与网站版本不一致，请使用匹配的进度文件。');
+  }
   if(!b.bank)return {id:b.id,name:b.name,series:b.name,level:b.level,edition:b.edition,status:'pending',color:'sand',subtitle:'等待导入词库。'};
   const entries=validateEntries(b.bank);return {...makeImportedBook({entries,summary:vocabularySummary(entries),filename:b.sourceFilename||''},b,b.id),remember:false};
 }
@@ -36,20 +49,21 @@ function restoreSecondary(raw,book,main){
   if(raw.mistakeStats){r.mistakeStats={};for(const [id,s] of Object.entries(raw.mistakeStats)){if(!book.bank.some(e=>e.id===id)||!s||!Number.isSafeInteger(s.streak)||s.streak<0||typeof s.consolidated!=='boolean'||!Array.isArray(s.rounds)||s.rounds.some(n=>!Number.isSafeInteger(n)||n<1))throw Error('易错巩固记录无效。');r.mistakeStats[id]={streak:s.streak,consolidated:s.consolidated,rounds:[...s.rounds]};}}
   return r;
 }
-export function readBackup(raw,existing,current){
+export function readBackup(raw,existing,current,options={}){
   const data=typeof raw==='string'?JSON.parse(raw):raw;
   if(['multi-atelier-preview','multi-atelier'].includes(data?.mode)){
-    if(data.mode==='multi-atelier'){if(data.version!==2)throw Error('备份版本无效。');return readBackup({...data,version:1,mode:'multi-atelier-preview'},existing,current);}
+    if(data.mode==='multi-atelier'){if(data.version!==2)throw Error('备份版本无效。');return readBackup({...data,version:1,mode:'multi-atelier-preview'},existing,current,options);}
     if(data.version!==1||!Array.isArray(data.books)||!data.books.length||data.books.length>35||!data.progress||!data.settings||!['classic','right'].includes(data.settings.layout)||typeof data.settings.shuffle!=='boolean')throw Error('完整备份格式无效。');
-    const ids=new Set(),saved=data.books.map(b=>{if(ids.has(b.id))throw Error('备份中存在重复课本。');ids.add(b.id);return restoreBook(b,existing);});
+    const ids=new Set(),saved=data.books.map(b=>{if(ids.has(b.id))throw Error('备份中存在重复课本。');ids.add(b.id);return restoreBook(b,existing,options);});
     const books=[...existing.filter(b=>!ids.has(b.id)),...saved],progress={...current},secondary={};
-    for(const b of saved)if(b.bank){const s=restoreStudy(data.progress[b.id],b);if(!s)throw Error(`${b.name} 的主进度或词条累计记录无效。`);progress[b.id]=s;secondary[b.id]=restoreSecondary(data.secondary?.[b.id],b,s);}
+    // 未打开过的课本本来就没有进度：有词库就新建一份，而不是当作损坏拒绝。
+    for(const b of saved)if(b.bank){const s=data.progress[b.id]===undefined?Study.create(b.bank,b.level):restoreStudy(data.progress[b.id],b);if(!s)throw Error(`${b.name} 的主进度或词条累计记录无效。`);progress[b.id]=s;secondary[b.id]=restoreSecondary(data.secondary?.[b.id],b,s);}
     if(!books.some(b=>b.id===data.bookId))throw Error('选中的课本不存在。');
     return {books,progress,secondary,bookId:data.bookId,settings:{layout:data.settings.layout,shuffle:data.settings.shuffle},theme:['light','dark','system'].includes(data.theme)?data.theme:'light',...(data.grammar?{grammar:normalizeGrammarState(data.grammar)}:{}),label:data.grammar?'法语之光完整备份':'多课本完整备份'};
   }
   if(data?.mode==='multi-atelier-main'){
     if(data.version!==1)throw Error('主进度版本无效。');
-    const book=restoreBook(data.book,existing),s=book.bank&&restoreStudy(data.main,book);if(!s)throw Error('课本主进度或累计记录无效。');
+    const book=restoreBook(data.book,existing,options),s=book.bank&&restoreStudy(data.main,book);if(!s)throw Error('课本主进度或累计记录无效。');
     return {books:existing.some(b=>b.id===book.id)?existing.map(b=>b.id===book.id?book:b):[...existing,book],progress:{...current,[book.id]:s},bookId:book.id,secondary:{[book.id]:{daily:null}},label:`${book.name} 主进度`};
   }
   const book=existing.find(b=>b.id==='edito-b1'),main=book&&convertClassicMain(data?.mode==='atelier'?data.main:data,book);

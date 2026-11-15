@@ -16,8 +16,8 @@ test('all topics have usable content and distinct exercises, conjugation answers
  assert.equal(isCorrect(tenseQuestions.find(q=>q.topic==='compound-past'&&q.expected?.includes('lavé')),'lave'),false);
 });
 test('corrections update scores once and malformed scores/answers cannot enter backups',()=>{
- const q=tenseQuestions[0];let s=answerTense(freshTense(),q,1);assert.equal(s.topics[q.topic].bad,1);s=answerTense(s,q,q.correct);assert.equal(s.topics[q.topic].good,1);assert.equal(s.topics[q.topic].bad,0);assert.equal(answerTense(s,q,q.correct),s);assert.deepEqual(normalizeTense(s),s);
- for(const change of [s=>s.answers.unknown=0,s=>s.topics.present.good=99,s=>s.current='bad',s=>s.answers[q.id]=9]){const bad=structuredClone(s);change(bad);assert.throws(()=>normalizeTense(bad));}
+ const q=tenseQuestions[0];let s=answerTense(freshTense(),q,1);assert.equal(s.topics[q.topic].bad,1);s=answerTense(s,q,q.correct);assert.equal(s.topics[q.topic].good,1);assert.equal(s.topics[q.topic].bad,0);assert.equal(answerTense(s,q,q.correct),s);assert.deepEqual(normalizeTense(s,bank),s);
+ for(const change of [s=>s.answers.unknown=0,s=>s.topics.present.good=99,s=>s.current='bad',s=>s.answers[q.id]=9]){const bad=structuredClone(s);change(bad);assert.throws(()=>normalizeTense(bad,bank));}
 });
 test('legacy and full backups preserve separate textbook, tense, and word records',()=>{
  const old=freshState();delete old.tense;assert.deepEqual(readGrammarBackup(old).state.tense,freshTense());

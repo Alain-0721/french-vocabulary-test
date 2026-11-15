@@ -14,7 +14,7 @@ test('grammar backups round-trip records and preferences, validate statistics an
  const book=restoreGrammarBackup(current,readGrammarBackup(grammarBackup(source,'book')));assert.equal(book.theme,'system');assert.equal(book.translation,true);assert.equal(book.space,'words');assert.deepEqual(book.last,current.last);assert.deepEqual(book.answers,source.answers);
  const restored=restoreGrammarBackup(current,full);assert.equal(restored.theme,'dark');assert.equal(restored.space,'words');
  for(const mutate of [s=>s.answers[exercises[0].id]=99,s=>s.topics[exercises[0].topic].good=9,s=>s.theme='invalid',s=>s.topics.unknown={}]){
-  const malformed=structuredClone(source);mutate(malformed);assert.throws(()=>readGrammarBackup(malformed));
+  const malformed=structuredClone(source);mutate(malformed);assert.throws(()=>readGrammarBackup(malformed,bank));
  }
  assert.throws(()=>readGrammarBackup({mode:'atelier',version:1}));assert.equal(loadState({getItem:()=>JSON.stringify({...source,theme:'bad'})}).theme,'light');
 });

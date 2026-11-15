@@ -22,5 +22,15 @@ export default defineConfig(({mode,command})=>{
  return {define:{'import.meta.env.VITE_NATIVE_APP':JSON.stringify(mode==='android'||grammarPreview?'true':'false')},
   resolve:{alias:cloudflare?{'@netlify/identity':fileURLToPath(new URL('./src/supabase-identity.js',import.meta.url))}:{}},
   plugins:[react(),devPrivateFiles(),...(mode==='android'||grammarPreview?[]:cloudflare?[pwaBuild(),cloudflareBuild()]:[netlify(),pwaBuild()])],
-  build:{...(grammarPreview?{rollupOptions:{input:fileURLToPath(new URL('./franlumi-preview.html',import.meta.url))}}:{}),outDir:grammarPreview?'dist-franlumi-preview':mode==='android'?'dist-android':cloudflare?'dist-cloudflare':'dist'},server:{host:'127.0.0.1',port:5173}};
+  build:{modulePreload:false,rollupOptions:{...(grammarPreview?{input:fileURLToPath(new URL('./franlumi-preview.html',import.meta.url))}:{}),output:{manualChunks(id){
+   // 词库与语法数据各自成块，按需加载；PWA 只预缓存应用外壳，不预缓存这些数据块。
+   if(id.includes('textbook-bank.json'))return 'data-b1';
+   if(id.includes('inspire-a1-bank.json')||id.includes('inspire-a1-titles.json'))return 'data-inspire-a1';
+   if(id.includes('edito-a2-2022-bank.json')||id.includes('edito-a2-2022-titles.json'))return 'data-a2';
+   if(id.includes('edito-a1-2022-bank.json')||id.includes('edito-a1-2022-titles.json'))return 'data-a1';
+   if(id.includes('vocabulary-mnemonics.json'))return 'data-mnemonics';
+   if(id.includes('grammar-preview/bank.json'))return 'data-grammar';
+   if(id.includes('tense-bank.json'))return 'data-tense';
+   if(id.includes('conjugation-bank.json'))return 'data-conjugation';
+  }}},outDir:grammarPreview?'dist-franlumi-preview':mode==='android'?'dist-android':cloudflare?'dist-cloudflare':'dist'},server:{host:'127.0.0.1',port:5173}};
 });

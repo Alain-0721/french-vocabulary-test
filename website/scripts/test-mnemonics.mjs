@@ -2,8 +2,10 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
-import {initialBooks} from '../src/books.js';
-import {mnemonicFor} from '../src/vocabulary-mnemonics.js';
+import {initialBooks,loadAllBookBanks} from '../src/books.js';
+import {mnemonicFor,loadMnemonics} from '../src/vocabulary-mnemonics.js';
+await loadAllBookBanks();
+await loadMnemonics();
 import * as Study from '../src/preview-study.js';
 import {createDaily} from '../src/preview-review.js';
 
@@ -27,6 +29,7 @@ const bundle=await build({stdin:{contents:`
  import {reviewAction} from './src/preview-review.js';
  import {Quiz} from './src/study-preview-ui.jsx';
  import * as Study from './src/preview-study.js';
+ import {loadMnemonics} from './src/vocabulary-mnemonics.js';
  const f=window.fixture;
  function StudyApp(){const [state,setState]=useState(f.main);window.currentStudy=state;
  const act=(action,id,kind)=>setState(previous=>{const next=structuredClone(previous);
@@ -36,9 +39,9 @@ const bundle=await build({stdin:{contents:`
  return <Quiz book={f.book} state={state} attempt={Study.active(state)} act={act} settings={{layout:f.layout}} onSettings={()=>{}} titleFor={()=>({})} themeFor={()=>''}/>;}
  function App(){const [quiz,setQuiz]=useState(f.quiz);window.currentQuiz=quiz;
  return f.view==='library'?<LibraryStatistics book={f.book} state={f.main} view="library" go={()=>{}} titleFor={()=>({})} themeFor={()=>''}/>:<ReviewQuiz book={f.book} quiz={quiz} settings={{layout:'right'}} changeSettings={()=>{}} themeFor={()=>''} act={(a,id,k)=>setQuiz(q=>reviewAction(q,a,id,k,f.book))}/>;}
- createRoot(document.getElementById('root')).render(f.view==='study'?<StudyApp/>:<App/>);`,resolveDir:process.cwd(),loader:'jsx'},bundle:true,write:false,format:'iife',loader:{'.css':'empty'},logLevel:'silent'});
+ (async()=>{await loadMnemonics();createRoot(document.getElementById('root')).render(f.view==='study'?<StudyApp/>:<App/>);})();`,resolveDir:process.cwd(),loader:'jsx'},bundle:true,write:false,format:'iife',loader:{'.css':'empty'},logLevel:'silent'});
 const pause=()=>new Promise(r=>setTimeout(r,40));
-async function mount(view,layout='right'){const dom=new JSDOM('<div id="root"></div>',{url:'http://localhost',runScripts:'dangerously',pretendToBeVisual:true});dom.window.structuredClone=structuredClone;dom.window.fixture={book,main,quiz,view,layout};dom.window.eval(bundle.outputFiles[0].text);await pause();return dom;}
+async function mount(view,layout='right'){const dom=new JSDOM('<div id="root"></div>',{url:'http://localhost',runScripts:'dangerously',pretendToBeVisual:true});dom.window.structuredClone=structuredClone;dom.window.fixture={book,main,quiz,view,layout};dom.window.eval(bundle.outputFiles[0].text);for(let i=0;i<50&&!dom.window.document.querySelector('.study-word-row,.np-dictionary details');i++)await pause();return dom;}
 test('textbook mnemonics work in both layouts without flipping, voting or changing mastery; a retest collapses them',async()=>{
  for(const layout of ['classic','right']){
  const dom=await mount('study',layout),doc=dom.window.document,row=()=>doc.querySelector('.study-word-row');

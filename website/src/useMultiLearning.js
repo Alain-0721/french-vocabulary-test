@@ -6,18 +6,22 @@ import {rememberLocalAccount,readLocalAccount} from './offline-account.js';
 import {apiFetch as fetch} from './api-fetch.js';
 import {backendConfigured} from './supabase-client.js';
 const prefix='franmo-atelier:v2:';
-function readCache(key){try{let raw=localStorage.getItem(key);if(!raw){const legacy=JSON.parse(localStorage.getItem(key.replace(prefix,'edito-atelier:v1:'))||'null');if(!legacy)return null;const migrated=migrateClassic(legacy.bundle);const theme=localStorage.getItem('edito-theme');if(migrated&&['light','dark','system'].includes(theme))migrated.theme=theme;return migrated?{bundle:migrated,dirty:true,etag:null}:{corrupt:true};}const data=JSON.parse(raw),bundle=restoreBundle(data.bundle);return {...data,bundle,corrupt:!bundle};}catch{return {corrupt:true};}}
+// 旧版单课本记录（v1）只返回原始数据，不在这里同步迁移；
+// 迁移需要加载旧引擎，由 load() 在启动时异步完成。
+function readCache(key){try{let raw=localStorage.getItem(key);if(!raw){const legacy=JSON.parse(localStorage.getItem(key.replace(prefix,'edito-atelier:v1:'))||'null');if(!legacy)return null;return {legacy:legacy.bundle,legacyTheme:localStorage.getItem('edito-theme')};}const data=JSON.parse(raw),bundle=restoreBundle(data.bundle);return {...data,bundle,corrupt:!bundle};}catch{return {corrupt:true};}}
 function localStart(enabled){
  const account=enabled?readLocalAccount():null,scope=prefix+(account?'user:'+account.id:'guest'),local=enabled?readCache(scope):null;
- return {account,scope,bundle:local?.bundle||fresh(),dirty:!!local?.dirty,etag:local?.etag||null,corrupt:!!local?.corrupt};
+ return {account,scope,bundle:local?.bundle||fresh(),legacy:local?.legacy||null,legacyTheme:local?.legacyTheme||null,dirty:!!local?.dirty,etag:local?.etag||null,corrupt:!!local?.corrupt};
 }
 export function useMultiLearning(enabled=true){
  const [start]=useState(()=>localStart(enabled)),[bundle,setBundle]=useState(start.bundle);
  const [user,setUser]=useState(null),[offlineAccount,setOfflineAccount]=useState(start.account),[settings,setSettings]=useState(null),[sync,setSync]=useState(start.corrupt?'memory':start.account?'offline-account':'local'),[message,setMessage]=useState(start.corrupt?'原本机记录无法读取，已保留原文件。请导入有效备份；当前记录仅暂存。':''),[authCallback,setAuthCallback]=useState(null);
- const scope=useRef(start.scope),ready=useRef(false),etag=useRef(start.etag),clean=useRef(start.dirty?null:start.bundle.generation),current=useRef(bundle),uid=useRef(null),writing=useRef(false),blocked=useRef(false),generation=useRef(0),storageBroken=useRef(start.corrupt);
+ const scope=useRef(start.scope),ready=useRef(false),etag=useRef(start.etag),clean=useRef(start.dirty?null:start.bundle.generation),current=useRef(bundle),uid=useRef(null),writing=useRef(false),blocked=useRef(false),generation=useRef(0),storageBroken=useRef(start.corrupt),pendingLegacy=useRef(start.legacy),pendingLegacyTheme=useRef(start.legacyTheme);
  const localOwner=useRef(start.account),currentUser=useRef(null);localOwner.current=offlineAccount;currentUser.current=user;
  const cache=useCallback((data,dirty)=>{
-  if(storageBroken.current)return false;
+  // 旧版记录迁移完成前不写新版缓存：先写一份空进度会遮住尚未迁移的旧记录，
+  // 用户此时关闭应用，旧进度就再也找不回来了。
+  if(storageBroken.current||pendingLegacy.current)return false;
   try{localStorage.setItem(scope.current,JSON.stringify({bundle:data,dirty,etag:etag.current}));return true;}catch{setSync('memory');return false;}
  },[]);
  const load=useCallback(async(nextUser,localAccount=null)=>{
@@ -26,11 +30,20 @@ export function useMultiLearning(enabled=true){
   cache(current.current,clean.current!==current.current.generation);
   const nextScope=prefix+(nextUser||localAccount?'user:'+(nextUser||localAccount).id:'guest'),sameScope=nextScope===scope.current;
   const local=sameScope?{bundle:current.current,dirty:clean.current!==current.current.generation,etag:etag.current,corrupt:storageBroken.current}:readCache(nextScope);
+  if(local?.legacy){pendingLegacy.current=local.legacy;pendingLegacyTheme.current=local.legacyTheme;}
   const turn=++generation.current;ready.current=false;blocked.current=false;uid.current=nextUser?.id||null;setUser(nextUser);
   setOfflineAccount(localAccount);localOwner.current=localAccount;currentUser.current=nextUser;
   if(!localAccount)rememberLocalAccount(nextUser);
   scope.current=nextScope;storageBroken.current=!!local?.corrupt;
-  let data=local?.bundle||fresh();etag.current=local?.etag||null;clean.current=local?.dirty?null:data.generation;
+  let data=local?.bundle||fresh(),migratedNow=false;
+  if(pendingLegacy.current){
+   try{
+    const migrated=await migrateClassic(pendingLegacy.current);
+    if(migrated){if(['light','dark','system'].includes(pendingLegacyTheme.current))migrated.theme=pendingLegacyTheme.current;pendingLegacy.current=null;data=migrated;migratedNow=true;storageBroken.current=false;}
+    else{pendingLegacy.current=null;storageBroken.current=true;data=fresh();setMessage('原本机记录无法读取，已保留原文件。请导入有效备份；当前记录仅暂存。');}
+   }catch{pendingLegacy.current=null;storageBroken.current=true;data=fresh();setMessage('原本机记录无法读取，已保留原文件。请导入有效备份；当前记录仅暂存。');}
+  }
+  etag.current=local?.etag||null;clean.current=local?.dirty||migratedNow?null:data.generation;
   current.current=data;setBundle(data);
   setSync(nextUser?'checking':localAccount?'offline-account':'local');
   if(local?.corrupt)setMessage('原本机记录无法读取，已保留原文件。请导入有效备份；当前记录仅暂存。');
@@ -103,7 +116,7 @@ export function useMultiLearning(enabled=true){
   const cloud=await response.json(),data=restoreBundle(cloud.data);if(!data)throw Error('云端尚无有效记录');
   etag.current=cloud.etag;clean.current=data.generation;blocked.current=false;storageBroken.current=false;current.current=data;setBundle(data);setSync('cloud');setMessage('已读取最新云端记录。');
  },[user]);
- return {bundle,update,adopt,user,offlineAccount,settings,sync,message,setMessage,saveCloud,pull,authCallback,setAuthCallback,returnToGuest:()=>{rememberLocalAccount(null);load(null);},guest:()=>readCache(prefix+'guest')?.bundle};
+ return {bundle,update,adopt,user,offlineAccount,settings,sync,message,setMessage,saveCloud,pull,authCallback,setAuthCallback,returnToGuest:()=>{rememberLocalAccount(null);load(null);},guest:async()=>{const cached=readCache(prefix+'guest');if(cached?.legacy){try{const migrated=await migrateClassic(cached.legacy);if(migrated){if(['light','dark','system'].includes(cached.legacyTheme))migrated.theme=cached.legacyTheme;return migrated;}}catch{}return null;}return cached?.bundle||null;}};
 }
 
 export function useLearningSlice(learning,key,initialize,enabled){

@@ -5,7 +5,8 @@ import {collectGrowth,growthCandidates,growthDay,growthSeries,firstAchievements,
 import {manualMistakeRound,validMistakeRound,withTestResults,mistakeIds,applyJudge} from '../src/mistake-review.js';
 import * as Study from '../src/preview-study.js';
 import {readBackup,fullBackup} from '../src/preview-backup.js';
-import {initialBooks} from '../src/books.js';
+import {initialBooks,loadAllBookBanks} from '../src/books.js';
+await loadAllBookBanks();
 
 const book=initialBooks.find(b=>b.id==='edito-b1'),ids=book.bank.slice(0,7).map(e=>e.id);
 const options={source:'study',scope:'U1 · P1 · 第一主题'};

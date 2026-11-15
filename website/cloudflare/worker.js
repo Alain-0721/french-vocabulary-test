@@ -51,7 +51,7 @@ export async function handleApi(request,env,fetcher=fetch){
   if(request.method!=='PUT')return json({error:'不支持此操作。'},405);
   if(Number(request.headers.get('Content-Length'))>16_000_000)return json({error:'记录超过 16 MB，请导出备份。'},413);
   const text=await request.text();if(new TextEncoder().encode(text).length>16_000_000)return json({error:'记录超过 16 MB，请导出备份。'},413);
-  const body=JSON.parse(text),data=path==='/api/progress'?migrateClassic(body.data):restoreMulti(body.data);
+  const body=JSON.parse(text),data=path==='/api/progress'?await migrateClassic(body.data):restoreMulti(body.data);
   if(!data||!(body.etag===null||typeof body.etag==='string'&&body.etag.length>0&&body.etag.length<=200))return json({error:'记录校验失败，原记录未覆盖。'},400);
   // Preserve spaces that an older client cannot represent. An explicit tense
   // snapshot from a current client may still reset its own records normally.

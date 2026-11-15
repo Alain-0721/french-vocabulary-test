@@ -15,7 +15,7 @@ export default async(req:Request,context:Context)=>{
    if(record)return json({data:record.data,etag:record.etag});
    const legacy=production?getStore({name:'edito-progress',consistency:'strong'}):getDeployStore({name:'edito-progress',consistency:'strong'});
    const old=await legacy.get(key,{type:'json'});
-   const migrated=old&&migrateClassic(old);
+   const migrated=old?await migrateClassic(old):null;
    if(old&&!migrated)return json({error:'旧版云端记录无法迁移，原记录已保留。'},422);
    return json({data:migrated||null,etag:null});
   }
