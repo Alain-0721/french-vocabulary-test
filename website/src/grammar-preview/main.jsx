@@ -15,7 +15,7 @@ import {restoreMulti,touchMulti} from '../multi-learning.js';
 import {AccountMenu} from '../account-menu.jsx';
 import {AccountModal} from '../account-modal.jsx';
 import {LearningNotice} from '../learning-notice.jsx';
-import {logout} from '@netlify/identity';
+import {logout} from '../supabase-identity.js';
 import {PwaStatus} from '../pwa-ui.jsx';
 import {AppDownload,AppDownloadShortcut} from '../app-download.jsx';
 import {NativeUpdateBanner,NativeUpdateSettings} from '../native-update-ui.jsx';

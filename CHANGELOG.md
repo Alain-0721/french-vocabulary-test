@@ -1,5 +1,9 @@
 # 更新记录
 
+## 未发布
+
+- 移除全部 Netlify 部署：`netlify.toml`、旧 serverless 函数（`website/netlify/functions/`）、`@netlify/*` 依赖与 `netlify-cli`、Vite 的 Netlify 模式与 `@netlify/identity` 别名。登录代码改为直接引用 `src/supabase-identity.js`；接口只由 Cloudflare Worker 提供。特意保留：已安装安卓 App 的本地虚拟来源 `https://franmotest.netlify.app`（`MainActivity` 的 `HOST`、Worker 的 `ALLOWED_ORIGINS`、包名 `app.netlify.franmotest`），改动会破坏已安装用户的本机记录与覆盖升级。
+
 ## FranLumi 2.1.7 — 2026-11-02
 
 - 学习记录新增“成长之路”：每日、每周、每月、累计曲线，以及今日新增、今日复习、范围新增、累计掌握、同期对比和来源词单。

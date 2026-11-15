@@ -6,11 +6,12 @@ import {readFileSync,existsSync} from 'node:fs';
 import {readBackup} from '../src/preview-backup.js';
 import {freshMulti} from '../src/multi-learning.js';
 import * as Study from '../src/preview-study.js';
-const auth='export const getUser=async()=>null,refreshSession=async()=>{},getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,onAuthChange=()=>()=>{},login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},updateUser=async()=>{},acceptInvite=async()=>{};';
-const ui=await build({entryPoints:['src/site.jsx'],bundle:true,write:false,format:'iife',platform:'browser',define:{'import.meta.env.PROD':'true','import.meta.env.VITE_NATIVE_APP':'"true"'},loader:{'.css':'empty'},logLevel:'silent',plugins:[{name:'identity-fixture',setup(b){b.onResolve({filter:/^@netlify\/identity$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:auth,loader:'js'}));}}]});
+const auth='export const getUser=async()=>null,refreshSession=async()=>{},getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,onAuthChange=()=>()=>{},login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},verifyPasswordRecovery=async()=>{},resetRecoveredPassword=async()=>({unchanged:false}),updateUser=async()=>{},acceptInvite=async()=>{};';
+const ui=await build({entryPoints:['src/site.jsx'],bundle:true,write:false,format:'iife',platform:'browser',define:{'import.meta.env.PROD':'true','import.meta.env.VITE_NATIVE_APP':'"true"'},loader:{'.css':'empty'},logLevel:'silent',plugins:[{name:'identity-fixture',setup(b){b.onResolve({filter:/supabase-identity\.js$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:auth,loader:'js'}));}}]});
 const pause=()=>new Promise(r=>setTimeout(r,100));
 async function waitFor(w,selector){for(let i=0;i<30&&!w.document.querySelector(selector);i++)await pause();assert.ok(w.document.querySelector(selector),`UI did not render ${selector}`);}
 function app(saved,{online=false}={}){
+ // The JSDOM origin mirrors the installed Android app's local virtual origin.
  const dom=new JSDOM('<div id="root"></div>',{url:'https://franmotest.netlify.app/#/home',runScripts:'dangerously',pretendToBeVisual:true}),w=dom.window;
  w.structuredClone=structuredClone;w.scrollTo=()=>{};w.HTMLElement.prototype.scrollIntoView=()=>{};w.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
  Object.defineProperty(w.navigator,'onLine',{value:online,configurable:true});

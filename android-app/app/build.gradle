@@ -8,11 +8,13 @@ android {
         targetSdk 36
         versionCode = (project.findProperty('qaVersionCode') ?: '19').toString().toInteger()
         versionName = (project.findProperty('qaVersionName') ?: '2.1.7').toString()
-        def migrated = System.getenv('FRANMOTEST_BACKEND') == 'supabase'
-        def apiHost = migrated ? new URI(System.getenv('VITE_SITE_URL')).host : 'franmotest.netlify.app'
-        def authHost = migrated ? new URI(System.getenv('VITE_SUPABASE_URL')).host : 'franmotest.netlify.app'
+        def siteUrl = System.getenv('VITE_SITE_URL')
+        def supabaseUrl = System.getenv('VITE_SUPABASE_URL')
+        if (!siteUrl || !supabaseUrl) throw new GradleException('Missing migration configuration: VITE_SITE_URL and VITE_SUPABASE_URL must be set')
+        def apiHost = new URI(siteUrl).host
+        def authHost = new URI(supabaseUrl).host
         if (!(apiHost ==~ /[a-z0-9.-]+/) || !(authHost ==~ /[a-z0-9.-]+/)) throw new GradleException('Invalid backend host')
-        buildConfigField 'boolean', 'MIGRATED_BACKEND', migrated.toString()
+        buildConfigField 'boolean', 'MIGRATED_BACKEND', 'true'
         buildConfigField 'String', 'API_HOST', '"' + apiHost + '"'
         buildConfigField 'String', 'AUTH_HOST', '"' + authHost + '"'
         manifestPlaceholders.appLinkHost = apiHost

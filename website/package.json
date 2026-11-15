@@ -25,9 +25,6 @@
     "test:cloudflare": "node scripts/test-cloudflare.mjs && node scripts/test-supabase-account.mjs && node scripts/test-migration-local.mjs"
   },
   "dependencies": {
-    "@netlify/blobs": "latest",
-    "@netlify/functions": "latest",
-    "@netlify/identity": "latest",
     "@supabase/supabase-js": "^2.117.2",
     "lucide-react": "^0.468.0",
     "react": "^19.2.0",
@@ -36,11 +33,9 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
-    "@netlify/vite-plugin": "latest",
     "@types/node": "latest",
     "@vitejs/plugin-react": "latest",
     "jsdom": "^30.1.1",
-    "netlify-cli": "latest",
     "typescript": "latest",
     "vite": "latest"
   }

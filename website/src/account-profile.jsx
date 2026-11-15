@@ -1,5 +1,5 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {updateUser} from '@netlify/identity';
+import {updateUser} from './supabase-identity.js';
 import {Camera,LoaderCircle,Check} from 'lucide-react';
 import {avatarUrl,prepareAvatar,profileName,uploadAvatar,saveProfile} from './account-profile.js';
 import {AccountAvatar} from './account-menu.jsx';

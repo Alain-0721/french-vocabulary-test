@@ -41,26 +41,12 @@ try{
  check('Full backup round trips',()=>assert.ok(restoreBundle(JSON.stringify(fixture))));
  check('Plugin main-progress imports without fake secondary progress',()=>{const imported=importRecord(JSON.stringify(fixture.main),fresh());assert.equal(imported.main.current,5);assert.equal(imported.daily,null);assert.deepEqual(imported.dailyStats,{});});
  check('Malformed imports and unknown IDs are rejected',()=>{const invalid=structuredClone(fixture);invalid.main.stats.unknown={good:1,bad:0};assert.equal(restoreBundle(invalid),null);assert.throws(()=>importRecord({mode:'textbook'},fresh()));});
- await build({entryPoints:['netlify/functions/progress.mts'],bundle:true,format:'esm',platform:'node',outfile:join(dir,'api.mjs'),plugins:[{name:'server-test',setup(b){b.onResolve({filter:/^@netlify\/(identity|blobs)$/},args=>({path:args.path,namespace:'server-mock'}));b.onLoad({filter:/.*/,namespace:'server-mock'},args=>({contents:args.path.endsWith('identity')?`export class AuthError extends Error{};export const getUser=async()=>globalThis.testUser;export function verifyRequestOrigin(req){if(req.headers.get('Origin')!==new URL(req.url).origin)throw new AuthError('Origin');}`:`const records=new Map();let seq=0;function store(prefix){return {getWithMetadata:async key=>records.get(prefix+key)||null,setJSON:async(key,data,opts)=>{key=prefix+key;const old=records.get(key);if(opts.onlyIfNew&&old||opts.onlyIfMatch&&old?.etag!==opts.onlyIfMatch)return {modified:false};const etag=String(++seq);records.set(key,{data,etag});return {modified:true,etag};}}};export const getStore=()=>store('production:'),getDeployStore=()=>store('preview:');`,loader:'js'}));}}],logLevel:'silent'});
- const api=(await import(pathToFileURL(join(dir,'api.mjs')))).default;
- const request=(method='GET',data,etag=null,origin='https://example.test')=>new Request('https://example.test/api/progress',{method,headers:{Origin:origin,'Content-Type':'application/json'},...(method==='PUT'?{body:JSON.stringify({data,etag})}:{})});
- const context={deploy:{context:'production'}};
- globalThis.testUser=null;
- assert.equal((await api(request(),context)).status,401);console.log('✓ Cloud API rejects anonymous access');passed++;
- globalThis.testUser={id:'test-user-a'};
- let response=await api(request('PUT',fresh()),context);assert.equal(response.status,200);const token=(await response.json()).etag;
- assert.equal((await api(request('PUT',fresh()),context)).status,409);console.log('✓ Atomic cloud writes reject stale or missing ETags');passed++;
- response=await api(request('PUT',fresh(),token),context);assert.equal(response.status,200);
- assert.equal((await api(request('PUT',{mode:'invalid'},token),context)).status,400);
- assert.equal((await api(request('PUT',fresh(),token,'https://other.test'),context)).status,403);console.log('✓ Cloud API validates data and request origin');passed++;
- globalThis.testUser={id:'test-user-b'};
- assert.equal((await (await api(request(),context)).json()).data,null);
- globalThis.testUser={id:'test-user-a'};
- assert.equal((await (await api(request(),{deploy:{context:'deploy-preview'}})).json()).data,null);console.log('✓ Accounts and preview deployments have isolated progress');passed++;
- delete globalThis.testUser;
+ // The classic /api/progress endpoint is served by the Cloudflare Worker now
+ // (website/cloudflare/worker.js); its auth, origin, validation and ETag
+ // behavior is covered by test-cloudflare.mjs. The old Netlify function is gone.
  const dom=new JSDOM('<!DOCTYPE html><div id="root"></div>',{url:'https://example.test/#/home',pretendToBeVisual:true,runScripts:'dangerously'});
  dom.window.structuredClone=structuredClone;dom.window.scrollTo=()=>{};
- const result=await build({entryPoints:['src/main.jsx'],bundle:true,write:false,format:'iife',platform:'browser',loader:{'.css':'empty'},plugins:[{name:'auth-test',setup(b){b.onResolve({filter:/^@netlify\/identity$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:'export const getUser=async()=>null,getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,refreshSession=async()=>null,onAuthChange=()=>()=>{};export const login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},updateUser=async()=>{},acceptInvite=async()=>{};',loader:'js'}));}}],logLevel:'silent'});
+ const result=await build({entryPoints:['src/main.jsx'],bundle:true,write:false,format:'iife',platform:'browser',loader:{'.css':'empty'},plugins:[{name:'auth-test',setup(b){b.onResolve({filter:/supabase-identity\.js$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:'export const getUser=async()=>null,getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,refreshSession=async()=>null,onAuthChange=()=>()=>{};export const login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},verifyPasswordRecovery=async()=>{},resetRecoveredPassword=async()=>({unchanged:false}),updateUser=async()=>{},acceptInvite=async()=>{};',loader:'js'}));}}],logLevel:'silent'});
  dom.window.eval(result.outputFiles[0].text);await new Promise(r=>setTimeout(r,80));
  const doc=dom.window.document;
  check('Home renders real fresh progress',()=>{assert.match(doc.body.textContent,/Bonjour/);assert.match(doc.body.textContent,/0 \/ 24 Part/);});

@@ -128,7 +128,7 @@ npx wrangler pages deploy dist-cloudflare --project-name franmotest --branch mig
 npx wrangler pages deploy dist-cloudflare --project-name franmotest --branch main
 ```
 
-Supabase 需配置自定义 SMTP，并保持邮箱确认开启。网站地址和邮件允许回调需与新网站一致。依赖、构建产物、`.netlify/`、密钥与个人备份不提交到 GitHub。旧 Netlify 函数和构建配置仅保留供历史兼容，不参与新版运行。
+Supabase 需配置自定义 SMTP，并保持邮箱确认开启。网站地址和邮件允许回调需与新网站一致。依赖、构建产物、`.netlify/`、密钥与个人备份不提交到 GitHub。Netlify 函数、构建配置与依赖已全部移除，部署只使用 Cloudflare Pages + Worker + Supabase。`.netlify/` 本地目录只放安卓构建工具与签名配置，与 Netlify 部署无关。
 
 原创代码遵循仓库 [MIT 许可](../LICENSE)；教材衍生词库不包含在 MIT 代码授权中，详见 [词库来源及许可范围](../DATA_NOTICE.md)。
 

@@ -127,7 +127,7 @@ public final class MainActivity extends ComponentActivity {
                 // Keep the original virtual origin for installed users' local records.
                 // Migrated builds must never fall through to the old online backend.
                 if (path.startsWith("api/") || path.startsWith(".netlify/identity/")
-                    || path.startsWith(".netlify/functions/")) return BuildConfig.MIGRATED_BACKEND ? missingAsset() : null;
+                    || path.startsWith(".netlify/functions/")) return missingAsset();
                 if (path.isEmpty()) path = "index.html";
                 if (path.contains("..") || path.contains("\\")) return missingAsset();
                 try {

@@ -84,7 +84,6 @@ Part 和主题提供法中双语标题。Édito B2 是待导入的课本选项�
 - `plugin-package/`：三个 skill、词库与内置 HTML 后备卡片。
 - `assets/`：界面模板、抽词/评分核心、词库和双语标题。
 - `website/`：React/Vite 多课本网站、词库导入教程、Supabase 账号界面、Cloudflare 接口和数据库迁移。
-- `netlify.toml`：保留的旧版构建配置，供历史构建和只读导出使用。
 - `*-bridge.js`：MCP Apps 宿主桥接代码。
 - `worker-source.mjs`：MCP 路由、用户隔离和云端记录逻辑。
 - `db/`、`drizzle/`：数据库结构和迁移，不含用户数据。

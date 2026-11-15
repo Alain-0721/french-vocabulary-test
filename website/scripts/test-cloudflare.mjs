@@ -5,6 +5,10 @@ import {PGlite} from '@electric-sql/pglite';
 import {handleApi} from '../cloudflare/worker.js';
 import {normalizeUser} from '../src/supabase-client.js';
 import {freshMulti,restoreMulti} from '../src/multi-learning.js';
+import {fresh} from '../src/engine.js';
+// ALLOWED_ORIGINS keeps https://franmotest.netlify.app on purpose: it is the
+// installed Android app's local virtual origin (WebViewAssetLoader), not the
+// retired Netlify deployment. Installed APKs sync from that origin.
 const env={SUPABASE_URL:'https://backend.test',SUPABASE_ANON_KEY:'public-test-key',ALLOWED_ORIGINS:'https://franmotest.netlify.app'};
 const request=(path='/api/multi-progress',{method='GET',token='a',origin='https://app.test',body,headers={}}={})=>new Request('https://app.test'+path,{method,headers:{Origin:origin,...token?{Authorization:'Bearer '+token}:{},...headers},...body!==undefined?{body:typeof body==='string'?body:JSON.stringify(body)}:{}});
 test('Pages shell excludes its server worker from offline storage and routes only APIs through it',async()=>{
@@ -72,6 +76,39 @@ test('avatar API remains public for existing URLs, bounds uploads and rejects di
  assert.equal((await handleApi(request('/api/avatar',{method:'POST',body:'x',headers:{'Content-Length':'262145'}}),env,fetcher)).status,413);
  const body='RIFF1234WEBP';const result=await handleApi(request('/api/avatar',{method:'POST',body,headers:{'Content-Type':'image/webp'}}),env,fetcher);
  assert.match((await result.json()).url,/^\/api\/avatar\/[a-f0-9-]{36}\.webp$/);assert.equal(calls.at(-1).options.headers.Authorization,'Bearer a');
+ assert.equal((await handleApi(request('/api/avatar',{method:'POST',token:null,body,headers:{'Content-Type':'image/webp'}}),env,fetcher)).status,401);
+ assert.equal((await handleApi(request('/api/avatar',{method:'POST',body,headers:{'Content-Type':'image/webp'},origin:'https://evil.test'}),env,fetcher)).status,403);
+ const pngBytes=new Uint8Array([137,80,78,71,13,10,26,10,1,2,3]);
+ assert.equal((await handleApi(new Request('https://app.test/api/avatar',{method:'POST',headers:{Origin:'https://app.test',Authorization:'Bearer a','Content-Type':'image/webp'},body:pngBytes}),env,fetcher)).status,400);
+});
+test('classic /api/progress migrates old records through the same worker',async()=>{
+ const calls=[];let modified=true;
+ const fetcher=async(url,options)=>{
+  calls.push({url,options});
+  if(url.endsWith('/auth/v1/user'))return Response.json({id:'a'});
+  if(url.includes('/rest/v1/learning_records?'))return Response.json([{data:freshMulti(),etag:'cloud-b'}]);
+  return Response.json({modified,etag:modified?'next':null});
+ };
+ assert.equal((await handleApi(request('/api/progress',{token:null}),env,fetcher)).status,401);
+ const stored=await handleApi(request('/api/progress',{token:'a'}),env,fetcher);assert.equal(stored.status,200);assert.equal((await stored.json()).etag,'cloud-b');
+ assert.equal((await handleApi(request('/api/progress',{method:'PUT',body:{data:{mode:'invalid'},etag:null},token:'a'}),env,fetcher)).status,400);
+ assert.equal((await handleApi(request('/api/progress',{method:'PUT',body:{data:fresh(),etag:null},token:'a',origin:'https://evil.test'}),env,fetcher)).status,403);
+ modified=false;assert.equal((await handleApi(request('/api/progress',{method:'PUT',body:{data:fresh(),etag:'old'},token:'a'}),env,fetcher)).status,409);
+ modified=true;const saved=await handleApi(request('/api/progress',{method:'PUT',body:{data:fresh(),etag:'old'},token:'a'}),env,fetcher);assert.equal(saved.status,200);assert.equal((await saved.json()).etag,'next');
+});
+test('avatar upload round-trips through the worker and stays publicly readable',async()=>{
+ const stored=new Map();
+ const fetcher=async(url,options)=>{
+  if(url.endsWith('/auth/v1/user'))return Response.json({id:'a'});
+  if(url.includes('/storage/v1/object/avatars/')){stored.set(url.split('/').at(-1),options.body);return Response.json({Key:'avatar'});}
+  if(url.includes('/public/')){const bytes=stored.get(url.split('/').at(-1));return bytes?new Response(bytes):new Response('',{status:404});}
+  throw Error('unexpected '+url);
+ };
+ const png=new Uint8Array([137,80,78,71,13,10,26,10,1,2,3]);
+ const uploaded=await handleApi(new Request('https://app.test/api/avatar',{method:'POST',headers:{Origin:'https://app.test',Authorization:'Bearer a','Content-Type':'image/png'},body:png}),env,fetcher);
+ assert.equal(uploaded.status,200);const {url}=await uploaded.json();assert.match(url,/^\/api\/avatar\/[a-f0-9-]{36}\.png$/);
+ const image=await handleApi(new Request('https://app.test'+url,{headers:{Origin:'https://app.test'}}),env,fetcher);
+ assert.equal(image.status,200);assert.equal(image.headers.get('Content-Type'),'image/png');assert.equal(image.headers.get('X-Content-Type-Options'),'nosniff');assert.deepEqual(new Uint8Array(await image.arrayBuffer()),png);
 });
 test('only trusted app metadata can map a migrated account to its prior local record scope',()=>{
  assert.equal(normalizeUser({id:'new',user_metadata:{legacy_user_id:'victim'}}).id,'new');

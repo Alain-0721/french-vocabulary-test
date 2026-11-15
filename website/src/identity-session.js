@@ -1,5 +1,9 @@
 // Keep SDK-managed cookies across browser restarts; never store a password.
 // Authentication and token renewal remain the Identity SDK's responsibility.
+// NOTE: the nf_jwt / nf_refresh cookie names are a Netlify Identity leftover.
+// Supabase keeps its session in localStorage, so the cookie handling below is
+// a no-op for current logins. The refresh-before-getUser ordering in
+// restoreIdentitySession is provider-agnostic and still live: keep it.
 export const REMEMBER_DAYS=30;
 export function rememberIdentitySession(doc=globalThis.document,now=Date.now()){
   if(!doc)return false;

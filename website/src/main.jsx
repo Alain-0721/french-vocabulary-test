@@ -1,7 +1,7 @@
 import React,{useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {BookOpen,LayoutDashboard,CalendarDays,Shuffle,Library,ChartNoAxesCombined,ArrowRight,ChevronRight,ChevronLeft,Check,X,Cloud,CloudOff,Download,Upload,Search,Settings,LogIn,LogOut,GraduationCap,CheckCircle2,RotateCcw,ShieldCheck,Info,Menu,Plus,Mail,LoaderCircle,Sun,Moon,Monitor,ArrowUpRight} from 'lucide-react';
-import {login,signup,logout,requestPasswordRecovery,updateUser,acceptInvite} from '@netlify/identity';
+import {login,signup,logout,requestPasswordRecovery,updateUser,acceptInvite} from './supabase-identity.js';
 import {T,D,V,bank,ordinaryBank,titles,themeTitles,parts,dictionary,day,partName,fresh,currentAttempt,bookAction,makeDaily,touch,importRecord} from './engine';
 import {useLearning} from './useLearning';
 import './style.css';

@@ -1,5 +1,5 @@
 import React,{useRef,useState,useEffect} from 'react';
-import {login,signup,logout,requestPasswordRecovery,updateUser,acceptInvite} from '@netlify/identity';
+import {login,signup,logout,requestPasswordRecovery,updateUser,acceptInvite} from './supabase-identity.js';
 import {X,BookOpen,Cloud,LogOut,ShieldCheck,LoaderCircle} from 'lucide-react';
 import './account-modal.css';
 import {AccountProfile} from './account-profile.jsx';

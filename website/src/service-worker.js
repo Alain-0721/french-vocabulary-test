@@ -18,6 +18,10 @@ self.addEventListener('message',event=>{if(event.data?.type==='ACTIVATE_UPDATE')
 self.addEventListener('fetch',event=>{
  const request=event.request,url=new URL(request.url);
  // Account, progress and avatar requests always go to the network.
+ // The /.netlify/ bypass is kept for the installed Android app: its
+ // WebViewAssetLoader serves pages from the franmotest.netlify.app virtual
+ // origin and intercepts those legacy API paths itself. It is not a live
+ // Netlify deployment; the Service Worker must not answer for them.
  if(request.method!=='GET'||url.origin!==self.location.origin||url.pathname.startsWith('/api/')||url.pathname.startsWith('/.netlify/')||url.pathname==='/textbooks-preview.html'||url.pathname==='/android-update.json')return;
  if(request.mode==='navigate'){
   // Serve one complete build: new assets activate only with their own HTML.

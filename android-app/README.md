@@ -2,7 +2,7 @@
 
 Android APK 自带 React 学习界面与四本完整词库及 Édito B1 语法内容、时态专题和助记，通过原生 Activity 和 Android WebView 在应用内运行。移除了 TWA、Custom Tabs 和 Android Browser Helper，学习不依赖外部浏览器，首次启动即可离线检测。
 
-包名 `app.netlify.franmotest`，版本名 `2.1.3`，内部版本号 `15`，最低 Android 6.0（API 23）。同一发布签名允许覆盖升级此前版本。
+包名 `app.netlify.franmotest`，版本名 `2.1.3`，内部版本号 `15`，最低 Android 6.0（API 23）。同一发布签名允许覆盖升级此前版本。包名里的 `netlify` 只是历史名字：已安装用户的覆盖升级要求包名不变，所以保留；Netlify 部署本身已经停用，不要改包名。
 
 [下载安装说明](INSTALL.md) · [下载 APK](https://github.com/Alain-0721/french-vocabulary-test/releases/download/v2.1.3/FranLumi-2.1.3-Android.apk)
 

@@ -1,5 +1,5 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
-import {getUser,getSettings,handleAuthCallback,onAuthChange,refreshSession} from '@netlify/identity';
+import {getUser,getSettings,handleAuthCallback,onAuthChange,refreshSession} from './supabase-identity.js';
 import {freshMulti as fresh,restoreMulti as restoreBundle,migrateClassic,touchMulti} from './multi-learning.js';
 import {rememberIdentitySession,restoreIdentitySession} from './identity-session';
 import {rememberLocalAccount,readLocalAccount} from './offline-account.js';

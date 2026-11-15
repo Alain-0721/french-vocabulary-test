@@ -4,11 +4,11 @@
 
 状态：[正式网站](https://franmotest.pages.dev/) 与 [测试预览](https://migration-preview.franmotest.pages.dev/) 已部署；账号、记录和头像已导入核对，并补齐切换前新增记录。真实登录、同步、隔离、冲突与头像检查通过。自定义 SMTP 已在线核验，账号本人已确认收到恢复邮件、登录成功且原学习记录正常。原站和原账号数据保留。
 
-网页由 Cloudflare Pages 托管；`cloudflare/worker.js` 处理学习记录和头像接口。登录、密码恢复、资料、数据库和头像存储由独立 Supabase 项目提供。新运行环境不调用 Netlify Identity、Functions 或 Blobs。原函数文件仅用于兼容旧构建及历史验证。
+网页由 Cloudflare Pages 托管；`cloudflare/worker.js` 处理学习记录和头像接口。登录、密码恢复、资料、数据库和头像存储由独立 Supabase 项目提供。新运行环境不调用 Netlify Identity、Functions 或 Blobs。原 Netlify 函数文件已在清理中移除，接口只由 Cloudflare Worker 提供。
 
 ## 数据与账号
 
-先运行 `node scripts/export-netlify.mjs`，把原账号、两种记录和头像完整导出到仓库根目录 `.netlify/migration/exports/<时间>/`，附校验和。文件含个人资料，禁止上传 GitHub 或放进部署目录。导出脚本只读取原服务。
+迁移时已运行 `node scripts/export-netlify.mjs`，把原账号、两种记录和头像完整导出到仓库根目录 `.netlify/migration/exports/<时间>/`，附校验和。文件含个人资料，禁止上传 GitHub 或放进部署目录。导出已完成，脚本已移除。
 
 在新项目执行 `supabase/migrations/202610070001_learning.sql`，然后通过私有配置运行 `node scripts/import-supabase.mjs <私有配置路径>`。配置格式：
 
@@ -34,7 +34,6 @@ Supabase Site URL 和允许的邮件回调地址需要设为实际新网站地�
 通过私有环境配置提供：
 
 ```text
-FRANMOTEST_BACKEND=supabase
 VITE_SITE_URL=https://<实际项目名>.pages.dev/
 VITE_SUPABASE_URL=https://<project>.supabase.co
 VITE_SUPABASE_ANON_KEY=<公开 anon 或 publishable key>
@@ -43,7 +42,7 @@ VITE_ACCOUNT_MIGRATED=true
 
 执行 `npm run build:cloudflare`，发布目录为 `dist-cloudflare`。构建会拒绝缺失配置或浏览器管理员密钥。仅本地未配置演示可设置 `FRANMOTEST_ALLOW_UNCONFIGURED=true`；该演示不能用于正式发布。
 
-Pages Worker 环境绑定：`SUPABASE_URL`、`SUPABASE_ANON_KEY`（与上述公开配置一致），`ALLOWED_ORIGINS` 包含实际正式站地址及 `https://franmotest.netlify.app`。后者仅用于已安装 App 的本地虚拟来源，并非旧服务代理。不要向浏览器、Pages Worker 或构建产物提供管理员密钥。
+Pages Worker 环境绑定：`SUPABASE_URL`、`SUPABASE_ANON_KEY`（与上述公开配置一致），`ALLOWED_ORIGINS` 包含实际正式站地址及 `https://franmotest.netlify.app`。后者仅用于已安装 App 的本地虚拟来源，并非旧服务代理——Netlify 部署已停用，但这个来源字符串必须保留，否则已安装 App 的同步请求会被 Worker 拒绝。不要向浏览器、Pages Worker 或构建产物提供管理员密钥。
 
 `_routes.json` 只让 `/api/*` 进入 Worker。学习记录不缓存；头像公开读取、不可覆盖；写入使用用户令牌。数据库再次按 `auth.uid()` 隔离读取，保存使用原子 ETag 比较，另一个设备有新数据时返回 409。
 

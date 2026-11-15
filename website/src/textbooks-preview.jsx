@@ -13,7 +13,7 @@ import {ImportVocabulary,VocabularyGuide} from './vocabulary-import-ui.jsx';
 import {initialBooks} from './books.js';
 import {useMultiLearning,useLearningSlice} from './useMultiLearning.js';
 import {AccountModal} from './account-modal.jsx';
-import {logout} from '@netlify/identity';
+import {logout} from './supabase-identity.js';
 import {touchMulti,migrateClassic} from './multi-learning.js';
 import * as Study from './preview-study.js';
 import {Quiz,PartDirectory,Records,Settings,About} from './study-preview-ui.jsx';
