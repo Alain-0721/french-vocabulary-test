@@ -105,7 +105,7 @@ final class AppUpdater {
             throw new IllegalStateException("HTTPS required");
         HttpURLConnection c = (HttpURLConnection) url.openConnection();
         c.setInstanceFollowRedirects(false); c.setConnectTimeout(15000); c.setReadTimeout(30000); c.setUseCaches(false);
-        c.setRequestProperty("User-Agent", "Franmotest/" + BuildConfig.VERSION_NAME + " Android");
+        c.setRequestProperty("User-Agent", "FranLumi/" + BuildConfig.VERSION_NAME + " Android");
         return c;
     }
     private HttpURLConnection downloadConnection(String address) throws Exception {
@@ -190,7 +190,7 @@ final class AppUpdater {
         if (closed || activity.isFinishing()) { busy = false; return; }
         try {
             if (Build.VERSION.SDK_INT >= 26 && !activity.getPackageManager().canRequestPackageInstalls()) {
-                status("permission", "请允许 Franmotest 安装应用，返回后继续更新");
+                status("permission", "请允许 FranLumi 安装应用，返回后继续更新");
                 activity.launchUpdatePermission(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + BuildConfig.APPLICATION_ID)));
                 return;
             }

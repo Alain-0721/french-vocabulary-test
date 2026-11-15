@@ -22,7 +22,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" android:host="${appLinkHost}" />
-                <data android:scheme="https" android:host="franmotest.pages.dev" />
             </intent-filter>
         </activity>
     </application>

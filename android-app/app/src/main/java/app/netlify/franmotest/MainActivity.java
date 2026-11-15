@@ -37,6 +37,8 @@ import java.util.concurrent.Executors;
 
 /** APK-owned screens and banks. Online paths are restricted to existing APIs. */
 public final class MainActivity extends ComponentActivity {
+    // Compatibility-only virtual origin: APK files are served locally here.
+    // Changing it would strand existing WebView learning records and sessions.
     static final String HOST = "franmotest.netlify.app";
     static final String HOME = "https://" + HOST + "/";
     private WebView web;
@@ -125,9 +127,8 @@ public final class MainActivity extends ComponentActivity {
         WebViewAssetLoader loader = new WebViewAssetLoader.Builder().setDomain(HOST)
             .addPathHandler("/", path -> {
                 // Keep the original virtual origin for installed users' local records.
-                // Migrated builds must never fall through to the old online backend.
-                if (path.startsWith("api/") || path.startsWith(".netlify/identity/")
-                    || path.startsWith(".netlify/functions/")) return missingAsset();
+                // The virtual origin never falls through to a remote backend.
+                if (path.startsWith("api/") || path.startsWith(".")) return missingAsset();
                 if (path.isEmpty()) path = "index.html";
                 if (path.contains("..") || path.contains("\\")) return missingAsset();
                 try {
@@ -145,7 +146,7 @@ public final class MainActivity extends ComponentActivity {
         web.setWebViewClient(new WebViewClient() {
             @Override public void onPageFinished(WebView view, String url) { updater.publish(); }
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                if (BuildConfig.MIGRATED_BACKEND && "https".equals(request.getUrl().getScheme())) {
+                if ("https".equals(request.getUrl().getScheme())) {
                     String host = request.getUrl().getHost();
                     if (BuildConfig.API_HOST.equals(host) || BuildConfig.AUTH_HOST.equals(host)) return null;
                 }
@@ -223,7 +224,7 @@ public final class MainActivity extends ComponentActivity {
     }
     private static boolean isAppUrl(Uri uri) {
         return uri != null && "https".equals(uri.getScheme())
-            && (HOST.equals(uri.getHost()) || BuildConfig.MIGRATED_BACKEND && (BuildConfig.API_HOST.equals(uri.getHost()) || "franmotest.pages.dev".equals(uri.getHost())))
+            && (HOST.equals(uri.getHost()) || BuildConfig.API_HOST.equals(uri.getHost()))
             && (uri.getPort() == -1 || uri.getPort() == 443)
             && ("/".equals(uri.getPath()) || "/index.html".equals(uri.getPath()));
     }

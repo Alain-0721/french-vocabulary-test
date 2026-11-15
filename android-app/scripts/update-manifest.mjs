@@ -1,10 +1,10 @@
 import {readFileSync,writeFileSync,statSync,copyFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 const config=JSON.parse(readFileSync(new URL('../app-config.json',import.meta.url),'utf8'));
-const apk=new URL(`../../.netlify/releases/android-${config.appVersion}/FranLumi-${config.appVersion}-Android.apk`,import.meta.url);
+const apk=new URL(`../../.local/releases/android-${config.appVersion}/FranLumi-${config.appVersion}-Android.apk`,import.meta.url);
 // Already installed updaters validate this exact historical filename.
 // Publish both names with identical signed bytes; keep the on-device contract stable.
-const compatibleApk=new URL(`../../.netlify/releases/android-${config.appVersion}/Franmotest-${config.appVersion}-Android.apk`,import.meta.url);
+const compatibleApk=new URL(`../../.local/releases/android-${config.appVersion}/Franmotest-${config.appVersion}-Android.apk`,import.meta.url);
 copyFileSync(apk,compatibleApk);
 const manifest={schema:1,packageId:config.packageId,versionName:config.appVersion,versionCode:config.appVersionCode,
  apkUrl:`https://github.com/Alain-0721/french-vocabulary-test/releases/download/v${config.appVersion}/Franmotest-${config.appVersion}-Android.apk`,

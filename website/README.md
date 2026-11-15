@@ -12,7 +12,7 @@ FranLumi 提供单词之光和语法之光两个学习空间；顶部可以随�
 
 ## 选择菜单与词库切换（1.1.5）
 
-顺序与布局在按钮下方就地展开；Part 直接滚动选择，主题长列表可搜索，支持键盘及安卓返回关闭。词库记录选中 Part 或主题后，列表底部显示前后切换按钮；Part 切换重置为全部主题，主题按当前范围的教材顺序切换，搜索关键词保留，首尾禁用。
+顺序与布局在按钮下方就地展开；Part 直接滚动选择，主题长列表可搜索，支持键盘及安卓返回关闭。学习记录选中 Part 或主题后，列表底部显示前后切换按钮；Part 切换重置为全部主题，主题按当前范围的教材顺序切换，搜索关键词保留，首尾禁用。
 
 ## 使用入口与功能
 
@@ -52,7 +52,7 @@ Part 与主题带中文标题。Édito B2 是待导入选项，“我的法语�
 
 在设置中选择“账号设置”可修改 1–40 字昵称，上传或移除头像。JPG/PNG/WebP 原图最大 5 MB，浏览器居中裁剪并缩小为 256×256，点击“保存资料”才上传。账号资料只保存昵称和头像路径；修改资料只刷新当前账号信息，不重置学习进度。
 
-正式游客和账号缓存使用 `franmo-atelier:v2:guest` / `franmo-atelier:v2:user:<id>`，包含书架、每本书的轮次与累计对错、每日/普通练习和设置。退出恢复原游客空间，各账号缓存独立。清理浏览器数据会移除游客记录。
+正式游客和账号缓存使用 `franmo-atelier:v2:guest` / `franmo-atelier:v2:user:<id>`，包含书架、每本书的轮次与累计对错、每日检测、错题本、题目检测、成长统计和设置。退出恢复原游客空间，各账号缓存独立。清理浏览器数据会移除游客记录；旧备份中的练习记录仍可迁移读取。
 
 同源旧版缓存首次读取时迁移并保留原缓存。旧网址与新网址属于不同浏览器来源，游客需在旧站导出，再到新站导入。可确认恢复完整多课本备份，或迁移单书主进度；网站与 ChatGPT 插件只通过文件迁移，不自动互相同步。
 
@@ -72,7 +72,7 @@ Part 与主题带中文标题。Édito B2 是待导入选项，“我的法语�
 
 离线重启使用上次账号的本机缓存，标注“需联网验证”，不把本机显示资料当作已认证身份，也不调用账号接口。离线修改仍保存在原账号空间。联网并打开应用后，先恢复 Supabase 会话、核对云端 ETag，再上传；另一设备改过记录时会提示冲突，保留本机修改。登录失效后需重新登录原账号，本机记录不会删除。可从头像菜单“返回游客记录”，各空间互不覆盖。
 
-Service Worker 只缓存应用页面、版本化静态资源与图标，不缓存 `/api/`、`/.netlify/` 或独立设计预览。每次构建生成独立缓存版本，全部资源准备成功后才可启用。新版本显示提示，确认“更新并重新打开”后再切换，更新不清除本机词库和进度；若其他窗口也在检测，先保存并关闭它们。
+Service Worker 只缓存应用页面、版本化静态资源与图标，不缓存 `/api/`、点号开头的内部路径或独立设计预览。每次构建生成独立缓存版本，全部资源准备成功后才可启用。新版本显示提示，确认“更新并重新打开”后再切换，更新不清除本机词库和进度；若其他窗口也在检测，先保存并关闭它们。
 
 `scripts/pwa-build.mjs` 生成 `dist-cloudflare/sw.js`；`public/manifest.webmanifest` 定义应用入口与图标。图标沿用现有书本标识，运行 `node scripts/generate-app-icons.mjs` 可重新生成。Cloudflare 构建生成响应头和仅 `/api/*` 生效的 Worker 路由，Worker 不进入离线缓存。安装支持及各平台行为参考 [MDN PWA 安装说明](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable)。
 
@@ -87,6 +87,10 @@ npm run dev
 ```
 
 正式入口为 `index.html` → `src/site.jsx`，本地打开 `http://127.0.0.1:5173/`。`textbooks-preview.html` 为独立设计预览：不读写正式学习缓存和云端数据，检测进度刷新后重置，记住词库仅保存至预览本机空间。
+
+生产入口为 `src/site.jsx` → `src/grammar-preview/main.jsx`，单词空间使用 `src/textbooks-preview.jsx`；账号直接使用 Supabase。正式构建会将 React、图标、语法数据、变位数据及各课本词库拆为独立缓存块，单词空间代码按需加载。
+
+正式开发与构建需提供下面部署说明中的三个 `VITE_` 公开变量。只查看独立离线预览时，可运行 `npx vite --mode franlumi-android` 并打开 `/franlumi-preview.html`；它使用独立预览数据。
 
 ```bash
 npm test
@@ -106,9 +110,13 @@ npm run test:pwa
 
 `test:pwa` 需先构建，检查清单和图标、完整缓存、离线账号记录与重连冲突。本地 PWA 验收需运行构建产物（例如 `npx vite preview --host 127.0.0.1`）；开发服务器不注册 Service Worker。
 
+`npm run test:release` 验证发布文件白名单，覆盖自定义输出目录、网站 ZIP 与 APK，避免私有调试文件混入产物。
+
+`public/` 只能放发布白名单中的静态资源，调试备份与导入助手保存在本地 `.local/private-debug/`，调试时显式选择文件。构建会验证实际输出目录；发现调试文件、私钥文件名或白名单外文件即失败，不会静默删除。打包后用 `npm run check:release -- <输出目录或网站ZIP或APK>` 检查最终文件清单；Android 构建会自动检查复制后的资源和已签名 APK。若新增公开资源，应同时更新 `scripts/release-files.mjs` 白名单和回归用例。
+
 ## Cloudflare Pages 部署与接口
 
-完整配置、数据库权限、私有导出与安卓构建顺序见 [CLOUDFLARE-MIGRATION.md](CLOUDFLARE-MIGRATION.md)。提供公开 Supabase 项目地址、anon/publishable key 与正式网站地址，执行 `npm run build:cloudflare`，发布 `dist-cloudflare`。Pages Worker 只配置公开 key、项目地址与允许来源，管理员密钥仅用于本机迁移，不能放入前端或 Worker。
+完整配置、数据库权限与安卓兼容说明见 [CLOUDFLARE.md](CLOUDFLARE.md)。提供公开 Supabase 项目地址、anon/publishable key 与正式网站地址，执行 `npm run build` 或 `npm run build:cloudflare`，发布 `dist-cloudflare`。Pages Worker 只配置公开 key、项目地址与允许来源，管理员密钥不能放入前端或 Worker。
 
 | 接口 | 用途与存储 |
 | --- | --- |
@@ -124,11 +132,11 @@ npm run test:pwa
 ```bash
 npm run build:cloudflare
 npm run test:cloudflare
-npx wrangler pages deploy dist-cloudflare --project-name franmotest --branch migration-preview
-npx wrangler pages deploy dist-cloudflare --project-name franmotest --branch main
+npx wrangler pages deploy dist-cloudflare --project-name franlumi --branch preview
+npx wrangler pages deploy dist-cloudflare --project-name franlumi --branch main
 ```
 
-Supabase 需配置自定义 SMTP，并保持邮箱确认开启。网站地址和邮件允许回调需与新网站一致。依赖、构建产物、`.netlify/`、密钥与个人备份不提交到 GitHub。Netlify 函数、构建配置与依赖已全部移除，部署只使用 Cloudflare Pages + Worker + Supabase。`.netlify/` 本地目录只放安卓构建工具与签名配置，与 Netlify 部署无关。
+Supabase 需配置自定义 SMTP，并保持邮箱确认开启。网站地址和邮件允许回调需与正式网站一致。依赖、构建产物、`.local/`、密钥与个人备份不提交到 GitHub。当前部署只保留 FranLumi 项目。
 
 原创代码遵循仓库 [MIT 许可](../LICENSE)；教材衍生词库不包含在 MIT 代码授权中，详见 [词库来源及许可范围](../DATA_NOTICE.md)。
 
@@ -140,7 +148,7 @@ Supabase 需配置自定义 SMTP，并保持邮箱确认开启。网站地址和
 
 1.1.1 起，安卓版设置可检查更新，首页联网自动检查并提示。App 下载经过 SHA-256、包名、递增版本与同一签名校验，再用系统安装窗口确认。检查状态独立于学习存储，失败或取消不修改学习记录。
 
-`android-app/scripts/build.mjs` 构建并签名后生成 `public/android-update.json`。1.1.3 起 App 读取 GitHub main 分支中的更新清单，不再依赖 Netlify；对应 Release APK 需上传且验证成功后再公开发布。清单也随网站发布。安装包不内置该元数据，避免校验值形成循环；原生网络检查不会使用 PWA 缓存。
+`android-app/scripts/build.mjs` 构建并签名后生成 `public/android-update.json`。App 读取 GitHub main 分支中的更新清单；对应 Release APK 需上传且验证成功后再公开发布。清单也随网站发布。安装包不内置该元数据，避免校验值形成循环；原生网络检查不会使用 PWA 缓存。
 
 1.1.6：Part 选择菜单不显示搜索框，直接滚动选择，不自动弹出手机键盘。
 

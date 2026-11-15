@@ -1,8 +1,10 @@
 # 更新记录
 
-## 未发布
+## 未发布 — 2026-11-16
 
-- 移除全部 Netlify 部署：`netlify.toml`、旧 serverless 函数（`website/netlify/functions/`）、`@netlify/*` 依赖与 `netlify-cli`、Vite 的 Netlify 模式与 `@netlify/identity` 别名。登录代码改为直接引用 `src/supabase-identity.js`；接口只由 Cloudflare Worker 提供。特意保留：已安装安卓 App 的本地虚拟来源 `https://franmotest.netlify.app`（`MainActivity` 的 `HOST`、Worker 的 `ALLOWED_ORIGINS`、包名 `app.netlify.franmotest`），改动会破坏已安装用户的本机记录与覆盖升级。
+- 网站统一使用 Cloudflare Pages、API Worker 和 Supabase，移除旧托管函数、SDK、Cookie 会话代码及一次性导入导出工具；默认网页构建直接生成 Cloudflare 发布目录。
+- 清理旧 Franmotest 站点入口、发布配置、调试安装包和本机缓存；本机工具改放 `.local/`。保留私有学习备份，以及 Android 包名、签名、存储来源和更新文件名的兼容约定。
+- 构建、网站 ZIP 和 APK 使用发布白名单，阻止私有调试备份进入产物。
 
 ## FranLumi 2.1.7 — 2026-11-02
 
@@ -124,7 +126,7 @@
 
 本节为网站更新，ChatGPT 插件版本仍为 1.0.8。
 
-- 正式网址更新为 https://franmotest.netlify.app/ ，保留旧版学习记录的迁移和备份能力。
+- 正式网址更新为当时的正式站，保留旧版学习记录的迁移和备份能力；当前入口见 README。
 - 接入 Édito B1 2023（1110 词）、Inspire A1（937 词）和 Édito A2 2022（850 词），提供 Part 与主题中文标题；各书进度独立。
 - 增加 XLSX、CSV、JSON 词库导入、14 列空白模板及课本 PDF 生成词库教程。
 - 主导航统一为首页、课本过关、每日检测、词库记录、设置；首页与设置保留教程入口，首页增加我的课本、当前进度和累计活动。

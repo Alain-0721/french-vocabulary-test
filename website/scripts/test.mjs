@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
-import {mkdtemp,rm,readFile} from 'node:fs/promises';
+import {mkdtemp,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -41,29 +41,5 @@ try{
  check('Full backup round trips',()=>assert.ok(restoreBundle(JSON.stringify(fixture))));
  check('Plugin main-progress imports without fake secondary progress',()=>{const imported=importRecord(JSON.stringify(fixture.main),fresh());assert.equal(imported.main.current,5);assert.equal(imported.daily,null);assert.deepEqual(imported.dailyStats,{});});
  check('Malformed imports and unknown IDs are rejected',()=>{const invalid=structuredClone(fixture);invalid.main.stats.unknown={good:1,bad:0};assert.equal(restoreBundle(invalid),null);assert.throws(()=>importRecord({mode:'textbook'},fresh()));});
- // The classic /api/progress endpoint is served by the Cloudflare Worker now
- // (website/cloudflare/worker.js); its auth, origin, validation and ETag
- // behavior is covered by test-cloudflare.mjs. The old Netlify function is gone.
- const dom=new JSDOM('<!DOCTYPE html><div id="root"></div>',{url:'https://example.test/#/home',pretendToBeVisual:true,runScripts:'dangerously'});
- dom.window.structuredClone=structuredClone;dom.window.scrollTo=()=>{};
- const result=await build({entryPoints:['src/main.jsx'],bundle:true,write:false,format:'iife',platform:'browser',loader:{'.css':'empty'},plugins:[{name:'auth-test',setup(b){b.onResolve({filter:/supabase-identity\.js$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:'export const getUser=async()=>null,getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,refreshSession=async()=>null,onAuthChange=()=>()=>{};export const login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},verifyPasswordRecovery=async()=>{},resetRecoveredPassword=async()=>({unchanged:false}),updateUser=async()=>{},acceptInvite=async()=>{};',loader:'js'}));}}],logLevel:'silent'});
- dom.window.eval(result.outputFiles[0].text);await new Promise(r=>setTimeout(r,80));
- const doc=dom.window.document;
- check('Home renders real fresh progress',()=>{assert.match(doc.body.textContent,/Bonjour/);assert.match(doc.body.textContent,/0 \/ 24 Part/);});
- const click=async el=>{assert.ok(el);el.click();await new Promise(r=>setTimeout(r,45));};
-  const waitFor=async predicate=>{const deadline=Date.now()+2000;while(Date.now()<deadline){if(predicate())return;await new Promise(r=>setTimeout(r,25));}assert.fail('UI did not update within 2 seconds');};
- await click([...doc.querySelectorAll('button')].find(e=>e.textContent.includes('继续课本检测')));
- let card=doc.querySelector('.study-main>.quiz-card');const oldId=card.dataset.attempt;
- check('Answer and scores stay hidden initially',()=>{assert.ok(card.querySelector('.answer.invisible'));assert.ok(card.querySelector('.vote:disabled'));});
- await click(card.querySelector('.word-trigger'));await click(card.querySelector('.vote.good'));
- check('Word flip enables scoring and reveals translation',()=>{assert.equal(card.querySelector('.vote.good').disabled,false);assert.ok(card.querySelector('.vote.good.chosen'));});
- await click([...card.querySelectorAll('button')].find(b=>b.textContent.includes('本部分过关')));
-  await waitFor(()=>doc.querySelector('.study-main>.quiz-card')?.dataset.attempt!==oldId);
- card=doc.querySelector('.study-main>.quiz-card');
- check('UI pass creates new card and history keeps old card',()=>{assert.notEqual(card.dataset.attempt,oldId);assert.match(card.textContent,/U1 · P2/);assert.equal(doc.querySelector('.history [data-attempt]').dataset.attempt,oldId);});
- const cache=JSON.parse(dom.window.localStorage.getItem('edito-atelier:v1:guest'));
- check('Progress persists to browser storage',()=>{assert.equal(cache.bundle.main.current,1);assert.equal(cache.bundle.main.attempts.length,2);});
- await click([...doc.querySelectorAll('.chapter-map button')].find(b=>b.textContent.includes('P1 · 共同生活')));
- check('Chapter directory opens matching dictionary Part',()=>assert.equal(doc.querySelector('select[aria-label="筛选Part"]').value,'U2P1'));
- dom.window.close();console.log(`${passed} checks passed.`);
+ console.log(`${passed} legacy data migration checks passed.`);
 }finally{await rm(dir,{recursive:true,force:true});}

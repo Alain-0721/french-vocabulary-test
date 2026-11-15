@@ -1,6 +1,6 @@
-Franmotest Android app
+FranLumi Android app
 
-Includes retained Gradle/icon templates from Google Bubblewrap (Copyright Google LLC) and AndroidX WebKit/Activity/Core libraries, licensed under Apache License 2.0. No Android Browser Helper or browser runtime is bundled. Original Franmotest code is MIT; textbook data terms are described in DATA_NOTICE.md.
+Includes retained Gradle/icon templates from Google Bubblewrap (Copyright Google LLC) and AndroidX WebKit/Activity/Core libraries, licensed under Apache License 2.0. No Android Browser Helper or browser runtime is bundled. Original FranLumi code is MIT; textbook data terms are described in DATA_NOTICE.md.
 
 
                                  Apache License

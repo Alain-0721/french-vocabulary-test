@@ -8,13 +8,15 @@ android {
         targetSdk 36
         versionCode = (project.findProperty('qaVersionCode') ?: '19').toString().toInteger()
         versionName = (project.findProperty('qaVersionName') ?: '2.1.7').toString()
-        def siteUrl = System.getenv('VITE_SITE_URL')
-        def supabaseUrl = System.getenv('VITE_SUPABASE_URL')
-        if (!siteUrl || !supabaseUrl) throw new GradleException('Missing migration configuration: VITE_SITE_URL and VITE_SUPABASE_URL must be set')
-        def apiHost = new URI(siteUrl).host
-        def authHost = new URI(supabaseUrl).host
+        def apiUrl = System.getenv('VITE_SITE_URL')
+        def authUrl = System.getenv('VITE_SUPABASE_URL')
+        if (!apiUrl || !authUrl) throw new GradleException('Configure Cloudflare and Supabase URLs before building')
+        def apiUri = new URI(apiUrl)
+        def authUri = new URI(authUrl)
+        if (apiUri.scheme != 'https' || authUri.scheme != 'https') throw new GradleException('Backend URLs must use HTTPS')
+        def apiHost = apiUri.host
+        def authHost = authUri.host
         if (!(apiHost ==~ /[a-z0-9.-]+/) || !(authHost ==~ /[a-z0-9.-]+/)) throw new GradleException('Invalid backend host')
-        buildConfigField 'boolean', 'MIGRATED_BACKEND', 'true'
         buildConfigField 'String', 'API_HOST', '"' + apiHost + '"'
         buildConfigField 'String', 'AUTH_HOST', '"' + authHost + '"'
         manifestPlaceholders.appLinkHost = apiHost

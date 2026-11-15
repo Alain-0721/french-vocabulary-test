@@ -26,7 +26,7 @@ function worker({redirectedShell=false}={}){
 test('offline shell and build assets survive navigation; private APIs, previews and writes bypass cache',async()=>{
  const w=worker();await w.event('install');assert.equal(w.skipped(),0);
  assert.equal(await (await w.fetch('/#/study',{mode:'navigate'})).text(),'offline shell');assert.equal(await (await w.fetch('/assets/app.js')).text(),'asset');
- for(const [path,options] of [['/api/multi-progress',{}],['/api/avatar/abc.png',{}],['/.netlify/identity/user',{}],/* kept: Android virtual-origin paths bypass the worker cache */['/textbooks-preview.html',{mode:'navigate'}],['https://other.test/assets/app.js',{}],['/assets/app.js',{method:'POST'}]])assert.equal(await w.fetch(path,options),null);
+ for(const [path,options] of [['/api/multi-progress',{}],['/api/avatar/abc.png',{}],['/.private/auth/user',{}],['/textbooks-preview.html',{mode:'navigate'}],['https://other.test/assets/app.js',{}],['/assets/app.js',{method:'POST'}]])assert.equal(await w.fetch(path,options),null);
  await w.event('activate');assert.equal(w.claimed(),1);assert.ok(!w.stores.has('franmo-app-old'));assert.ok(w.stores.has('other-app'));
  w.handlers.get('message')({data:{type:'IGNORE'}});assert.equal(w.skipped(),0);w.handlers.get('message')({data:{type:'ACTIVATE_UPDATE'}});assert.equal(w.skipped(),1);
 });
@@ -48,8 +48,8 @@ test('local account selector stores display data only, rejects invalid records a
  map.set(LAST_ACCOUNT,'{"id":"../../other","name":"Alain"}');assert.equal(readLocalAccount(storage),null);rememberLocalAccount(null,storage);assert.equal(map.size,0);
 });
 
-const auth=`export const getUser=async()=>{window.authReads++;return window.testIdentity;},refreshSession=async()=>{window.authReads++;},getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,onAuthChange=()=>()=>{},login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},verifyPasswordRecovery=async()=>{},resetRecoveredPassword=async()=>({unchanged:false}),updateUser=async()=>{},acceptInvite=async()=>{};`;
-const ui=await build({entryPoints:['src/site.jsx'],bundle:true,write:false,format:'iife',platform:'browser',define:{'import.meta.env.PROD':'false'},loader:{'.css':'empty'},logLevel:'silent',plugins:[{name:'identity-fixture',setup(b){b.onResolve({filter:/supabase-identity\.js$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:auth,loader:'js'}));}}]});
+const auth=`export const getUser=async()=>{window.authReads++;return window.testIdentity;},refreshSession=async()=>{window.authReads++;},getSettings=async()=>({disableSignup:false}),handleAuthCallback=async()=>null,onAuthChange=()=>()=>{},login=async()=>{},signup=async()=>({}),logout=async()=>{},requestPasswordRecovery=async()=>{},updateUser=async()=>{},acceptInvite=async()=>{},verifyPasswordRecovery=async()=>({}),resetRecoveredPassword=async()=>({unchanged:false});`;
+const ui=await build({entryPoints:['src/site.jsx'],bundle:true,write:false,format:'iife',platform:'browser',define:{'import.meta.env.PROD':'false'},loader:{'.css':'empty'},logLevel:'silent',plugins:[{name:'identity-fixture',setup(b){b.onResolve({filter:/(^|\/)supabase-identity\.js$/},()=>({path:'identity',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:auth,loader:'js'}));}}]});
 const pause=(ms=100)=>new Promise(resolve=>setTimeout(resolve,ms));
 async function waitForLocalAccount(w){
  const deadline=Date.now()+2000;
